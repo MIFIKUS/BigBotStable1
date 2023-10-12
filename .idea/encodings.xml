@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/SborPlushek/account_lvls.json" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/account_lvls.json" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/alchemy_account_preset.txt" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/settings.txt" charset="windows-1251" />
+  </component>
+</project>

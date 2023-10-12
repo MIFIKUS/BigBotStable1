@@ -28,7 +28,11 @@ import random
 #Время раз в которое удаляются значения из таблицы less_100_items
 DIFERNCE_IN_TIME = 24
 
+ROLL_000_MINIMAL_PRICE_2ND_SLOT = 240
+ROLL_000_MINIMAL_PRICE_2ND_SLOT_FOR_CHECK_1ST_SLOT = 130
+ROLL_000_MINIMAL_PRICE_1ST_SLOT = 80
 TOTAL_PRICE = 200
+
 with open('settings.txt') as f:
     for i in f.readlines():
         if 'path' in i:
@@ -1941,16 +1945,20 @@ class Roll_000():
         self.need_except_sharp = True
         self.slots = [2]
         self.totaling_prices = False
-        self.appropriatable_items = f'{PATH_TO_ALCHEMY}\\rol_00_items.txt'
+        self.appropriatable_items = f'{PATH_TO_ALCHEMY}\\rol_000_items.txt'
         self.red_check = False
         self.need_for_check_roll_items_name = True
         self.need_for_check_sql = True
         self.need_sequence_matching = False
+        self.need_find_by_image = False
+        self.roll = '000'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
         items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
-                                                                                                                                                        roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching)
+                                                                                                                                                        roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
+                                                                                                                                                        need_find_by_image=self.need_find_by_image, roll=self.roll)
+
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
         return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time
 

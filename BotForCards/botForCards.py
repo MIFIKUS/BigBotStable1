@@ -23,7 +23,6 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 autohotkey = AHK()
 
 class Windows():
-
     def switch_windows(self, func):
         shell = win32com.client.Dispatch("WScript.Shell")
 
@@ -276,9 +275,14 @@ class AHKActions():
                 except:
                     pass
                 time.sleep(random.uniform(0.2, 0.4))
-        for proc in psutil.process_iter():
-            if proc.name() == 'AutoHotkey.exe':
-                proc.kill()
+        try:
+            for proc in psutil.process_iter():
+                if proc.name() == 'AutoHotkey.exe':
+                    proc.kill()
+        except Exception as e:
+            print(e)
+            print("AHK process doesn't exists anymore")
+
 ahk = AHKActions()
 class Image():
 
@@ -338,7 +342,14 @@ image = Image()
 
 class InGame():
     def open_inventory(self):
-        autohotkey.key_press('i')
+        while image.matching(f'{PATH_TO_CARDS}is_inventory_opened.png', f'{PATH_TO_CARDS}inventory_opened.png',
+                             need_for_taking_screenshot=True, threshold=0.7, area_of_screenshot=(1320, 165, 1410, 215)) is False:
+            print('Инвентарь не открыт')
+            autohotkey.key_press('i')
+            time.sleep(1)
+
+        ahk.mouse_actions('move', x=410, y=85)
+        ahk.mouse_actions('click')
 
         ahk.mouse_actions('move', x=1350, y=440)
         ahk.mouse_actions('click')
@@ -347,17 +358,17 @@ class InGame():
         ahk.mouse_actions('click')
 
         while image.matching(f'{PATH_TO_CARDS}is_filter_selected.png', f'{PATH_TO_CARDS}filter_is_selected.png',
-                             need_for_taking_screenshot=True, area_of_screenshot=(1755, 255, 1810, 310)) is True:
+                             need_for_taking_screenshot=True, area_of_screenshot=(1755, 255, 1810, 310), threshold=0.6) is True:
             ahk.mouse_actions('move', x=1600, y=280)
             ahk.mouse_actions('click')
 
         while image.matching(f'{PATH_TO_CARDS}is_filter_selected.png', f'{PATH_TO_CARDS}filter_is_selected.png',
-                     need_for_taking_screenshot=True, area_of_screenshot=(1755, 335, 1810, 385)) is False:
+                     need_for_taking_screenshot=True, area_of_screenshot=(1755, 335, 1810, 385), threshold=0.6) is False:
             ahk.mouse_actions('move', x=1600, y=350)
             ahk.mouse_actions('click')
 
         while image.matching(f'{PATH_TO_CARDS}is_filter_selected.png', f'{PATH_TO_CARDS}filter_is_selected.png',
-                     need_for_taking_screenshot=True, area_of_screenshot=(1755, 490, 1810, 540)) is False:
+                     need_for_taking_screenshot=True, area_of_screenshot=(1755, 490, 1810, 540), threshold=0.6) is False:
             ahk.mouse_actions('move', x=1600, y=520)
             ahk.mouse_actions('click')
 
@@ -380,38 +391,36 @@ class InGame():
         ahk.mouse_actions('move', x=1350, y=720)
         ahk.mouse_actions('click')
 
-
     def open_card(self, cords):
-
         if cords is not False:
             x = cords[0] + 1400
             y = cords[1] + 300
-
             print(x,' ', y)
             ahk.mouse_actions('move', x=x, y=y)
             ahk.mouse_actions('click')
             ahk.mouse_actions('click')
 
-            time.sleep(2)
+            time.sleep(4)
 
             ahk.mouse_actions('move', x=930, y=950)
             ahk.mouse_actions('click')
 
-            time.sleep(2)
-            while image.matching(f'{PATH_TO_CARDS}card_menu.jpg', f'{PATH_TO_CARDS}go_to_result_button.png', need_for_taking_screenshot=True) is True:
+            time.sleep(5)
+            while image.matching(f'{PATH_TO_CARDS}card_menu.jpg', f'{PATH_TO_CARDS}go_to_result_button.png', need_for_taking_screenshot=True,
+                                 threshold=0.65) is True:
                 ahk.mouse_actions('move', x=850, y=950)
                 ahk.mouse_actions('click')
-                time.sleep(1)
-            while image.matching(f'{PATH_TO_CARDS}card_menu.jpg', f'{PATH_TO_CARDS}repeat_button.png', need_for_taking_screenshot=True) is True:
+                time.sleep(3)
+            while image.matching(f'{PATH_TO_CARDS}card_menu.jpg', f'{PATH_TO_CARDS}repeat_button.png', need_for_taking_screenshot=True,
+                                 threshold=0.7) is True:
                 ahk.mouse_actions('move', x=850, y=950)
                 ahk.mouse_actions('click')
-
-                time.sleep(2)
+                time.sleep(4)
 
                 ahk.mouse_actions('move', x=930, y=950)
                 ahk.mouse_actions('click')
+                time.sleep(3)
 
-                time.sleep(2)
             ahk.mouse_actions('esc')
             return True
         return False

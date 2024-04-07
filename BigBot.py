@@ -1,3 +1,4 @@
+import time
 import tkinter as tk
 from tkinter import ttk
 import json
@@ -12,23 +13,32 @@ from SborPlushek import script_dlya_sbora_plushek
 from BotForCards import botForCards
 from BotForStats import BotForStat
 from Alchemy import AlchemyBot
-
-
+from CollectionMaster import collection_master
+from Booster.Fuse import fuse_bot
+from Booster.Souls import souls_bot
+from Booster.Stamps import stamps_bot
+from Booster.Revival import revival_bot
+from Booster.Cases import cases_bot
 
 LIST_OF_ROLLS = (
     'Roll_00',
     'Roll_000',
     'Roll_66',
+    'Roll_66_Lite',
     'Roll_32',
     'Roll_80',
+    'Roll_80_Red',
     'Roll_888',
-    'Roll_888_K'
-    )
+    'Roll_888_K',
+    'Roll_40',
+    'Roll_40_Symbol',
+    'Roll_50',
+    'Roll_50_Symbol',
+    'Roll_50_Symbol_Plus')
 
 def con(obj,color):
     print(color)
     obj.configure(bg=color)
-
 
 class SampleApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -86,7 +96,7 @@ def Buyer():
     with open('settings.txt') as f:
         for i in f.readlines():
             if 'BuyerBot_minimal_price_for_red' in i:
-                minimal_price_for_red = i.split('=yy')[1]
+                minimal_price_for_red = i.split('=')[1]
                 print(i)
                 break
 
@@ -96,6 +106,7 @@ def Buyer():
                 minimal_price_for_red_accesories = i.split('=')[1]
                 print(i)
                 break
+
     with open('settings.txt') as f:
         for i in f.readlines():
             if 'BuyerBot_amount_items_to_buy' in i:
@@ -125,12 +136,8 @@ def Buyer():
                 break
 
     if __name__ == '__main__':
-            buyer = multiprocessing.Process(target=BuyerBot.run, args=(mode, minimal_price, minimal_price_for_red,
-                                                                       minimal_price_for_red_accesories, amount_items_to_buy,
-                                                                       schedule, multiplier, path,))
+            buyer = multiprocessing.Process(target=BuyerBot.run)
             buyer.start()
-
-
 
 def Autosell():
     if __name__ == '__main__':
@@ -195,6 +202,22 @@ def CheckGreen():
 
 
 def SborPlushek():
+    def __reset_current_dungeon():
+        with open('settings.txt') as f:
+            for i in f.readlines():
+                if 'SborPlushek_current_dungeon' in i:
+                    current_dungeon = i.split('=')
+                    break
+        with open('settings.txt', 'r') as f:
+            old_data = f.read()
+            print(current_dungeon[1])
+            new_data = old_data.replace(f'SborPlushek_current_dungeon={current_dungeon[1]}',
+                                        f'SborPlushek_current_dungeon=1\n')
+        with open('settings.txt', 'w') as f:
+            f.write(new_data)
+
+
+    __reset_current_dungeon()
     with open('settings.txt') as f:
         for i in f.readlines():
             if 'SborPlushek_schedule' in i:
@@ -221,9 +244,62 @@ def SborPlushek():
                 path = i.split('=')[1]
                 print(i)
                 break
+
     if __name__ == '__main__':
-        sbor_plushek = multiprocessing.Process(target=script_dlya_sbora_plushek.run, args=(clan_clicks, multiplier, path, schedule,))
+        sbor_plushek = multiprocessing.Process(target=script_dlya_sbora_plushek.run, args=(clan_clicks, multiplier, path, schedule, 1))
         sbor_plushek.start()
+
+def sbor_plushek_next_dungeon():
+    with open('settings.txt') as f:
+        current_dungeon = None
+        schedule = None
+        clan_clicks = None
+        multiplier = None
+        path = None
+        for i in f.readlines():
+            if 'SborPlushek_current_dungeon' in i:
+                current_dungeon = i.split('=')[1]
+                print('current_dungeon_num is', current_dungeon)
+            if 'SborPlushek_schedule' in i:
+                schedule = i.split('=')[1]
+                print(i)
+            if 'SborPlushek_amount_of_clicks_in_clan' in i:
+                clan_clicks = i.split('=')[1]
+                print(i)
+            if 'multiplier' in i:
+                multiplier = i.split('=')[1]
+                print(i)
+            if 'path' in i:
+                path = i.split('=')[1]
+                print(i)
+
+    if __name__ == '__main__':
+        sbor_plushek = multiprocessing.Process(target=script_dlya_sbora_plushek.run,
+                                               args=(clan_clicks, multiplier, path, schedule, current_dungeon))
+        sbor_plushek.start()
+
+def sbor_plushek_apples():
+    with open('settings.txt') as f:
+        for i in f.readlines():
+            if 'path' in i:
+                path = i.split('=')[1]
+                print(i)
+    if __name__ == '__main__':
+        apples = multiprocessing.Process(target=script_dlya_sbora_plushek.start_collect_apples,
+                                                   args=(path,))
+        apples.start()
+
+def sbor_plushek_collect_event_good():
+    with open('settings.txt') as f:
+        for i in f.readlines():
+            if 'path' in i:
+                path = i.split('=')[1]
+                print(i)
+
+    if __name__ == '__main__':
+        event = multiprocessing.Process(target=script_dlya_sbora_plushek.start_collect_event_good,
+                                                   args=(path,))
+        event.start()
 
 
 def BotForCards():
@@ -275,6 +351,12 @@ def alchemy_bot():
     if __name__ == '__main__':
         alchemy = multiprocessing.Process(target=AlchemyBot.main, args=(path,))
         alchemy.start()
+
+def collections():
+    if __name__ == '__main__':
+        collection = multiprocessing.Process(target=collection_master.run)
+        collection.start()
+
 class Main(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -493,14 +575,17 @@ class AllBots(tk.Frame):
         bot_for_raking_rewards_label = tk.Label(self, text='Бот для сбора плюшек', bg='#404040',fg='#d4d3d3',font='Arial 24')
 
         bot_for_raking_rewards_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41',font='Arial 24',borderwidth=0, command=lambda: SborPlushek())
-        bot_for_raking_rewards_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3',font='Arial 24',borderwidth=0)
+
         bot_for_raking_rewards_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e',font='Arial 24',borderwidth=0, command=lambda: controller.show_frame('SborPlushekSettings'))
+        bot_for_taking_rewards_next_button = tk.Button(self, text='Некст данж', bg='#404040', fg='#24c9c3',font='Arial 24',borderwidth=0, command=lambda: sbor_plushek_next_dungeon())
+        bot_for_taking_rewards_apples_button = tk.Button(self, text='Яблоки', bg='#404040', fg='#F24F44', font='Arial 24', borderwidth=0, command=lambda: sbor_plushek_apples())
+        bot_for_taking_rewards_event_button = tk.Button(self, text='Ивент', bg='#404040', fg='#F24F44', font='Arial 24', borderwidth=0, command=lambda: sbor_plushek_collect_event_good())
 
         bot_for_raking_rewards_start_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_start_button: h.configure(fg='#459330'))
         bot_for_raking_rewards_start_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_start_button: h.configure(fg='#5ecb41'))
 
-        bot_for_raking_rewards_logs_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#1b9591'))
-        bot_for_raking_rewards_logs_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#24c9c3'))
+        #bot_for_raking_rewards_logs_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#1b9591'))
+        #bot_for_raking_rewards_logs_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#24c9c3'))
 
         bot_for_raking_rewards_settings_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_settings_button: h.configure(fg='#875520'))
         bot_for_raking_rewards_settings_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_settings_button: h.configure(fg='#c17a2e'))
@@ -517,8 +602,10 @@ class AllBots(tk.Frame):
         bot_for_raking_rewards_label.place(x=60, y=310)
 
         bot_for_raking_rewards_start_button.place(x=50, y=360)
-        bot_for_raking_rewards_logs_button.place(x=210, y=360)
-        bot_for_raking_rewards_settings_button.place(x=350,y=360)
+        bot_for_raking_rewards_settings_button.place(x=170, y=360)
+        bot_for_taking_rewards_next_button.place(x=350, y=360)
+        bot_for_taking_rewards_apples_button.place(x=550, y=360)
+        bot_for_taking_rewards_event_button.place(x=700, y=360)
 
         go_to_all_bots.place(x=0, y=0)
         go_to_main.place(x=430, y=0)
@@ -582,10 +669,8 @@ class AllBots(tk.Frame):
 
         bot_for_raking_rewards_frame.place(x=15, y=290)
         bot_for_raking_rewards_label.place(x=60, y=310)
-
-        bot_for_raking_rewards_start_button.place(x=50, y=360)
-        bot_for_raking_rewards_logs_button.place(x=210, y=360)
-        bot_for_raking_rewards_settings_button.place(x=350,y=360)
+        #bot_for_raking_rewards_start_button.place(x=50, y=360)
+        #bot_for_raking_rewards_settings_button.place(x=350,y=360)
 
         autosell_frame.place(x=15, y=460)
         autosell_label.place(x=60, y=480)
@@ -668,6 +753,57 @@ class AllBotsSecondPage(tk.Frame):
         alchemy_start_button.place(x=50, y=360)
         alchemy_logs_button.place(x=210, y=360)
         alchemy_settings_button.place(x=350,y=360)
+
+        collection_master_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
+        collection_master_label = tk.Label(self, text='Заточка', bg='#404040',fg='#d4d3d3',font='Arial 24')
+
+        collection_master_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41', font='Arial 24', borderwidth=0,
+                                         command=lambda: collections())
+        collection_master_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3', font='Arial 24', borderwidth=0)
+        collection_master_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e', font='Arial 24',
+                                            borderwidth=0, )
+
+        collection_master_frame.place(x=15, y=460)
+        collection_master_label.place(x=60, y=480)
+
+        collection_master_start_button.place(x=50, y=530)
+        collection_master_logs_button.place(x=210, y=530)
+        collection_master_settings_button.place(x=350, y=530)
+
+        booster_frame = tk.Frame(self, bg='#404040', width=1260, height=150)
+        booster_label = tk.Label(self, text='Бустера', bg='#404040', fg='#d4d3d3', font='Arial 24')
+
+        fuse = tk.Button(self, text='Фьюз', bg='#404040', fg='#5ecb41', font='Arial 24',
+                                                   borderwidth=0,
+                                                   command=lambda: fuse_bot.run())
+
+        souls = tk.Button(self, text='Души', bg='#404040', fg='#24c9c3', font='Arial 24',
+                                                  borderwidth=0,
+                                                  command=lambda: souls_bot.run())
+
+        stamps = tk.Button(self, text='Печати', bg='#404040', fg='#c17a2e',
+                                                      font='Arial 24',
+                                                      borderwidth=0,
+                                                      command=lambda: stamps_bot.run())
+
+        revivals = tk.Button(self, text='Пробуждение', bg='#404040', fg='#ff2b2b',
+                           font='Arial 24',
+                           borderwidth=0,
+                           command=lambda: revival_bot.run())
+
+        cases = tk.Button(self, text='Сундуки', bg='#404040', fg='#ffc0cb',
+                           font='Arial 24',
+                           borderwidth=0,
+                           command=lambda: cases_bot.run())
+
+        booster_frame.place(x=15, y=630)
+        booster_label.place(x=60, y=650)
+
+        fuse.place(x=50, y=700)
+        souls.place(x=210, y=700)
+        stamps.place(x=350, y=700)
+        revivals.place(x=500, y=700)
+        cases.place(x=750, y=700)
 
         go_to_all_bots.place(x=0, y=0)
         go_to_main.place(x=430, y=0)
@@ -1655,8 +1791,13 @@ class AlchemySettings(tk.Frame):
             acc_info = i.split(' ')
             print(acc_info)
             acc_name = tk.Label(self, text=acc_info[0], bg='#282828', fg='#d4d3d3', font='Arial 12', borderwidth=0)
+
             acc_roll = ttk.Combobox(self, values=LIST_OF_ROLLS, font='Arial 12')
+            acc_roll.set(acc_info[1])
+
             amount_of_rolls = tk.Entry(self, bg='#535353', fg='#d4d3d3', font='Arial 12', borderwidth=0)
+            amount_of_rolls.insert(0, acc_info[-2])
+
             acc_colors = tk.Entry(self, bg='#282828', font='Arial 12', fg='#5ecb41')
 
             acc_names.append(acc_name)
@@ -1719,6 +1860,12 @@ class AlchemySettings(tk.Frame):
         update_button.place(x=800, y=600)
 
         confirm_button.place(x=800, y=400)
+
 if __name__ == '__main__':
     app = SampleApp()
     app.mainloop()
+
+#time.sleep(6)
+#
+#cases_bot.main()
+

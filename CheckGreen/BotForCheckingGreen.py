@@ -72,9 +72,14 @@ class AHKActions():
                 if autohotkey.type(text) is not False:
                     break
 
-        for proc in psutil.process_iter():
-            if proc.name() == 'AutoHotkey.exe':
-                proc.kill()
+        try:
+            for proc in psutil.process_iter():
+                if proc.name() == 'AutoHotkey.exe':
+                    proc.kill()
+        except Exception as e:
+            print(e)
+            print("AHK process doesn't exists anymore")
+
 ahk = AHKActions()
 
 class ImageWork():

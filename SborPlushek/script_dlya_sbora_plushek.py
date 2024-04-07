@@ -16,32 +16,33 @@ import cv2
 
 import keyboard
 import psutil
+import pythoncom
+import telebot
+
+import json
 
 # AHK 0.14.2 ОБЯЗАТЕЛЬНО
 # ЗАПУСК ОТ ИМЕНИ АДМИНИСТРАТОРА ОБЯЗАТЕЛЬНО
 
-
-
 TIME_FOR_WORK = ['21:49','','']
 CLAN_CLICKS = 3
-MULTIPLIER =1
-
+MULTIPLIER = 1
 PATH_TO_SCRIPT = ''
+
 #Колличество ивентов в текущий момент
 AMOUNT_OF_EVENTS = 1
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-# Сюда вписывать какие бонусы собирать
-BONUSES_NUMBER = (1, 3, 4)
-
+# номер данжа
+NUM_OF_DUNGEON = 1
 
 with open(f'{PATH_TO_SCRIPT}account_lvls.json') as account_lvls_json:
     account_lvls = json.load(account_lvls_json)
 
 autohotkey = AHK()
 
-
 # Класс для взаимодействия с окнами
+
 class AHKActions():
 
     # Переменная action отвечает за то, какое действие нужно сделать. (кликнуть, перевести мышку, провести мышкой с нажатием)
@@ -101,6 +102,15 @@ class AHKActions():
                     pass
             return
 
+        elif action == 'wheel_up':
+            while True:
+                try:
+                    autohotkey.wheel_up()
+                    break
+                except:
+                    pass
+            return
+
         elif action == 'esc':
             while True:
                 try:
@@ -152,9 +162,14 @@ class AHKActions():
                 except:
                     pass
                 time.sleep(random.uniform(0.2, 0.4))
-        for proc in psutil.process_iter():
-            if proc.name() == 'AutoHotkey.exe':
-                proc.kill()
+        try:
+            for proc in psutil.process_iter():
+                if proc.name() == 'AutoHotkey.exe':
+                    proc.kill()
+        except Exception as e:
+            print(e)
+            print("AHK process doesn't exists anymore")
+
 
 # Класс для работы компьютерного зрения и изображений
 class Image():
@@ -204,6 +219,47 @@ class Image():
         if (0,0,0) in colors:
             colors.remove(colors[0])
         return colors[0][1]
+
+    def get_lvl(self) -> int or bool:
+        def _prepare_lvl(lvl):
+            lvl = lvl.replace(' ', '')
+            lvl = lvl.replace('\n', '')
+            lvl = lvl.replace('LV.', '')
+            return lvl
+
+        self.take_screenshot(f'{PATH_TO_SCRIPT}lvl.png', (20, 990, 130, 1030))
+
+        lvl = pytesseract.image_to_string(f'{PATH_TO_SCRIPT}lvl.png', config='--psm 6 -c tessedit_char_whitelist=0123456789LV.')
+        lvl = _prepare_lvl(lvl)
+
+        try:
+            return int(lvl)
+        except Exception as e:
+            print(f'Не удалось получить лвл, {e}')
+            return False
+
+    def get_dungeon_name(self):
+        def _prepare_dungeon_name(name) -> str:
+            name = name.replace(' ', '')
+            name = name.replace('\n', '')
+            name = name.replace('"', '')
+            name = name.replace("'", "")
+            name = name.lower()
+            return name
+
+        DUNGEONS_LIST = {
+            "храмундины": "UNDINA'S TEMPLE",
+            "разоренныйзамок": "DEVASTATED CASTLE",
+            "островнеистовства": "ISLAND OF FURY"
+        }
+
+        self.take_screenshot(f'{PATH_TO_SCRIPT}dungeon_name.png', (1210, 320, 1620, 375))
+
+        dungeon_name = pytesseract.image_to_string(f'{PATH_TO_SCRIPT}dungeon_name.png', lang='rus', config='--psm 6 --oem 3')
+        dungeon_name = _prepare_dungeon_name(dungeon_name)
+
+        return DUNGEONS_LIST.get(dungeon_name)
+
 # Класс для работы с окнами
 ahk = AHKActions()
 image = Image()
@@ -372,7 +428,51 @@ windows = Windows()
 image = Image()
 ahk = AHKActions()
 
+class Telegram:
+    """Класс для взаимодействия с тг"""
+    def __init__(self):
+        self.TG_ID = 420909529
+        self.TOKEN = '6775352589:AAG_LBg1GWil7ypCR8h_e7BhpZDCubFKbQQ'
+        self.BOT = telebot.TeleBot(self.TOKEN)
+        self.TIMEOUT = 3600
+
+    def send_next_dungeon_msg(self):
+        """Функция для отправки сообщения о том что пора переключать данж"""
+        self.BOT.send_message(self.TG_ID, 'Пора переключить данжи')
+
+    def send_end_msg(self):
+        """Функция для отправки сообщения о том что все данжи пройдены"""
+        self.BOT.send_message(self.TG_ID, 'Все данжи переставлены')
+
+class IOOperations:
+    """Класс для взаимодействия с файлами"""
+    def update_current_dungeon(self, current_dungeon_num):
+        with open('settings.txt') as f:
+            for i in f.readlines():
+                if 'SborPlushek_current_dungeon' in i:
+                    current_dungeon = i.split('=')
+                    break
+        with open('settings.txt', 'r') as f:
+            old_data = f.read()
+            print(current_dungeon[1])
+            new_data = old_data.replace(f'SborPlushek_current_dungeon={current_dungeon[1]}',
+                                        f'SborPlushek_current_dungeon={current_dungeon_num}\n')
+        with open('settings.txt', 'w') as f:
+            f.write(new_data)
+io = IOOperations()
+
 class InGame():
+    def lock_window(self):
+        ahk.mouse_actions('move', x=70, y=640)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('move', x=940, y=550)
+        ahk.mouse_actions('click')
+        time.sleep(2)
+
+    def unlock_window(self):
+        windows.unlock_screen()
+        time.sleep(1)
 
     def respawn(self):
         ahk.mouse_actions('move', x=928, y=865)
@@ -385,7 +485,11 @@ class InGame():
     def go_to_adena_shop(self):
         ahk.mouse_actions('move', x=1425, y=90)
         ahk.mouse_actions('click')
-        time.sleep(3)
+
+        while image.matching(f'{PATH_TO_SCRIPT}is_there_adena_shop_cross.png', f'{PATH_TO_SCRIPT}cross_adena_shop.png',
+                             need_for_taking_screenshot=True, threshold=0.7, area_of_screenshot=(1510, 765, 1555, 815)) is False:
+            time.sleep(0.1)
+            print('Нету крестика для того чтобы закрыть рекламу, ждемс')
 
         ahk.mouse_actions('move', x=1530, y=780)
         ahk.mouse_actions('click')
@@ -412,10 +516,11 @@ class InGame():
                 ahk.mouse_actions('click')
 
                 time.sleep(4*MULTIPLIER)
-        ahk.mouse_actions('esc')
+        ahk.mouse_actions('move', x=1800, y=80)
+        ahk.mouse_actions('click')
 
     def go_to_clan_menu(self):
-        ahk.mouse_actions('move', x=1425, y=570)
+        ahk.mouse_actions('move', x=1515, y=570)
         ahk.mouse_actions('click')
 
     def check_for_clan(self):
@@ -443,7 +548,7 @@ class InGame():
             ahk.mouse_actions('esc')
 
     def go_to_mail(self):
-        ahk.mouse_actions('move', x=1430, y=715)
+        ahk.mouse_actions('move', x=1430, y=830)
         ahk.mouse_actions('click')
 
     def get_all_rewards_from_mail(self):
@@ -458,17 +563,17 @@ class InGame():
         time.sleep(2*MULTIPLIER)
 
     def go_to_battle_pass_menu(self):
-        ahk.mouse_actions('move', x=1515, y=720)
+        ahk.mouse_actions('move', x=1515, y=820)
         ahk.mouse_actions('click')
 
     def get_all_battle_pass_rewards(self):
 
         def __get_rewards():
             while image.matching(f'{PATH_TO_SCRIPT}main_screen.jpg', f'{PATH_TO_SCRIPT}get_reward.png', need_for_taking_screenshot=True,
-                                  area_of_screenshot=(1225, 270, 1375, 370)) is True:
+                                  area_of_screenshot=(1225, 270, 1375, 370), threshold=0.7) is True:
                 ahk.mouse_actions('move', x=1300, y=320)
                 ahk.mouse_actions('click')
-                time.sleep(0.5)
+                time.sleep(1)
 
             return True
 
@@ -490,7 +595,7 @@ class InGame():
         ahk.mouse_actions('esc')
 
     def go_to_bonus_menu(self):
-        ahk.mouse_actions('move', x=1515, y=575)
+        ahk.mouse_actions('move', x=1590, y=575)
         ahk.mouse_actions('click')
 
     def get_bonuses_from_bonus_menu(self):
@@ -524,32 +629,49 @@ class InGame():
         ahk.mouse_actions('esc')
 
     def go_to_town(self):
+        time.sleep(2)
         ahk.mouse_actions('move', x=180, y=250)
         ahk.mouse_actions('click')
 
-        time.sleep(0.5*MULTIPLIER)
+        time.sleep(2)
 
         for i in range(2):
             ahk.mouse_actions('move', x=100, y=200)
             ahk.mouse_actions('click')
+            time.sleep(2)
 
         ahk.mouse_actions('move', x=180, y=200)
         ahk.mouse_actions('click')
 
+        time.sleep(2)
         ahk.mouse_actions('move', x=250, y=315)
         ahk.mouse_actions('click')
 
+        time.sleep(2)
         ahk.mouse_actions('move', x=1615, y=700)
         ahk.mouse_actions('click')
 
+        time.sleep(2)
         ahk.mouse_actions('move', x=1100, y=700)
         ahk.mouse_actions('click')
 
         time.sleep(5)
 
     def open_sellers_menu(self):
+        image.take_screenshot(f'{PATH_TO_SCRIPT}\\is_sellers_menu_opened.png', (45, 150, 315, 325))
+
         ahk.mouse_actions('move', x=350, y=280)
         ahk.mouse_actions('click')
+        time.sleep(1)
+
+        image.take_screenshot(f'{PATH_TO_SCRIPT}\\is_sellers_menu_opened_1.png', (45, 150, 315, 325))
+
+        while image.matching(f'{PATH_TO_SCRIPT}\\is_sellers_menu_opened.png', f'{PATH_TO_SCRIPT}\\is_sellers_menu_opened_1.png') is True:
+            ahk.mouse_actions('move', x=350, y=280)
+            ahk.mouse_actions('click')
+            time.sleep(1)
+
+            image.take_screenshot(f'{PATH_TO_SCRIPT}\\is_sellers_menu_opened_1.png', (45, 150, 315, 325))
 
     def _autoselling(self):
         ahk.mouse_actions('move', x=1490, y=940)
@@ -627,14 +749,76 @@ class InGame():
                     print("Пришел к ивенту")
 
                 if AMOUNT_OF_EVENTS == 2:
-                    #Go to statue
-                    ahk.mouse_actions('move', x=statue_x, y=statue_y)
+                    event_x = 200
+                    event_y = 180
+
+                    second_event_x = 200
+                    second_event_y = 240
+
+                    grocer_x = 200
+                    grocer_y = 300
+
+                    buyer_x = 200
+                    buyer_y = 500
+
+                    warehouse_worker_x = 200
+                    warehouse_worker_y = 450
+
+                    ahk.mouse_actions('move', x=event_x, y=event_y)
+                    ahk.mouse_actions('click')
+                    time.sleep(13)
+                    #self._autoselling()
+                    ahk.mouse_actions('move', x=1390, y=950)
+                    ahk.mouse_actions('click')
+
+                    for _ in range(2):
+                        ahk.mouse_actions('move', x=630, y=630)
+                        ahk.mouse_actions('click')
+                        time.sleep(1)
+
+                    ahk.mouse_actions('move', x=1650, y=950)
+                    ahk.mouse_actions('click')
+
+                    ahk.mouse_actions('move', x=950, y=710)
+                    ahk.mouse_actions('click')
+
+                    ahk.mouse_actions('esc')
+                    print("Пришел к ивенту")
+
+                    ahk.mouse_actions('move', x=second_event_x, y=second_event_y)
                     ahk.mouse_actions('click')
                     time.sleep(13)
                     ahk.mouse_actions('move', x=1080, y=700)
                     ahk.mouse_actions('click')
-                    print("Пришел к статуе")
+                    print("Пришел ко второму ивенту")
 
+                    ahk.mouse_actions('move', x=grocer_x, y=grocer_y)
+                    ahk.mouse_actions('click')
+                    time.sleep(13 * MULTIPLIER)
+                    self._autoselling()
+                    print("Пришел к бакалейщику")
+
+                    ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
+                    # for i in range(2):
+                    #    ahk.mouse_actions('wheel')
+                    ahk.mouse_actions('click')
+                    time.sleep(13 * MULTIPLIER)
+                    self._autoselling()
+                    print("Пришел к рабочему склада")
+                    ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
+                    for _ in range(2):
+                        ahk.mouse_actions('wheel')
+                    ahk.mouse_actions('move', x=buyer_x, y=buyer_y)
+                    ahk.mouse_actions('click')
+                    time.sleep(13 * MULTIPLIER)
+                    self._autoselling()
+                    print("Пришел к скупщику")
+
+                    ahk.mouse_actions('move', x=buyer_x, y=buyer_y)
+                    for _ in range(2):
+                        ahk.mouse_actions('wheel_up')
+
+                    return
             else:
                 grocer_x = 200
                 grocer_y = 180
@@ -644,9 +828,10 @@ class InGame():
 
                 warehouse_worker_x = 200
                 warehouse_worker_y = 300
-
         # go_to_warehouse_worker
         ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
+        #for i in range(2):
+        #    ahk.mouse_actions('wheel')
         ahk.mouse_actions('click')
         time.sleep(13*MULTIPLIER)
         self._autoselling()
@@ -673,6 +858,8 @@ class InGame():
 
     def switch_off_fast_walk_to_sellers(self):
         ahk.mouse_actions('move', x=200, y=300)
+        for i in range(2):
+            ahk.mouse_actions('wheel_up')
         ahk.mouse_actions('move', x=350, y=270)
         ahk.mouse_actions('click')
 
@@ -692,38 +879,67 @@ class InGame():
         ahk.mouse_actions('click')
 
     def go_to_dungeon_menu(self):
-        ahk.mouse_actions('move', x=1600, y=450)
+        ahk.mouse_actions('move', x=1690, y=450)
         ahk.mouse_actions('click')
 
     def choose_dungeon(self):
-        ahk.mouse_actions('move', x=390, y=350)
+        ahk.mouse_actions('move', x=390, y=150+(NUM_OF_DUNGEON*200))
         ahk.mouse_actions('click')
 
-        ahk.mouse_actions('move', x=1600, y=950)
+    def _choose_dungeon_lvl(self, hwnd, acc_lvl: int):
+        def _get_dungeon_lvls_file() -> dict:
+            with open('SborPlushek\\dungeon_lvls.json') as text:
+                return json.load(text)
+
+        dungeon_type = image.get_dungeon_name()
+        need_to_find_lvl = True
+        if dungeon_type is not False:
+            print(f"Данж обнаружен в списке {dungeon_type}")
+            lvls_file = _get_dungeon_lvls_file()
+            print(f'lvls_file {lvls_file}')
+
+            lvls_list = lvls_file.get(dungeon_type)
+            print(f'lvls_list {lvls_list}')
+            if lvls_list:
+                for c in lvls_list.items():
+                    lvls = c[0].split('-')
+                    print(f'lvls {lvls}')
+                    if int(lvls[0]) <= acc_lvl <= int(lvls[1]):
+                        lvl = c[1]
+                        print(f'Данж обнаружен. Выбран лвл {lvl}')
+                        need_to_find_lvl = False
+            else:
+                print('Данж не обнаружен в списке')
+        else:
+            print('Данж не обнаружен в списке')
+
+        ahk.mouse_actions('move', x=1350, y=950)
         ahk.mouse_actions('click')
 
-    def _choose_dungeon_lvl(self, hwnd):
-        account_name = windows.get_account_name(hwnd)
-        print(account_name)
-        lvl = 0
-        for i in account_lvls.keys():
-            print(i)
-            if account_name == i:
-                print(123)
-                lvl = account_lvls[i]
-        if lvl == 0:
-            print(account_name, 'нет в списке. Выбран 50 лвл по дефолту')
-            lvl = 50
+        if need_to_find_lvl:
+            account_name = windows.get_account_name(hwnd)
+            print(account_name)
+            lvl = 0
+            for i in account_lvls.keys():
+                print(i)
+                if account_name == i:
+                    print(123)
+                    lvl = account_lvls[i]
+            if lvl == 0:
+                print(account_name, 'нет в списке. Выбран 50 лвл по дефолту')
+                lvl = 50
         return lvl
 
-    def go_to_dungeon(self, hwnd):
+    def go_to_dungeon(self, hwnd, acc_lvl):
         def __click_on_dungeon_lvl_button(x, y):
             ahk.mouse_actions('move', x=x, y=y)
             ahk.mouse_actions('click')
 
-        lvl = self._choose_dungeon_lvl(hwnd)
+        lvl = self._choose_dungeon_lvl(hwnd, acc_lvl)
         print(lvl)
         if lvl == 30:
+            __click_on_dungeon_lvl_button(x=1200, y=270)
+        elif lvl == 40:
             __click_on_dungeon_lvl_button(x=1200, y=270)
         elif lvl == 50:
             __click_on_dungeon_lvl_button(x=1200, y=370)
@@ -738,50 +954,85 @@ class InGame():
 ingame = InGame()
 # Основная часть программы
 def main(hwnd):
-    ingame.go_to_menu()
-    ingame.go_to_adena_shop()
+    ingame.lock_window()
     time.sleep(1)
-    ingame.in_adena_shop_buy_all()
+    lvl = image.get_lvl()
+    ingame.unlock_window()
 
-    ingame.go_to_menu()
-    ingame.go_to_clan_menu()
-    ingame.check_for_clan()
+    if NUM_OF_DUNGEON == 1:
+        ingame.go_to_menu()
+        ingame.go_to_adena_shop()
+        time.sleep(1)
+        ingame.in_adena_shop_buy_all()
 
-    ingame.go_to_menu()
-    ingame.go_to_mail()
-    ingame.get_all_rewards_from_mail()
+        ingame.go_to_menu()
+        ingame.go_to_clan_menu()
+        ingame.check_for_clan()
 
-    ingame.go_to_menu()
-    time.sleep(1)
-    ingame.go_to_bonus_menu()
-    ingame.get_bonuses_from_bonus_menu()
-    ingame.go_to_town()
-    ingame.open_sellers_menu()
-    ingame.go_to_sellers()
-    ingame.switch_off_fast_walk_to_sellers()
-    ingame.go_to_menu()
+        ingame.go_to_menu()
+        ingame.go_to_mail()
+        ingame.get_all_rewards_from_mail()
 
-    ingame.go_to_battle_pass_menu()
-    time.sleep(1)
-    ingame.get_all_battle_pass_rewards()
+        ingame.go_to_menu()
+        time.sleep(1)
+        ingame.go_to_bonus_menu()
+        ingame.get_bonuses_from_bonus_menu()
+        ingame.go_to_town()
+        ingame.open_sellers_menu()
+        ingame.go_to_sellers()
+        ingame.switch_off_fast_walk_to_sellers()
+        ingame.go_to_menu()
 
-    ingame.tp_to_previous_location()
+        ingame.go_to_battle_pass_menu()
+        time.sleep(1)
+        ingame.get_all_battle_pass_rewards()
+
+        ingame.tp_to_previous_location()
 
     ingame.go_to_menu()
     ingame.go_to_dungeon_menu()
     ingame.choose_dungeon()
-    ingame.go_to_dungeon(hwnd)
+    ingame.go_to_dungeon(hwnd, lvl)
     time.sleep(6*MULTIPLIER)
     windows.lock_screen()
 
+telegram = Telegram()
 
-def run(clan_clicks, multiplier, path, schedule):
+def start():
+    global NUM_OF_DUNGEON
+    pythoncom.CoInitializeEx(0)
+
+    now = time.localtime()
+    current_time = time.strftime("%H:%M", now)
+    print(current_time)
+
+    if NUM_OF_DUNGEON > 3:
+        print('Бот сделан только для 3 данжей(((((( 4го нетю(')
+        return
+    if current_time in TIME_FOR_WORK:
+        windows.switch_windows(main)
+
+    elif 'Авто' in TIME_FOR_WORK:
+        windows.switch_windows(main)
+
+        io.update_current_dungeon(NUM_OF_DUNGEON+1)
+
+        time.sleep(telegram.TIMEOUT)
+        telegram.send_next_dungeon_msg()
+
+        if NUM_OF_DUNGEON == 3:
+            telegram.send_end_msg()
+            return
+
+def run(clan_clicks, multiplier, path, schedule, current_dungeon):
     global CLAN_CLICKS
     global MULTIPLIER
     global PATH_TO_SCRIPT
     global TIME_FOR_WORK
+    global NUM_OF_DUNGEON
 
     CLAN_CLICKS = int(clan_clicks)
+    NUM_OF_DUNGEON = int(current_dungeon)
     MULTIPLIER = int(multiplier)
     PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
     time_tuple = schedule.split(',')
@@ -792,11 +1043,72 @@ def run(clan_clicks, multiplier, path, schedule):
 
     print(TIME_FOR_WORK)
 
-    while True:
-        now = time.localtime()
-        current_time = time.strftime("%H:%M", now)
-        print(current_time)
-        if current_time in TIME_FOR_WORK:
-            windows.switch_windows(main)
-        time.sleep(15)
+    start()
 
+def collect_apples(window):
+    def _go_to_event_seller():
+        ahk.mouse_actions('move', x=140, y=190)
+        ahk.mouse_actions('click')
+
+    def _add_item(x, y):
+        ahk.mouse_actions('move', x, y)
+        ahk.mouse_actions('click')
+
+    def _set_max():
+        ahk.mouse_actions('move', 730, 960)
+        ahk.mouse_actions('click')
+
+    ingame.go_to_town()
+
+    ingame.open_sellers_menu()
+    _go_to_event_seller()
+
+    time.sleep(12)
+
+    _add_item(125, 330)
+    _set_max()
+
+    _add_item(125, 450)
+    _set_max()
+
+    ahk.mouse_actions('move', 1620, 950)
+    ahk.mouse_actions('click')
+
+    ahk.mouse_actions('move', 950, 720)
+    ahk.mouse_actions('click')
+
+    ahk.mouse_actions('esc')
+
+    ingame.open_sellers_menu()
+
+    windows.lock_screen()
+
+def start_collect_apples(path):
+    global PATH_TO_SCRIPT
+    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
+    windows.switch_windows(collect_apples)
+
+def collect_event_good(hwnd):
+    def _click_on_good():
+        ahk.mouse_actions('move', x=220, y=450)
+        ahk.mouse_actions('click')
+
+    def _buy_good():
+        ahk.mouse_actions('move', x=980, y=790)
+        ahk.mouse_actions('click')
+
+    ingame.go_to_adena_shop()
+    _click_on_good()
+    _buy_good()
+
+    ahk.mouse_actions('move', x=1790, y=90)
+    ahk.mouse_actions('click')
+
+    time.sleep(1)
+
+    windows.lock_screen()
+
+def start_collect_event_good(path):
+    global PATH_TO_SCRIPT
+    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
+    windows.switch_windows(collect_event_good)

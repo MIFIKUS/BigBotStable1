@@ -1,7 +1,7 @@
 from ahk import AHK
 from PIL import Image as pil
 
-from .rolls import Roll_00, Roll_000, Roll_66, Roll_32, Roll_80, Roll_888, Roll_888_K
+from .rolls import Roll_00, Roll_000, Roll_66, Roll_66_Lite, Roll_32, Roll_80, Roll_80_Red, Roll_888, Roll_888_K, Roll_40, Roll_50, Roll_40_Symbol, Roll_50_Symbol, Roll_50_Symbol_Plus
 from .rolls import roll
 import pyscreenshot
 import numpy as np
@@ -35,11 +35,9 @@ TG_USER_ID = 420909529
 TG_API_KEY = '6444400617:AAGFcVcsipQrXxrF0J6nzQM_B0RsUDLynPw'
 bot = telebot.TeleBot(TG_API_KEY)
 
-
 autohotkey = AHK()
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 accs_and_rolls_dict = {}
-
 
 with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as file:
     accs_and_rols = file.read().split('\n')
@@ -479,33 +477,26 @@ def run(hwnd):
         print(roll)
         roll_amount = int(list(accs_and_rolls_dict[acc_name].items())[0][1])
         print(roll_amount)
+
         items_list = None
-        out_of_blue_items = None
-        out_of_green_items = None
         accesory_items_list = None
-        sort_inventory()
+
+        if '40' not in roll and '50' not in roll:
+            pass
+            #sort_inventory()
 
         open(f'{PATH_TO_ALCHEMY}gained_items_list.txt', 'w').close()
-        if roll_amount == 0:
-            roll_done = False
-            while roll_done is False:
-                items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
-                print('items list is ', items_list)
-                print('accesory_items_list is ',accesory_items_list)
-                telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
-                                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
-                if items_list is False:
-                    telegram.send_msg_in_tg('overflow')
-                if roll_amount == 0:
-                    roll_done = True
-            return
         for i in range(roll_amount):
             #sort_inventory()
             items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)
-            print('accesory_items_list is ',accesory_items_list)
+            print('accesory_items_list is ', accesory_items_list)
             telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
                                     diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
+
+            if roll_amount == 0:
+                return
+
             if items_list is False:
                 telegram.send_msg_in_tg('overflow')
                 return

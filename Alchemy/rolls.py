@@ -704,11 +704,11 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        #self.host = '192.168.0.15'
-        self.host = '192.168.1.66'
+        self.host = '192.168.0.15'
+        #self.host = '192.168.1.66'
         self.user = 'root'
-        #self.password = 'BigBot'
-        self.password = 'root'
+        self.password = 'BigBot'
+        #self.password = 'root'
         self.AMOUNT_OF_ROLL_00_ITEMS = 188
 
     def add_to_gained_items(self, acc_name, item_name):

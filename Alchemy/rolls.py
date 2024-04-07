@@ -1417,6 +1417,8 @@ class Rolls():
                 if int(price) >= 10:
                     prices_and_goods.update({i: int(price)})
                     skip = True
+                else:
+                    print(f'Цена шмотки {price}. Скип')
 
                 print(prices_and_goods)
 

@@ -602,7 +602,7 @@ class Image:
         self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_4th_slot_empty.png', area_of_screenshot=(1000, 785, 1110, 900))
 
         slot_empty = self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_4th_slot_empty.png', f'{PATH_TO_ALCHEMY}\\imgs\\empty_4th_slot.png',
-                                   need_for_taking_screenshot=False, threshold=0.8)
+                                   need_for_taking_screenshot=False, threshold=0.7)
 
         return slot_empty
 
@@ -1360,7 +1360,6 @@ class Rolls():
         print(f'list_to_find_in {list_to_find_in}')
 
         counter = 0
-        skip = False
 
         for i in list_to_find_in:
             skip = False
@@ -1413,12 +1412,14 @@ class Rolls():
                         skip = False
                         if counter == amount:
                             return prices_and_goods
+                        continue
 
                 if int(price) >= 10:
                     prices_and_goods.update({i: int(price)})
                     skip = True
                 else:
                     print(f'Цена шмотки {price}. Скип')
+                    skip = True
 
                 print(prices_and_goods)
 

@@ -40,7 +40,8 @@ class ImpressStamps:
             2: 'Booster\\Stamps\\imgs\\templates\\two_lvl.png',
             1: 'Booster\\Stamps\\imgs\\templates\\one_lvl.png',
             4: 'Booster\\Stamps\\imgs\\templates\\four_lvl.png',
-            5: 'Booster\\Stamps\\imgs\\templates\\five_lvl.png'}
+            5: 'Booster\\Stamps\\imgs\\templates\\five_lvl.png',
+            6: 'Booster\\Stamps\\imgs\\templates\\six_lvl.png'}
 
         for lvl, img_path in lvls.items():
             is_match = image.matching('Booster\\Stamps\\imgs\\screenshots\\impress_lvl.png', img_path)

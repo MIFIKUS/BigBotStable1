@@ -172,8 +172,7 @@ class AHKActions():
 
 
 # Класс для работы компьютерного зрения и изображений
-class Image():
-
+class Image:
     def matching(self, main_image_name, template_image_name, need_for_taking_screenshot=False, threshold=0.8,
                  func=None, area_of_screenshot=None):
 
@@ -211,6 +210,7 @@ class Image():
         else:
             main_screen = pyscreenshot.grab()
         main_screen.save(image_name)
+
     def get_main_color(self, file, colors_amount=1024):
         img = pil.open(file)
         colors = img.getcolors(colors_amount)  # put a higher value if there are many colors in your image
@@ -459,6 +459,7 @@ class IOOperations:
                                         f'SborPlushek_current_dungeon={current_dungeon_num}\n')
         with open('settings.txt', 'w') as f:
             f.write(new_data)
+
 io = IOOperations()
 
 class InGame():
@@ -567,7 +568,6 @@ class InGame():
         ahk.mouse_actions('click')
 
     def get_all_battle_pass_rewards(self):
-
         def __get_rewards():
             while image.matching(f'{PATH_TO_SCRIPT}main_screen.jpg', f'{PATH_TO_SCRIPT}get_reward.png', need_for_taking_screenshot=True,
                                   area_of_screenshot=(1225, 270, 1375, 370), threshold=0.7) is True:
@@ -577,8 +577,8 @@ class InGame():
 
             return True
 
-
         y_cords_battle_pass_reward = 290
+
         for i in range(2):
             ahk.mouse_actions('move', x=90, y=y_cords_battle_pass_reward)
             ahk.mouse_actions('click')
@@ -592,14 +592,16 @@ class InGame():
 
             y_cords_battle_pass_reward += 90
 
-        ahk.mouse_actions('esc')
+        ahk.mouse_actions('move', x=1800, y=80)
+        ahk.mouse_actions('click')
+
+        time.sleep(2)
 
     def go_to_bonus_menu(self):
         ahk.mouse_actions('move', x=1590, y=575)
         ahk.mouse_actions('click')
 
     def get_bonuses_from_bonus_menu(self):
-
         def __collect_bonus():
             ahk.mouse_actions('move', x=1400, y=560)
             ahk.mouse_actions('click')
@@ -626,7 +628,8 @@ class InGame():
 
             counter += 110
 
-        ahk.mouse_actions('esc')
+        ahk.mouse_actions('move', x=1800, y=80)
+        ahk.mouse_actions('click')
 
     def go_to_town(self):
         time.sleep(2)
@@ -696,8 +699,8 @@ class InGame():
         ahk.mouse_actions('move', x=1080, y=710)
         ahk.mouse_actions('click')
 
-        ahk.mouse_actions('esc')
-
+        ahk.mouse_actions('move', x=1800, y=80)
+        ahk.mouse_actions('click')
 
     def go_to_sellers(self):
 
@@ -828,6 +831,7 @@ class InGame():
 
                 warehouse_worker_x = 200
                 warehouse_worker_y = 300
+
         # go_to_warehouse_worker
         ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
         #for i in range(2):
@@ -844,7 +848,6 @@ class InGame():
         self._autoselling()
         print("Пришел к бакалейщику")
 
-
         #go_to_buyer
         if AMOUNT_OF_EVENTS == 2:
             pass
@@ -854,7 +857,6 @@ class InGame():
         time.sleep(13*MULTIPLIER)
         self._autoselling()
         print("Пришел к скупщику")
-
 
     def switch_off_fast_walk_to_sellers(self):
         ahk.mouse_actions('move', x=200, y=300)

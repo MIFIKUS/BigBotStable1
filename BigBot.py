@@ -19,7 +19,7 @@ from Booster.Souls import souls_bot
 from Booster.Stamps import stamps_bot
 from Booster.Revival import revival_bot
 from Booster.Cases import cases_bot
-
+#
 LIST_OF_ROLLS = (
     'Roll_00',
     'Roll_000',

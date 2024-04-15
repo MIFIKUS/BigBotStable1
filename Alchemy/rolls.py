@@ -1413,6 +1413,9 @@ class Rolls():
                         if counter == amount:
                             return prices_and_goods
                         continue
+                    else:
+                        skip = True
+                        continue
 
                 if int(price) >= 10:
                     prices_and_goods.update({i: int(price)})

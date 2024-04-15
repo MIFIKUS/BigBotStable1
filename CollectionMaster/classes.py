@@ -202,7 +202,7 @@ class Image:
         max_occurence, most_present = 0, 0
         try:
             for c in colors:
-                if (25, 30, 37) in c or (30, 35, 42) in c or (117, 117, 117) in c:
+                if (25, 30, 37) in c or (30, 35, 42) in c or (117, 117, 117) in c or (26, 31, 38) in c:
                     continue
                 if c[0] > max_occurence:
                     (max_occurence, most_present) = c

@@ -4,10 +4,12 @@ import cv2
 import numpy as np
 import pyscreenshot
 import pytesseract
-import time
-import random
+
+import TGNotifier
+
 import keyboard
 import psutil
+import time
 
 
 #как ты в видосе объяснял эти пресеты
@@ -194,16 +196,19 @@ def main():
         except:
             print('Два одинаковый стата')
             continue
+
+
 def run(statlist, multiplier):
-    global STAT_DICT
-    global MULTIPLIER
+    try:
+        global STAT_DICT
+        global MULTIPLIER
 
-    STAT_DICT = eval(statlist.lower())
-    MULTIPLIER = float(multiplier)
+        STAT_DICT = eval(statlist.lower())
+        MULTIPLIER = float(multiplier)
 
-    keyboard.add_hotkey(HOTKEY, main)
-    keyboard.wait()
+        keyboard.add_hotkey(HOTKEY, main)
+        keyboard.wait()
 
-
-
+    except Exception as e:
+        TGNotifier.send_break_msg('Статы', '', e)
 

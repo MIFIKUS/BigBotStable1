@@ -1,6 +1,8 @@
 from Booster.MainClasses.classes import AHKActions, Windows
 from Booster.Stamps import ingame_actions
 from Booster.Stamps.functions import ImpressStamps
+
+import TGNotifier
 import time
 
 
@@ -25,4 +27,7 @@ def main():
     ahk.esc()
 
 def run():
-    windows.switch_windows(main)
+    try:
+        windows.switch_windows(main)
+    except Exception as e:
+        TGNotifier.send_break_msg('Печати', '', e)

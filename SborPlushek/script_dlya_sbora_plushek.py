@@ -14,10 +14,11 @@ import pytesseract
 import numpy as np
 import cv2
 
-import keyboard
 import psutil
 import pythoncom
 import telebot
+
+import TGNotifier
 
 import json
 
@@ -1027,25 +1028,28 @@ def start():
             return
 
 def run(clan_clicks, multiplier, path, schedule, current_dungeon):
-    global CLAN_CLICKS
-    global MULTIPLIER
-    global PATH_TO_SCRIPT
-    global TIME_FOR_WORK
-    global NUM_OF_DUNGEON
+    try:
+        global CLAN_CLICKS
+        global MULTIPLIER
+        global PATH_TO_SCRIPT
+        global TIME_FOR_WORK
+        global NUM_OF_DUNGEON
 
-    CLAN_CLICKS = int(clan_clicks)
-    NUM_OF_DUNGEON = int(current_dungeon)
-    MULTIPLIER = int(multiplier)
-    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
-    time_tuple = schedule.split(',')
-    time_list = []
+        CLAN_CLICKS = int(clan_clicks)
+        NUM_OF_DUNGEON = int(current_dungeon)
+        MULTIPLIER = int(multiplier)
+        PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
+        time_tuple = schedule.split(',')
+        time_list = []
 
-    time_list.append(time_tuple[0].replace('(', '').replace(')', '').replace(' ', '').replace('\n', ''))
-    TIME_FOR_WORK = time_list
+        time_list.append(time_tuple[0].replace('(', '').replace(')', '').replace(' ', '').replace('\n', ''))
+        TIME_FOR_WORK = time_list
 
-    print(TIME_FOR_WORK)
+        print(TIME_FOR_WORK)
 
-    start()
+        start()
+    except Exception as e:
+        TGNotifier.send_break_msg('Сбор плюшек', '', e)
 
 def collect_apples(window):
     def _go_to_event_seller():
@@ -1086,9 +1090,12 @@ def collect_apples(window):
     windows.lock_screen()
 
 def start_collect_apples(path):
-    global PATH_TO_SCRIPT
-    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
-    windows.switch_windows(collect_apples)
+    try:
+        global PATH_TO_SCRIPT
+        PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
+        windows.switch_windows(collect_apples)
+    except Exception as e:
+        TGNotifier.send_break_msg('Сбор плюшек яблоки', '', e)
 
 def collect_event_good(hwnd):
     def _click_on_good():
@@ -1111,6 +1118,9 @@ def collect_event_good(hwnd):
     windows.lock_screen()
 
 def start_collect_event_good(path):
-    global PATH_TO_SCRIPT
-    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
-    windows.switch_windows(collect_event_good)
+    try:
+        global PATH_TO_SCRIPT
+        PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
+        windows.switch_windows(collect_event_good)
+    except Exception as e:
+        TGNotifier.send_break_msg('Сбор плюшек ивент', '', e)

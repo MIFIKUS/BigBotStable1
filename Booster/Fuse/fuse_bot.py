@@ -2,6 +2,7 @@ from Booster.MainClasses.classes import AHKActions, Image, Windows
 from Booster.Fuse import ingame_actions
 from Booster.Fuse.functions import FuseClasses, ConfirmMenu
 
+import TGNotifier
 import time
 
 ahk = AHKActions()
@@ -77,8 +78,11 @@ def fuse_aghathions():
     ahk.esc()
 
 def main():
-    fuse_classes()
-    fuse_aghathions()
+    try:
+        fuse_classes()
+        fuse_aghathions()
+    except Exception as e:
+        TGNotifier.send_break_msg('Фьюз', '', e)
 
 def run():
     windows.switch_windows(main)

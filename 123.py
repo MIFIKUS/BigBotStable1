@@ -1,5 +1,5 @@
-a = [1,1,1,1,1,]
-b = [2,2,2,2,2,2]
+import time
 
-for i in zip(a,b):
-    print(i)
+for i in range(10):
+    print(f"Прогресс: {i}%", end="\r")
+    time.sleep(1)

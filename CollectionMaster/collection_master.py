@@ -1,10 +1,10 @@
-import time
-
 from .classes import Windows, AHKActions
 from .collect_info.collect_info import CollectInfo
 from .functions import MainFunctions, InGameActions
 from .config.preferences_for_bot import Preferences
 
+import TGNotifier
+import time
 
 functions = MainFunctions()
 windows = Windows()
@@ -98,5 +98,8 @@ class Bot(Preferences):
                             functions.get_scrolls_from_groccery(scroll_name)
                             continue
 def run():
-    bot = Bot()
-    windows.switch_windows(bot.main_cycle)
+    try:
+        bot = Bot()
+        windows.switch_windows(bot.main_cycle)
+    except Exception as e:
+        TGNotifier.send_break_msg('Колы', '', e)

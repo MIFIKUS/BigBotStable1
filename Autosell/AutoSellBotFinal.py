@@ -17,6 +17,7 @@ import mysql.connector
 
 import telebot
 import requests
+import TGNotifier
 
 import datetime
 import random
@@ -249,12 +250,15 @@ class Image():
         out = img * mask
         cv2.imwrite(image_name, out)
 
-    def is_inventory_overflow(self):
+    def is_inventory_overflow(self, hwnd):
+        acc_name = win32gui.GetWindowText(hwnd)
         if self.matching(f'{PATH_TO_AUTOSELL}is_inventory_overflow.jpg', f'{PATH_TO_AUTOSELL}inventory_is_overlow.png', need_for_taking_screenshot=True, threshold=0.65) is True:
             print("Инвентарь переполнен. Замечен 1ым способом")
+            TGNotifier.send_overflow_msg(acc_name)
             return True
         if self.matching(f'{PATH_TO_AUTOSELL}is_inventory_overflow.jpg', f'{PATH_TO_AUTOSELL}inventory_is_overlow_2.png', need_for_taking_screenshot=True, threshold=0.60) is True:
             print("Инвентарь переполнен. Замечен 2ым способом")
+            TGNotifier.send_overflow_msg(acc_name)
             return True
         return False
 
@@ -915,7 +919,7 @@ class InGame():
             ahk.mouse_actions('click')
             time.sleep(0.7)
 
-        if image.is_inventory_overflow() is True:
+        if image.is_inventory_overflow(hwnd) is True:
             telegram.send_msg_to_tg(hwnd, type='overflow')
             return True
 
@@ -1289,128 +1293,131 @@ def get_acc_name_by_label():
     print('Не удалось получить название аккаунта. Боль, депрессия и разочарование(((')
 
 def main(hwnd, current_time):
-    acc_name = win32gui.GetWindowText(hwnd)
-    acc_name = acc_name.replace('Lineage2M l ', '')
+    try:
+        acc_name = win32gui.GetWindowText(hwnd)
+        acc_name = acc_name.replace('Lineage2M l ', '')
 
-    amount_of_items_to_replace = 0
+        amount_of_items_to_replace = 0
 
-    if 'Lineage2M' in acc_name:
-        print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
-        acc_name = get_acc_name_by_label()
-    ingame.go_to_menu()
-    ingame.go_to_autofit_menu()
-    ingame.turn_off_autofit()
+        if 'Lineage2M' in acc_name:
+            print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
+            acc_name = get_acc_name_by_label()
+        ingame.go_to_menu()
+        ingame.go_to_autofit_menu()
+        ingame.turn_off_autofit()
 
-    ingame.sort_inventory()
+        ingame.sort_inventory()
 
-    ingame.go_to_menu()
-    ingame.go_to_market()
-    ingame.go_to_sell_menu()
+        ingame.go_to_menu()
+        ingame.go_to_market()
+        ingame.go_to_sell_menu()
 
-    amount_of_wheels_down = 0
-    amount_of_wheels_up = 0
-    cords_seted = False
-    while cords_seted is False:
-        global cords
-        cords = ingame.find_good_in_inventory()
-        if cords is False:
-            print('Не нашел предмет')
-            ahk.mouse_actions('move', x=1600, y=600)
-            if amount_of_wheels_down < 2:
-                ingame.wheel_inventory_down()
-                amount_of_wheels_down += 1
-                continue
-            if amount_of_wheels_up < 2:
-                ingame.wheel_inventory_up()
-                amount_of_wheels_up += 1
-                continue
-            else:
-                amount_of_wheels_down = 0
-                amount_of_wheels_up = 0
-                continue
-        else:
-            cords_seted = True
-
-    while True:
-        take_off_goods = ingame.take_off_good_from_shop(hwnd, False)
-        is_item_dumped = False
-
-        if take_off_goods is True:
-            ahk.mouse_actions('esc')
-            break
-
-        if take_off_goods is False:
-            ahk.mouse_actions('move', x=850, y=350)
-            ahk.mouse_actions('drag', x=0, y=-10)
-            continue
-
-        ingame.sale_good(cords[0], cords[1])
-        time.sleep(0.5)
-        ingame.get_minimal_price()
-
-        price, is_item_dumped, item_name = ingame.comparison_previous_price_and_minimal_price(hwnd, current_time, False)
-
-        if price is False:
-            continue
-
-        print('is_item_dumped' , is_item_dumped)
-        if is_item_dumped:
-            amount_of_items_to_replace += 1
-        print('amount_of_items_to_replace', amount_of_items_to_replace)
-
-        min_and_max_price = ingame.get_min_and_max_prices(item_name)
-        if min_and_max_price:
-            min_price = min_and_max_price[0]
-            max_price = min_and_max_price[1]
-
-            if not min_price < price < max_price:
-                min_price_diff = abs(price - min_price)
-                max_price_diff = abs(price - max_price)
-
-                if min(min_price_diff, max_price_diff) == min_price_diff:
-                    price = min_price
+        amount_of_wheels_down = 0
+        amount_of_wheels_up = 0
+        cords_seted = False
+        while cords_seted is False:
+            global cords
+            cords = ingame.find_good_in_inventory()
+            if cords is False:
+                print('Не нашел предмет')
+                ahk.mouse_actions('move', x=1600, y=600)
+                if amount_of_wheels_down < 2:
+                    ingame.wheel_inventory_down()
+                    amount_of_wheels_down += 1
+                    continue
+                if amount_of_wheels_up < 2:
+                    ingame.wheel_inventory_up()
+                    amount_of_wheels_up += 1
+                    continue
                 else:
-                    price = max_price
+                    amount_of_wheels_down = 0
+                    amount_of_wheels_up = 0
+                    continue
+            else:
+                cords_seted = True
 
-        ingame.make_new_price(price)
-        ingame.confirm_new_price()
+        while True:
+            take_off_goods = ingame.take_off_good_from_shop(hwnd, False)
+            is_item_dumped = False
 
-    acc_name, market_balance, main_balance, sold_balance, slots = windows.update_statistics(acc_name)
-    global_market_balance, sold_balance = autosell_global_market(market_balance, sold_balance, hwnd, current_time)
+            if take_off_goods is True:
+                ahk.mouse_actions('esc')
+                break
 
-    print('Баланс на обычном ауке', market_balance)
-    print('Баланс на глобал ауке', global_market_balance)
+            if take_off_goods is False:
+                ahk.mouse_actions('move', x=850, y=350)
+                ahk.mouse_actions('drag', x=0, y=-10)
+                continue
 
-    if global_market_balance is False:
-        print('Нет шмоток на глобал ауке')
+            ingame.sale_good(cords[0], cords[1])
+            time.sleep(0.5)
+            ingame.get_minimal_price()
 
-    else:
-        market_balance = market_balance.replace('\n', '')
-        market_balance = market_balance.replace(' ', '')
-        try:
-            market_balance = int(market_balance)
-        except Exception as e:
-            print(f'Не удалось получить market balance {e}')
-            market_balance = 0
-        market_balance += global_market_balance
+            price, is_item_dumped, item_name = ingame.comparison_previous_price_and_minimal_price(hwnd, current_time, False)
 
-    ingame.go_to_menu()
-    ingame.go_to_autofit_menu()
-    ingame.turn_on_autofit()
+            if price is False:
+                continue
 
-    windows.lock_screen()
+            print('is_item_dumped' , is_item_dumped)
+            if is_item_dumped:
+                amount_of_items_to_replace += 1
+            print('amount_of_items_to_replace', amount_of_items_to_replace)
 
-    print('Ник', acc_name)
-    print('На ауке', market_balance)
-    print('На балансе', main_balance)
-    print('Доход', sold_balance)
-    print('Слоты', slots)
-    print('Нужно переставить шмоток', amount_of_items_to_replace)
+            min_and_max_price = ingame.get_min_and_max_prices(item_name)
+            if min_and_max_price:
+                min_price = min_and_max_price[0]
+                max_price = min_and_max_price[1]
 
-    google.write_google(acc_name, market_balance, main_balance, sold_balance, slots)
-    google.write_amount_of_items_that_need_to_be_replaced(acc_name, amount_of_items_to_replace)
+                if not min_price < price < max_price:
+                    min_price_diff = abs(price - min_price)
+                    max_price_diff = abs(price - max_price)
 
-    del cords
+                    if min(min_price_diff, max_price_diff) == min_price_diff:
+                        price = min_price
+                    else:
+                        price = max_price
+
+            ingame.make_new_price(price)
+            ingame.confirm_new_price()
+
+        acc_name, market_balance, main_balance, sold_balance, slots = windows.update_statistics(acc_name)
+        global_market_balance, sold_balance = autosell_global_market(market_balance, sold_balance, hwnd, current_time)
+
+        print('Баланс на обычном ауке', market_balance)
+        print('Баланс на глобал ауке', global_market_balance)
+
+        if global_market_balance is False:
+            print('Нет шмоток на глобал ауке')
+
+        else:
+            market_balance = market_balance.replace('\n', '')
+            market_balance = market_balance.replace(' ', '')
+            try:
+                market_balance = int(market_balance)
+            except Exception as e:
+                print(f'Не удалось получить market balance {e}')
+                market_balance = 0
+            market_balance += global_market_balance
+
+        ingame.go_to_menu()
+        ingame.go_to_autofit_menu()
+        ingame.turn_on_autofit()
+
+        windows.lock_screen()
+
+        print('Ник', acc_name)
+        print('На ауке', market_balance)
+        print('На балансе', main_balance)
+        print('Доход', sold_balance)
+        print('Слоты', slots)
+        print('Нужно переставить шмоток', amount_of_items_to_replace)
+
+        google.write_google(acc_name, market_balance, main_balance, sold_balance, slots)
+        google.write_amount_of_items_that_need_to_be_replaced(acc_name, amount_of_items_to_replace)
+
+        del cords
+    except Exception as e:
+        TGNotifier.send_break_msg('Перестановка', acc_name, e)
 
 def run(schedule, multiplier, path):
     global TIME_FOR_WORK

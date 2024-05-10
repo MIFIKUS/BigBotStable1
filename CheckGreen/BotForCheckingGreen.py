@@ -1,13 +1,16 @@
 from ahk import AHK
+from PIL import Image
+
 import cv2
 import numpy as np
 import pyscreenshot
 import time
-import random
-import keyboard
 
+import TGNotifier
+
+import keyboard
 import psutil
-from PIL import Image
+
 
 
 #как ты в видосе объяснял эти пресеты
@@ -183,13 +186,16 @@ def main():
         time.sleep(1.5*MULTIPLIER)
 
 def run(hotkey, mode, multiplier):
-    global MULTIPLIER
+    try:
+        global MULTIPLIER
 
-    global PRESET
-    MULTIPLIER = int(multiplier)
+        global PRESET
+        MULTIPLIER = int(multiplier)
 
-    PRESET = int(mode)
-    keyboard.add_hotkey(HOTKEY, main)
-    keyboard.wait()
-    print('Все готово!')
+        PRESET = int(mode)
+        keyboard.add_hotkey(HOTKEY, main)
+        keyboard.wait()
+        print('Все готово!')
+    except Exception as e:
+        TGNotifier.send_break_msg('Зеленка', '', e)
 

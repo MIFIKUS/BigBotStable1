@@ -18,6 +18,7 @@ import win32gui
 import telebot
 import gspread
 import mysql.connector
+import TGNotifier
 
 import time
 import string
@@ -27,6 +28,8 @@ import json
 
 #Время раз в которое удаляются значения из таблицы less_100_items
 DIFERNCE_IN_TIME = 24
+
+BOT_NAME = 'Алхимка'
 
 ROLL_000_MINIMAL_PRICE_2ND_SLOT = 240
 ROLL_000_MINIMAL_PRICE_2ND_SLOT_FOR_CHECK_1ST_SLOT = 130
@@ -1009,134 +1012,137 @@ class Rolls():
                   slots, totaling_prices, list_of_appropriate_roll_items, red_check, need_for_check_roll_items_name, items_list,
                   roll_amount, tg, hwnd, need_check_sql, is_888=False, is_80=False, need_sequence_matching=False, accesory_items_list=None,
                   need_find_by_image=False, roll=None, need_to_roll=True, need_check_symbol=False):
-        global adena_wasted
-        global diamonds_wasted
-        global items_bought
-        global template_list_00
+        try:
+            global adena_wasted
+            global diamonds_wasted
+            global items_bought
+            global template_list_00
 
-        image.check_if_there_is_error_after_unlock_window()
+            image.check_if_there_is_error_after_unlock_window()
 
-        sql.update_gained_items_google_table()
-        start_time = time.time()
-        template_list_00 = []
-        adena_wasted = 0
-        diamonds_wasted = 0
-        items_bought = {}
-        acc_name = win32gui.GetWindowText(hwnd)
-        acc_name = acc_name.replace('Lineage2M l ', '')
-        if 'Lineage2M' in acc_name:
-            print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
-            acc_name = get_acc_name()
+            sql.update_gained_items_google_table()
+            start_time = time.time()
+            template_list_00 = []
+            adena_wasted = 0
+            diamonds_wasted = 0
+            items_bought = {}
+            acc_name = win32gui.GetWindowText(hwnd)
+            acc_name = acc_name.replace('Lineage2M l ', '')
+            if 'Lineage2M' in acc_name:
+                print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
+                acc_name = get_acc_name()
 
-        if need_check_sql:
-            sql.update_less_100_items(acc_name)
-            sql.get_values_from_gained_items(acc_name)
-            sql.get_values_from_less_100_items(acc_name)
+            if need_check_sql:
+                sql.update_less_100_items(acc_name)
+                sql.get_values_from_gained_items(acc_name)
+                sql.get_values_from_less_100_items(acc_name)
 
-        if roll == '40' or roll == '50' or roll == '50_plus':
-            while True:
-                keyboard.add_hotkey('ctrl+f12', lambda: self._make_roll_for_40_50_roll(forecast_colors=forecast_colors, roll=roll, need_check_symbol=need_check_symbol,
-                                                                                       need_find_by_image=need_find_by_image, list_of_appropriate_roll_items=list_of_appropriate_roll_items,
-                                                                                       slots=slots))
-                keyboard.wait()
+            if roll == '40' or roll == '50' or roll == '50_plus':
+                while True:
+                    keyboard.add_hotkey('ctrl+f12', lambda: self._make_roll_for_40_50_roll(forecast_colors=forecast_colors, roll=roll, need_check_symbol=need_check_symbol,
+                                                                                           need_find_by_image=need_find_by_image, list_of_appropriate_roll_items=list_of_appropriate_roll_items,
+                                                                                           slots=slots))
+                    keyboard.wait()
 
-        ahk.mouse_actions('move', x=100, y=100)
-        self._go_to_alchemy()
-        time.sleep(1)
-        self._reset_roll()
-        is_roll_done = False
+            ahk.mouse_actions('move', x=100, y=100)
+            self._go_to_alchemy()
+            time.sleep(1)
+            self._reset_roll()
+            is_roll_done = False
 
-        is_choose_items_done = False
+            is_choose_items_done = False
 
-        while is_choose_items_done is False:
-            is_choose_items_done = self.choose_necceary_items_from_inventory(item_list_and_colors,
-                                                                             need_except_accesories,
-                                                                             need_except_sharp,
-                                                                             need_for_check_roll_items_name,
-                                                                             items_list,
-                                                                             accesory_items_list,
-                                                                             tg, roll)
-            if is_choose_items_done == "GREEN ERROR":
-                return None, None, 0, 0, 0, {}, 0, "Не нашел зеленую шмотку, скип", 0
-        while is_roll_done is False:
+            while is_choose_items_done is False:
+                is_choose_items_done = self.choose_necceary_items_from_inventory(item_list_and_colors,
+                                                                                 need_except_accesories,
+                                                                                 need_except_sharp,
+                                                                                 need_for_check_roll_items_name,
+                                                                                 items_list,
+                                                                                 accesory_items_list,
+                                                                                 tg, roll)
+                if is_choose_items_done == "GREEN ERROR":
+                    return None, None, 0, 0, 0, {}, 0, "Не нашел зеленую шмотку, скип", 0
+            while is_roll_done is False:
 
-            is_color_good = False
+                is_color_good = False
 
-            while not is_color_good:
-                if image.is_dead():
-                    self._go_to_alchemy()
-                    time.sleep(2)
-                self._repeat_forecast()
-                adena_wasted += 10000
-                time.sleep(0.6)
-                color_true, color_of_forecast = self.check_neccesary_color_of_forecast(forecast_colors)
-                if color_true is True:
-                    forecast_not_opened_counter = 0
-                    while not image.is_forecast_opened():
-                        forecast_not_opened_counter += 1
-                        self._open_forecast()
-                        if forecast_not_opened_counter >= 1000:
-                            if image.is_dead():
+                while not is_color_good:
+                    if image.is_dead():
+                        self._go_to_alchemy()
+                        time.sleep(2)
+                    self._repeat_forecast()
+                    adena_wasted += 10000
+                    time.sleep(0.6)
+                    color_true, color_of_forecast = self.check_neccesary_color_of_forecast(forecast_colors)
+                    if color_true is True:
+                        forecast_not_opened_counter = 0
+                        while not image.is_forecast_opened():
+                            forecast_not_opened_counter += 1
+                            self._open_forecast()
+                            if forecast_not_opened_counter >= 1000:
+                                if image.is_dead():
+                                    self._go_to_alchemy()
                                 self._go_to_alchemy()
-                            self._go_to_alchemy()
-                            forecast_not_opened_counter = 0
-                    if self.is_diamonds_in_forecast():
-                        ahk.mouse_actions('esc')
+                                forecast_not_opened_counter = 0
+                        if self.is_diamonds_in_forecast():
+                            ahk.mouse_actions('esc')
+                        else:
+                            print('Ролл без кристалов на нужном свечении создан')
+                            is_color_good = True
                     else:
-                        print('Ролл без кристалов на нужном свечении создан')
-                        is_color_good = True
-                else:
+                        continue
+
+                if self.check_items_price(slots, list_of_appropriate_roll_items, red_check,
+                                          need_for_totaling_prices=totaling_prices, need_check_sql=need_check_sql, hwnd=hwnd,
+                                          color_of_forecast=color_of_forecast, is_888=is_888, is_80=is_80,
+                                          need_sequence_matching=need_sequence_matching, need_find_by_image=need_find_by_image,
+                                          roll=roll, need_check_symbol=need_check_symbol) is False:
+                    ahk.mouse_actions('esc')
                     continue
+                else:
+                    time.sleep(0.2)
+                    ahk.mouse_actions('esc')
+                    if need_to_roll is False:
+                        raise Exception('Ролл найден')
 
-            if self.check_items_price(slots, list_of_appropriate_roll_items, red_check,
-                                      need_for_totaling_prices=totaling_prices, need_check_sql=need_check_sql, hwnd=hwnd,
-                                      color_of_forecast=color_of_forecast, is_888=is_888, is_80=is_80,
-                                      need_sequence_matching=need_sequence_matching, need_find_by_image=need_find_by_image,
-                                      roll=roll, need_check_symbol=need_check_symbol) is False:
-                ahk.mouse_actions('esc')
-                continue
-            else:
-                time.sleep(0.2)
-                ahk.mouse_actions('esc')
-                if need_to_roll is False:
-                    raise Exception('Ролл найден')
+                    time.sleep(0.5)
+                    image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\letter_in_forecast.png', area_of_screenshot=(525, 675, 1345, 715))
 
-                time.sleep(0.5)
-                image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\letter_in_forecast.png', area_of_screenshot=(525, 675, 1345, 715))
+                    forecast_letter = image.optimise_forecast_letter_image(f'{PATH_TO_ALCHEMY}\\imgs\\letter_in_forecast.png')
 
-                forecast_letter = image.optimise_forecast_letter_image(f'{PATH_TO_ALCHEMY}\\imgs\\letter_in_forecast.png')
+                    self._start_roll()
+                    adena_wasted += 20000
+                    time.sleep(6)
 
-                self._start_roll()
-                adena_wasted += 20000
-                time.sleep(6)
+                    gained_item, slot = self._get_slot_and_name_of_item_that_gained()
 
-                gained_item, slot = self._get_slot_and_name_of_item_that_gained()
+                    print('gained_item', gained_item)
+                    print('slot', slot)
 
-                print('gained_item', gained_item)
-                print('slot', slot)
+                    if need_check_sql:
+                        sql.add_to_gained_items(acc_name, gained_item)
+                    print('forecast_letter', forecast_letter)
+                    google.write_google(forecast_letter, slot)
 
-                if need_check_sql:
-                    sql.add_to_gained_items(acc_name, gained_item)
-                print('forecast_letter', forecast_letter)
-                google.write_google(forecast_letter, slot)
+                    print('Roll is done')
+                    global inventory_matrix
+                    inventory_matrix = {}
+                    roll_amount -= 1
+                    ahk.mouse_actions('move', x=950, y=950)
+                    ahk.mouse_actions('click')
+                    time.sleep(1)
+                    ahk.mouse_actions('move', x=1800, y=90)
+                    ahk.mouse_actions('click')
 
-                print('Roll is done')
-                global inventory_matrix
-                inventory_matrix = {}
-                roll_amount -= 1
-                ahk.mouse_actions('move', x=950, y=950)
-                ahk.mouse_actions('click')
-                time.sleep(1)
-                ahk.mouse_actions('move', x=1800, y=90)
-                ahk.mouse_actions('click')
+                    end_time = time.time()
 
-                end_time = time.time()
+                    wasted_time = end_time - start_time
 
-                wasted_time = end_time - start_time
+                    decrease_roll_amount(acc_name)
 
-                decrease_roll_amount(acc_name)
-
-                return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time
+                    return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time
+        except Exception as e:
+            TGNotifier.send_break_msg('Алхимка', acc_name, e)
 
     def check_neccesary_color_of_forecast(self, colors):
         color_of_forecast = self._check_color_of_forecast()
@@ -3127,7 +3133,6 @@ class Roll_50_Symbol_Plus:
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
         return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time
-
 
 
 class Roll_80_Red:

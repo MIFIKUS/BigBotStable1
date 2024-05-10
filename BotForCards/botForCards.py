@@ -1,21 +1,25 @@
 from ahk import AHK
-import keyboard
+
 import cv2
 import numpy as np
 import PIL.ImageGrab
+import pytesseract
 
 import win32gui
 import win32com.client
 import win32con
 
+import TGNotifier
+
 import time
 import random
 import psutil
 
+
 MULTIPLIER = 1
 PATH_TO_CARDS = r'C:\Users\MIFIKUS\PycharmProjects\BigBot\BotForCards\\'
 
-import pytesseract
+
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 
@@ -447,9 +451,12 @@ def main():
     windows.lock_screen()
 
 def run(multiplier, path):
-    global MULTIPLIER
-    global PATH_TO_CARDS
+    try:
+        global MULTIPLIER
+        global PATH_TO_CARDS
 
-    MULTIPLIER = int(multiplier)
-    PATH_TO_CARDS = f'{path}\BotForCards\\'
-    windows.switch_windows(main)
+        MULTIPLIER = int(multiplier)
+        PATH_TO_CARDS = f'{path}\BotForCards\\'
+        windows.switch_windows(main)
+    except Exception as e:
+        TGNotifier.send_break_msg('Карточки', '', e)

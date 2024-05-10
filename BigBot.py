@@ -5,7 +5,7 @@ import multiprocessing
 
 import update_statistics
 
-from BuyerBot import BuyerBot
+from BuyerBot import Buyerbot
 from Autosell import AutoSellBotFinal
 from CheckGreen import BotForCheckingGreen
 from SborPlushek import script_dlya_sbora_plushek

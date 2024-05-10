@@ -1,6 +1,8 @@
 from Booster.Souls import ingame_actions
 from Booster.Souls import functions
 from Booster.MainClasses.classes import AHKActions, Windows
+
+import TGNotifier
 import time
 
 ahk = AHKActions()
@@ -35,4 +37,7 @@ def main():
     ahk.esc()
 
 def run():
-    windows.switch_windows(main)
+    try:
+        windows.switch_windows(main)
+    except Exception as e:
+        TGNotifier.send_break_msg('Души', '', e)

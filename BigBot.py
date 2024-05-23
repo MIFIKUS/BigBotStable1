@@ -5,7 +5,7 @@ import multiprocessing
 
 import update_statistics
 
-from BuyerBot import Buyerbot
+
 from Autosell import AutoSellBotFinal
 from CheckGreen import BotForCheckingGreen
 from SborPlushek import script_dlya_sbora_plushek
@@ -134,9 +134,7 @@ def Buyer():
                 print(i)
                 break
 
-    if __name__ == '__main__':
-            buyer = multiprocessing.Process(target=BuyerBot.run)
-            buyer.start()
+
 
 def Autosell():
     if __name__ == '__main__':

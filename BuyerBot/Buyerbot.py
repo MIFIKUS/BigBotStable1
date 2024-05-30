@@ -21,7 +21,14 @@ from ingame.buy_item import buy_item
 import time
 import asyncio
 
+import database
+
 items_list = get_items_list()
+puprle_items_list = get_items_list()['purple']
+
+all_items_list = items_list['red']
+all_items_list.update(puprle_items_list)
+
 servers_list = get_servers_list()
 trash_list = get_trash_list()
 
@@ -35,39 +42,31 @@ servers_and_hwnds_list = get_all_servers()
 
 proxy_num = 0
 
-async def main():
-    update_token.update_token()
-    token = get_new_token.get_token()
+def main():
 
     while True:
-        items_to_research = []
         for server_id, server_name in servers_list.items():
-            market_info, token = await get_all_items_prices(token, server_id)
-            list_of_items = {}
-            for i in market_info.items():
-                purple = False
-                good = items_list.get('purple').get(i[0])
-                if not good:
-                    good = items_list.get('red').get(i[0])
-                else:
-                    purple = True
-                if good:
-                    list_of_items.update({good: [int(float(i[1])), purple]})
 
-            for item_name, info_list in list_of_items.items():
-                price = info_list[0]
-                is_purple = info_list[1]
-                print(item_name, price)
+            market_data = database.get_prices(server_name)
+            print(market_data)
+            for item_id, price in market_data.items():
+                if price == 0:
+                    continue
+                item_name = all_items_list.get(item_id)
+                is_purple = bool(puprle_items_list.get(item_id))
+
                 if is_purple and price <= minimal_price_for_purple:
                     sender.low_price_notification(item_name, price, server_name, 'purple')
                     hwnd = get_hwnd_from_list(servers_and_hwnds_list, server_name)
                     print(hwnd)
                     windows.open_window_by_hwnd(hwnd)
                     buy_item(item_name, price)
+
                 elif not is_purple and price <= minimal_price_for_red:
                     sender.low_price_notification(item_name, price, server_name, 'red')
                     hwnd = get_hwnd_from_list(servers_and_hwnds_list, server_name)
                     windows.open_window_by_hwnd(hwnd)
                     buy_item(item_name, price)
 
-asyncio.run(main())
+if __name__ == '__main__':
+    main()

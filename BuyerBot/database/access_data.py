@@ -1,3 +1,3 @@
-IP = '127.0.0.1'
-USER = 'root'
-PASSWORD = 'root'
+IP = '31.128.37.77'
+USER = 'lineika'
+PASSWORD = '!Qwertqwert1'

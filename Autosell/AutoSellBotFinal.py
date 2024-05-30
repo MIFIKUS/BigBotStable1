@@ -1363,20 +1363,20 @@ def main(hwnd, current_time):
                 amount_of_items_to_replace += 1
             print('amount_of_items_to_replace', amount_of_items_to_replace)
 
-            min_and_max_price = ingame.get_min_and_max_prices(item_name)
-            if min_and_max_price:
-                min_price = min_and_max_price[0]
-                max_price = min_and_max_price[1]
-
-                if not min_price < price < max_price:
-                    min_price_diff = abs(price - min_price)
-                    max_price_diff = abs(price - max_price)
-
-                    if min(min_price_diff, max_price_diff) == min_price_diff:
-                        price = min_price
-                    else:
-                        price = max_price
-
+            #min_and_max_price = ingame.get_min_and_max_prices(item_name)
+            #if min_and_max_price:
+            #    min_price = min_and_max_price[0]
+            #    max_price = min_and_max_price[1]
+#
+            #    if not min_price < price < max_price:
+            #        min_price_diff = abs(price - min_price)
+            #        max_price_diff = abs(price - max_price)
+#
+            #        if min(min_price_diff, max_price_diff) == min_price_diff:
+            #            price = min_price
+            #        else:
+            #            price = max_price
+#
             ingame.make_new_price(price)
             ingame.confirm_new_price()
 

@@ -1,21 +1,34 @@
-from BuyerBot.database.connector import get_cursor
 from BuyerBot.lists.items_list import get_items_list
+from BuyerBot.database.access_data import *
+from BuyerBot.database._servers_list import *
+import mysql.connector
 
 
-cursor = get_cursor()
 items_list = get_items_list()
+print(items_list)
 
-items_list_to_iterate = items_list['red'] + items_list['purple']
+items_list_to_iterate = items_list['red']
+items_list_to_iterate.update(items_list['purple'])
 
 
-def update_prices(data: dict):
-    list_of_items = []
+def update_prices(data: dict, server_name):
+    connection = mysql.connector.connect(host=IP, user=USER, password=PASSWORD)
+    connection.autocommit = True
+    cursor = connection.cursor()
+
+    server_column = servers_list.get(server_name)
+
+    print(data)
+
+    full_query = ''
+
     for item_id, item_name in items_list_to_iterate.items():
         price = data.get(item_id)
         if price:
-            list_of_items.append(f"'{item_id}' = {price}")
+            full_query += f"UPDATE l2m.{server_column} SET price = {price} WHERE item_id = '{item_id}';"
         else:
-            list_of_items.append(f"'{item_id}' = 0")
+            full_query += f"UPDATE l2m.{server_column} SET price = 0 WHERE item_id = '{item_id}';"
 
-    query = f"UPDATE l2m.items_prices SET {",".join(list_of_items)};"
-    cursor.execute(query)
+    print(full_query)
+    cursor.execute(full_query)
+    connection.disconnect()

@@ -12,6 +12,7 @@ def get_item_info(item_id) -> dict:
     item_id = item_id.replace(' ', '')
     url = KOREAN_L2M_API_URL + str(item_id)
     data = requests.get(url, headers=KOREAN_API_HEADERS, verify=False).json()
+    print(data)
     color = COLORS.get(data['grade_name'])
     return {'item_id': item_id, 'item_name': data['item_name'], 'img_link': data['image'], 'color': color}
 

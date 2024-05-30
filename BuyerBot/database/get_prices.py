@@ -1,9 +1,12 @@
-import mysql.connector
 from BuyerBot.database.access_data import *
+from BuyerBot.database._servers_list import *
+import mysql.connector
 
 
-def get_prices(server_id: int):
-    query = "SELECT * FROM l2m.items_prices;"
+def get_prices(server_name: int):
+    server_column = servers_list.get(server_name)
+
+    query = f"SELECT * FROM l2m.{server_column};"
     connection = mysql.connector.connect(host=IP, user=USER, password=PASSWORD)
     connection.autocommit = True
 
@@ -13,8 +16,8 @@ def get_prices(server_id: int):
 
     result = cursor.fetchall()
 
-    print(result)
+    items_and_prices = {}
 
-
-
-
+    for item_id, price in result:
+        items_and_prices.update({item_id: price})
+    return items_and_prices

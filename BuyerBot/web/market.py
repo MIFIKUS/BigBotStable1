@@ -3,13 +3,13 @@ from .urls import MAIN_MARKET_URL, COLLECT_PRICE_URL
 
 from BuyerBot.jwt_updater.fiddler_actions import get_new_token
 from BuyerBot.jwt_updater.l2m_actions import update_token
-from BuyerBot.jwt_updater.planet_vpn_actions.change_ip import change_ip
 
 from BuyerBot.lists.servers_list import get_servers_list
 from BuyerBot.lists.items_list import get_items_list
 
+from BuyerBot.database.get_bot_data import get_jwt_token
+
 from aiohttp.client import ClientTimeout
-from BuyerBot.web.proxy import get_proxy
 
 import requests
 import urllib3
@@ -73,7 +73,8 @@ async def get_all_items_prices(token: str, server_id):
     return ids_and_prices, token
 
 
-def get_market_info(server_id: int, token: str) -> list:
+def get_market_info(server_id: int) -> list:
+    token = get_jwt_token()
     HEADERS.update({'Authorization': token})
     while True:
         try:
@@ -82,5 +83,5 @@ def get_market_info(server_id: int, token: str) -> list:
         except Exception as e:
             print(e)
 
-    return data.json()['list'], token
+    return data.json()['list']
 

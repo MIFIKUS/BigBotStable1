@@ -12,11 +12,11 @@ image = Image()
 
 def main():
     def _open_menu():
-        mouse_and_keyboard.move(1775, 95, 0)
+        mouse_and_keyboard.move(1250, 70, 0)
         mouse_and_keyboard.click()
 
     def _open_market():
-        mouse_and_keyboard.move(1775, 340, 0)
+        mouse_and_keyboard.move(1250, 240, 0)
         mouse_and_keyboard.click()
 
     while not image.menu_opened():

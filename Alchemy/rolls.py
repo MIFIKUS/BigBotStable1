@@ -707,7 +707,7 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        self.host = '192.168.0.15'
+        self.host = '192.168.0.10'
         #self.host = '192.168.1.66'
         self.user = 'root'
         self.password = 'BigBot'

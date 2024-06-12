@@ -19,6 +19,7 @@ import datetime
 import time
 
 import psutil
+import traceback
 
 with open('settings.txt') as f:
     for i in f.readlines():
@@ -504,7 +505,7 @@ def run(hwnd):
 
         return
     except Exception as e:
-        print(e)
+        traceback.print_exc()
         pass
 
 def main(path):

@@ -43,7 +43,6 @@ servers_and_hwnds_list = get_all_servers()
 proxy_num = 0
 
 def main():
-
     while True:
         for server_id, server_name in servers_list.items():
 

@@ -1,5 +1,18 @@
-import time
+from ahk import AHK
+import keyboard
 
-for i in range(10):
-    print(f"Прогресс: {i}%", end="\r")
-    time.sleep(1)
+
+a = AHK()
+
+
+
+def df():
+    while True:
+        try:
+            a.click()
+        except:
+            passa
+
+
+keyboard.add_hotkey('a' , df)
+keyboard.wait()

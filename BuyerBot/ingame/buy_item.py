@@ -70,17 +70,18 @@ def buy_item(item_name: str, price: int) -> bool:
             mouse_and_keyboard.move(805, 920, 0)
             mouse_and_keyboard.click()
 
-    while not image.menu_opened():
-        _open_menu()
+    if not image.all_categories_opened():
+        while not image.menu_opened():
+            _open_menu()
 
-    while not image.market_opened():
-        _open_market()
+        while not image.market_opened():
+            _open_market()
 
-    while not image.globaL_market_opened():
-        _open_global_market()
+        while not image.globaL_market_opened():
+            _open_global_market()
 
-    while not image.all_categories_opened():
-       _open_all_categories()
+        while not image.all_categories_opened():
+            _open_all_categories()
 
     while not image.search_area_opened():
         _open_search_area()

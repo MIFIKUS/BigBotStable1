@@ -82,19 +82,19 @@ class Image:
         return colors[0][1]
 
     def menu_opened(self):
-        time.sleep(0.1)
+        time.sleep(0.2)
         return self.matching('jwt_updater\\l2m_actions\\imgs\\screenshots\\is_menu_opened.png',
                          'jwt_updater\\l2m_actions\\imgs\\templates\\menu_opened.png',
-                         True, area_of_screenshot=(1220, 140, 1280, 210))
+                         True, area_of_screenshot=(1720, 170, 1825, 300))
 
     def market_opened(self):
         time.sleep(0.1)
         return self.matching('jwt_updater\\l2m_actions\\imgs\\screenshots\\is_market_opened.png',
                          'jwt_updater\\l2m_actions\\imgs\\templates\\market_opened.png',
-                         True, area_of_screenshot=(1105, 60, 1230, 95))
+                         True, area_of_screenshot=(1550, 60, 1750, 130))
 
     def globaL_market_opened(self):
-        self.take_screenshot('jwt_updater\\l2m_actions\\imgs\\screenshots\\is_global_market_open.png', area_of_screenshot=(954, 75, 955, 76))
+        self.take_screenshot('jwt_updater\\l2m_actions\\imgs\\screenshots\\is_global_market_open.png', area_of_screenshot=(1335, 90, 1336, 91))
         color = self.get_main_color('jwt_updater\\l2m_actions\\imgs\\screenshots\\is_global_market_open.png')
         print(color)
         if not (250 < color[0] < 256) and not (250 < color[1] < 256) and not (250 < color[2] < 256):

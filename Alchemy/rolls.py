@@ -278,6 +278,7 @@ class AHKActions:
             print(e)
             print("AHK process doesn't exists anymore")
 
+
 class Image:
     def matching(self, main_image_name, template_image_name, need_for_taking_screenshot=False, threshold=0.8,
                  func=None, area_of_screenshot=None):
@@ -355,10 +356,10 @@ class Image:
 
     def fill_the_diamond_with_black(self, file='minimal_price.png'):
         #смотрим минимальную цену, чтобы потом закрасить там кристалик
-        img_rgb = cv2.imread(f'{PATH_TO_ALCHEMY}{file}')
+        img_rgb = cv2.imread(f'{PATH_TO_ALCHEMY}\\imgs\\{file}')
 
         img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-        template = cv2.imread(f'{PATH_TO_ALCHEMY}diamond.png', 0)
+        template = cv2.imread(f'{PATH_TO_ALCHEMY}\\imgs\\diamond.png', 0)
 
         w, h = template.shape[::-1]
 
@@ -609,8 +610,56 @@ class Image:
 
         return slot_empty
 
+    def get_gained_item_slot(self) -> tuple or bool:
+        y_additional = 0
+        for column in range(6):
+            x_additional = 0
+            for row in range(4):
+                self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', (1407+x_additional, 330+y_additional,
+                                                                                                                  1510+x_additional, 431+y_additional))
+
+                if self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', f'{PATH_TO_ALCHEMY}\\imgs\\red_dot.png',
+                                 threshold=0.7):
+                    return column, row
+
+                x_additional += 100
+            y_additional += 100
+
+        return False
+
+    def get_minimal_price(self) -> int or bool:
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', area_of_screenshot=(1220, 459, 1360, 495))
+        minimal_price = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', True, True)
+
+        try:
+            return minimal_price
+        except Exception as e:
+            print(f'Невозможно получить минимальную цену Ошибка {e}')
+            return False
+
+    def clear_number_for_detect_seted_price(self, file):
+        im = cv2.imread(file)
+
+        BlueMin = np.array([180, 70, 0], np.uint8)
+        BlueMax = np.array([255, 110, 10], np.uint8)
+
+        # Go to HSV colourspace and get mask of blue pixels
+        HSV  = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+        mask = cv2.inRange(HSV, BlueMin, BlueMax)
+
+        inverse_cachement_mask = cv2.bitwise_not(mask)
+        # Make all pixels in mask white
+        im[inverse_cachement_mask>0] = [0, 0, 0]
+        cv2.imwrite(file, mask)
+
+    def get_amount_of_slots(self):
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', area_of_screenshot=(150, 930, 235, 980))
+        return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', is_digits=True).replace('\n', '').split('/'))
+
+
 ahk = AHKActions()
 image = Image()
+
 
 class Telegram:
     def __init__(self, hwnd):
@@ -707,8 +756,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        self.host = '192.168.0.10'
-        #self.host = '192.168.1.66'
+        #self.host = '192.168.0.10'
+        self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'
@@ -1131,8 +1180,56 @@ class Rolls():
                     ahk.mouse_actions('move', x=950, y=950)
                     ahk.mouse_actions('click')
                     time.sleep(1)
+
                     ahk.mouse_actions('move', x=1800, y=90)
                     ahk.mouse_actions('click')
+
+                    self._go_to_market()
+                    time.sleep(3)
+
+                    ahk.mouse_actions('move', x=400, y=180)
+                    ahk.mouse_actions('click')
+                    time.sleep(3)
+
+                    new_item_position = False
+
+                    for _ in range(3):
+                        new_item_position = image.get_gained_item_slot()
+                        if new_item_position:
+                            print('Найдена выпавшная шмотка')
+                            break
+
+                        ahk.mouse_actions('move', x=1605, y=530)
+
+                        self._wheel_inventory_down()
+
+                    if image.get_amount_of_slots() < 30:
+                        print('Колличество слотов меньше 30')
+                        if new_item_position:
+                            print(f"Позиция выпавшей шмотки {new_item_position}")
+
+                            y, x = new_item_position
+                            ahk.mouse_actions('move', x=1450+(y*100), y=350+(x*100))
+                            ahk.mouse_actions('click')
+                            time.sleep(4)
+
+                            minimal_price = image.get_minimal_price()
+                            if minimal_price:
+                                print(f'Минимальная цена получена {minimal_price}')
+
+                                if minimal_price > 10:
+                                    print("Миинимальная цена больше 10")
+                                    minimal_price -= 1
+                                self.make_new_price(minimal_price)
+                                self.confirm_new_price()
+
+                            else:
+                                print("Не удалось получить минимальную цену")
+
+                            self._close_market()
+                            time.sleep(3)
+                    else:
+                        print("Колличество слотов 30")
 
                     end_time = time.time()
 
@@ -1360,8 +1457,8 @@ class Rolls():
                 is_market_open = True
 
         time.sleep(2)
-        if not is_acessory:
-            list_to_find_in = ['Цербер', 'Кристальный Арбалет'] + list_to_find_in
+        #if not is_acessory:
+        #    list_to_find_in = ['Цербер', 'Кристальный Арбалет'] + list_to_find_in
 
         print(f'list_to_find_in {list_to_find_in}')
 
@@ -2786,6 +2883,74 @@ class Rolls():
         acc_name = win32gui.GetWindowText(hwnd)
         acc_name = acc_name.replace('Lineage2M l ', '')
         return acc_name
+
+    def _wheel_inventory_down(self):
+        for i in range(17):
+            ahk.mouse_actions('wheel')
+
+    def make_new_price(self, price):
+        price = str(price)
+        price_is_correct = False
+        while price_is_correct is False:
+            for i in price:
+                if i == '1':
+                    ahk.mouse_actions('move', x=1055, y=835)
+                    ahk.mouse_actions('click')
+                if i == '2':
+                    ahk.mouse_actions('move', x=1140, y=835)
+                    ahk.mouse_actions('click')
+                if i == '3':
+                    ahk.mouse_actions('move', x=1220, y=835)
+                    ahk.mouse_actions('click')
+                if i == '4':
+                    ahk.mouse_actions('move', x=1055, y=775)
+                    ahk.mouse_actions('click')
+                if i == '5':
+                    ahk.mouse_actions('move', x=1140, y=775)
+                    ahk.mouse_actions('click')
+                if i == '6':
+                    ahk.mouse_actions('move', x=1220, y=775)
+                    ahk.mouse_actions('click')
+                if i == '7':
+                    ahk.mouse_actions('move', x=1055, y=720)
+                    ahk.mouse_actions('click')
+                if i == '8':
+                    ahk.mouse_actions('move', x=1140, y=720)
+                    ahk.mouse_actions('click')
+                if i == '9':
+                    ahk.mouse_actions('move', x=1220, y=720)
+                    ahk.mouse_actions('click')
+                if i == '0':
+                    ahk.mouse_actions('move', x=1300, y=835)
+                    ahk.mouse_actions('click')
+
+            image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\seted_price.png', area_of_screenshot=(1085, 630, 1270, 680))
+            image.clear_number_for_detect_seted_price(f'{PATH_TO_ALCHEMY}\\imgs\\seted_price.png')
+            seted_price = pytesseract.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\seted_price.png', config='--psm 7 -c tessedit_char_whitelist=0123456789')
+            print('Цена которую выставил ', seted_price)
+            print('Цена которую должен выставить', price)
+            if str(seted_price).replace(' ', '').replace('\n', '') == str(price).replace(' ', '').replace('\n', ''):
+                price_is_correct = True
+            else:
+                print('Цена выставлена неправильно!!!')
+                for i in range(9):
+                    ahk.mouse_actions('move', x=1300, y=720)
+                    ahk.mouse_actions('click')
+        print('Цена выставлена')
+
+    def confirm_new_price(self):
+        ahk.mouse_actions('move', x=1100, y=925)
+        ahk.mouse_actions('click')
+        time.sleep(0.7)
+
+        ahk.mouse_actions('move', x=1050, y=760)
+        ahk.mouse_actions('click')
+        time.sleep(0.7)
+
+    def _close_market(self):
+        ahk.mouse_actions('move', x=1800, y=90)
+        ahk.mouse_actions('click')
+
 
 roll = Rolls()
 

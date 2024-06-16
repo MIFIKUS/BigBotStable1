@@ -26,19 +26,16 @@ while True:
     for server_id, server_name in servers_list.items():
         market_info = get_market_info(int(server_id))
 
-        for j in market_info:
-            print(j.values())
-            for i in j.values():
-                print(i[0])
-                if not items_list.get(i[0]) and not trash_list.get(i[0]):
-                    if i[0] not in items_to_research:
-                        items_to_research.append(i[0])
+        for i in market_info:
+            if not items_list.get(i['group_game_item_key']) and not trash_list.get(i['group_game_item_key']):
+                if i['group_game_item_key'] not in items_to_research:
+                    items_to_research.append(i['group_game_item_key'])
 
-            print(items_to_research)
-            if items_to_research:
-                for c in items_to_research:
-                    print(c)
-                    item_info = get_item_info(c)
-                    sender.unknown_item_notification(item_info['item_id'], item_info['item_name'], item_info['img_link'], item_info['color'])
+        print(items_to_research)
+        if items_to_research:
+            for c in items_to_research:
+                print(c)
+                item_info = get_item_info(c)
+                sender.unknown_item_notification(item_info['item_id'], item_info['item_name'], item_info['img_link'], item_info['color'])
 
     time.sleep(DELAY)

@@ -19,7 +19,7 @@ def get_token_from_headers(headers_raw):
 
 def get_token():
     def _click_on_first_packet():
-        mouse_and_keyboard.move(120, 100, 0)
+        mouse_and_keyboard.move(100, 105, 0)
         mouse_and_keyboard.click()
 
     def _go_to_last_packet():

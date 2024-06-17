@@ -14,4 +14,4 @@ BotForStat_statlist={'Макс. НР': '+50', 'Ничего': 'Ничего'}
 Alchemy_minimal_price=100
 multiplier=1
 tg_id=420909529
-path=C:\Users\alcho\NkBor\BigBotStable1
+path=E:\Projects\BigBot

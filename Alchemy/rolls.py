@@ -654,7 +654,7 @@ class Image:
 
     def get_amount_of_slots(self):
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', area_of_screenshot=(150, 930, 235, 980))
-        return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', is_digits=True).replace('\n', '').split('/'))
+        return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', is_digits=True).replace('\n', '').split('/')[0])
 
 
 ahk = AHKActions()
@@ -756,8 +756,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        self.host = '192.168.0.10'
-        #self.host = '127.0.0.1'
+        #self.host = '192.168.0.10'
+        self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'

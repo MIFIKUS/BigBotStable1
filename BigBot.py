@@ -13,7 +13,7 @@ from BotForCards import botForCards
 from BotForStats import BotForStat
 from Alchemy import AlchemyBot
 from CollectionMaster import collection_master
-from Booster.Fuse import fuse_bot
+from Booster.Fuse import fuse_boty
 from Booster.Souls import souls_bot
 from Booster.Stamps import stamps_bot
 from Booster.Revival import revival_bot

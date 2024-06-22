@@ -6,8 +6,6 @@ from lists.items_list import get_items_list
 from lists.servers_list import get_servers_list
 from lists.trash_list import get_trash_list
 
-from BuyerBot.jwt_updater.l2m_actions import update_token
-from BuyerBot.jwt_updater.fiddler_actions import get_new_token
 
 from main_funs.windows import Windows
 
@@ -25,30 +23,37 @@ minimal_price_for_red = 300
 minimal_price_for_purple = 5000
 
 
-servers_and_hwnds_list = get_all_servers()
+#servers_and_hwnds_list = get_all_servers()
 
 proxy_num = 0
 
 
 async def main():
-    update_token.update_token()
-    token = get_new_token.get_token()
+    #update_token.update_token()
+    #token = get_new_token.get_token()
 
     while True:
+        tasks = []
         for server_id, server_name in servers_list.items():
-            market_info, token = await get_all_items_prices(token, server_id)
-            database.set_jwt_token(token)
+            market_info = await get_all_items_prices()
+            #database.set_jwt_token(token)
 
             list_of_items = {}
-            for i in market_info.items():
-                good = items_list.get('purple').get(i[0])
+            for server, item_info in market_info.items():
+                item_name = item_info[0]
+                item_price = item_info[1]
+
+                good = items_list.get('purple').get(item_name)
                 if not good:
-                    good = items_list.get('red').get(i[0])
+                    good = items_list.get('red').get(item_name)
                 else:
                     purple = True
                 if good:
-                    list_of_items.update({i[0]: int(float(i[1]))})
+                    list_of_items.update({item_name: int(float(item_price))})
 
-            database.update_prices(list_of_items, server_name)
+            tasks.append(database.update_prices(list_of_items, server_name))
+            #database.update_prices(list_of_items, server_name)
+
+        await asyncio.gather(*tasks)
 
 asyncio.run(main())

@@ -1,6 +1,6 @@
-from BuyerBot.main_funs.windows import Windows
-from BuyerBot.main_funs.mouse_and_keboard import AHKActions
-from BuyerBot.main_funs.images import Image
+from main_funs.windows import Windows
+from main_funs.mouse_and_keboard import AHKActions
+from main_funs.images import Image
 
 mouse_and_keyboard = AHKActions()
 image = Image()

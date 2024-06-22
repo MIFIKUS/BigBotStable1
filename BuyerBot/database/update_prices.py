@@ -1,6 +1,6 @@
-from BuyerBot.lists.items_list import get_items_list
-from BuyerBot.database.access_data import *
-from BuyerBot.database._servers_list import *
+from lists.items_list import get_items_list
+from database.access_data import *
+from database._servers_list import *
 import mysql.connector
 
 
@@ -11,7 +11,7 @@ items_list_to_iterate = items_list['red']
 items_list_to_iterate.update(items_list['purple'])
 
 
-def update_prices(data: dict, server_name):
+async def update_prices(data: dict, server_name):
     connection = mysql.connector.connect(host=IP, user=USER, password=PASSWORD)
     connection.autocommit = True
     cursor = connection.cursor()

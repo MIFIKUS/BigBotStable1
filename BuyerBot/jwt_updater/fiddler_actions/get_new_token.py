@@ -17,7 +17,7 @@ def get_token_from_headers(headers_raw):
     return headers['Authorization']
 
 
-def get_token():
+def get_token() -> str:
     def _click_on_first_packet():
         mouse_and_keyboard.move(100, 105, 0)
         mouse_and_keyboard.click()

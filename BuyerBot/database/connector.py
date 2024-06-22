@@ -1,4 +1,4 @@
-from BuyerBot.database.access_data import *
+from database.access_data import *
 import mysql.connector
 
 

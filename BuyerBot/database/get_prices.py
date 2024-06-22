@@ -1,5 +1,5 @@
-from BuyerBot.database.access_data import *
-from BuyerBot.database._servers_list import *
+from database.access_data import *
+from database._servers_list import *
 import mysql.connector
 
 

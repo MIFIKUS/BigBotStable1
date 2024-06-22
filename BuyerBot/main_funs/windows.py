@@ -1,7 +1,7 @@
 import time
 
-from BuyerBot.main_funs.mouse_and_keboard import AHKActions
-from BuyerBot.main_funs.images import Image
+from main_funs.mouse_and_keboard import AHKActions
+from main_funs.images import Image
 from ctypes import windll
 
 import win32gui

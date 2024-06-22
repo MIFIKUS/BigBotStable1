@@ -1510,7 +1510,9 @@ class Rolls():
                 if is_acessory is False:
                     print('is_accesory False')
                     if int(price) == 10:
-                        self._buy_item(price)
+                        if self._buy_item(price) is False:
+                            skip = True
+                            continue
                         counter += 1
                         skip = False
                         if counter == amount:

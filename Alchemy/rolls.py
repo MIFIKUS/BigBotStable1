@@ -70,7 +70,7 @@ inventory_matrix = {}
 red_slots = []
 template_list_00 = []
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
-    yLIST_OF_RARE_ITEMS = list(rare_items.read().split('\n'))
+    LIST_OF_RARE_ITEMS = list(rare_items.read().split('\n'))
 
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
     LIST_OF_RARE_ITEMS_FOR_ALCHEMY = list(rare_items.read().replace(' ', '').lower().split('\n'))
@@ -760,8 +760,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        self.host = '192.168.0.10'
-        #self.host = '127.0.0.1'
+        #self.host = '192.168.0.10'
+        self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'

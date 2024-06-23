@@ -760,8 +760,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        #self.host = '192.168.0.10'
-        self.host = '127.0.0.1'
+        self.host = '192.168.0.10'
+        #self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'

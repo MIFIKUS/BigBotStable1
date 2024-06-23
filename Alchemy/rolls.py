@@ -366,7 +366,7 @@ class Image:
 
         res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
 
-        threshold = 0.8
+        threshold = 0.7
         loc = np.where(res >= threshold)
 
         for pt in zip(*loc[::-1]):
@@ -620,7 +620,7 @@ class Image:
                                                                                                                   1510+x_additional, 431+y_additional))
 
                 if self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', f'{PATH_TO_ALCHEMY}\\imgs\\red_dot.png',
-                                 threshold=0.7):
+                                 threshold=0.725):
                     return column, row
 
                 x_additional += 100
@@ -629,11 +629,14 @@ class Image:
         return False
 
     def get_minimal_price(self) -> int or bool:
-        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', area_of_screenshot=(1220, 459, 1360, 495))
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', area_of_screenshot=(1220, 457, 1360, 497))
         minimal_price = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', True, True)
 
+        minimal_price = minimal_price.replace(' ', '')
+        minimal_price = minimal_price.replace('\n', '')
+
         try:
-            return minimal_price
+            return int(minimal_price)
         except Exception as e:
             print(f'Невозможно получить минимальную цену Ошибка {e}')
             return False
@@ -757,8 +760,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        #self.host = '192.168.0.10'
-        self.host = '127.0.0.1'
+        self.host = '192.168.0.10'
+        #self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'
@@ -1185,52 +1188,52 @@ class Rolls():
                     ahk.mouse_actions('move', x=1800, y=90)
                     ahk.mouse_actions('click')
 
-                    #self._go_to_market()
-                    #time.sleep(3)
-#
-                    #ahk.mouse_actions('move', x=400, y=180)
-                    #ahk.mouse_actions('click')
-                    #time.sleep(3)
-#
-                    #new_item_position = False
-#
-                    #for _ in range(3):
-                    #    new_item_position = image.get_gained_item_slot()
-                    #    if new_item_position:
-                    #        print('Найдена выпавшная шмотка')
-                    #        break
-#
-                    #    ahk.mouse_actions('move', x=1605, y=530)
-#
-                    #    self._wheel_inventory_down()
-#
-                    #if image.get_amount_of_slots() < 30:
-                    #    print('Колличество слотов меньше 30')
-                    #    if new_item_position:
-                    #        print(f"Позиция выпавшей шмотки {new_item_position}")
-#
-                    #        y, x = new_item_position
-                    #        ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
-                    #        ahk.mouse_actions('click')
-                    #        time.sleep(4)
-#
-                    #        minimal_price = image.get_minimal_price()
-                    #        if minimal_price:
-                    #            print(f'Минимальная цена получена {minimal_price}')
-#
-                    #            if minimal_price > 10:
-                    #                print("Миинимальная цена больше 10")
-                    #                minimal_price -= 1
-                    #            self.make_new_price(minimal_price)
-                    #            self.confirm_new_price()
-#
-                    #        else:
-                    #            print("Не удалось получить минимальную цену")
-#
-                    #        self._close_market()
-                    #        time.sleep(3)
-                    #else:
-                    #    print("Колличество слотов 30")
+                    self._go_to_market()
+                    time.sleep(3)
+
+                    ahk.mouse_actions('move', x=400, y=180)
+                    ahk.mouse_actions('click')
+                    time.sleep(3)
+
+                    new_item_position = False
+
+                    for _ in range(3):
+                        new_item_position = image.get_gained_item_slot()
+                        if new_item_position:
+                            print('Найдена выпавшная шмотка')
+                            break
+
+                        ahk.mouse_actions('move', x=1605, y=530)
+
+                        self._wheel_inventory_down()
+
+                    if image.get_amount_of_slots() < 30:
+                        print('Колличество слотов меньше 30')
+                        if new_item_position:
+                            print(f"Позиция выпавшей шмотки {new_item_position}")
+
+                            y, x = new_item_position
+                            ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
+                            ahk.mouse_actions('click')
+                            time.sleep(4)
+
+                            minimal_price = image.get_minimal_price()
+                            if minimal_price:
+                                print(f'Минимальная цена получена {minimal_price}')
+
+                                if minimal_price > 10:
+                                    print("Миинимальная цена больше 10")
+                                    minimal_price -= 1
+                                self.make_new_price(minimal_price)
+                                self.confirm_new_price()
+
+                            else:
+                                print("Не удалось получить минимальную цену")
+
+                            self._close_market()
+                            time.sleep(3)
+                    else:
+                        print("Колличество слотов 30")
 
                     end_time = time.time()
 
@@ -1254,20 +1257,20 @@ class Rolls():
 
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\color_of_forecast.png', area_of_screenshot=(930, 547, 950, 564))
         img = cv2.imread(f'{PATH_TO_ALCHEMY}\\imgs\\color_of_forecast.png')
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
         # Define the range of colors for each color
-        lower_white = np.array([90, 135, 145], dtype=np.uint8)
-        upper_white = np.array([190, 245, 255], dtype=np.uint8)
+        lower_white = np.array([0, 0, 180], dtype=np.uint8)
+        upper_white = np.array([360, 30, 255], dtype=np.uint8)
 
-        lower_blue = np.array([240, 240, 240], dtype=np.uint8)
-        upper_blue = np.array([255, 255, 255], dtype=np.uint8)
+        lower_blue = np.array([80, 50, 50], dtype=np.uint8)
+        upper_blue = np.array([130, 255, 255], dtype=np.uint8)
 
-        lower_yellow = np.array([140, 80, 30], dtype=np.uint8)
-        upper_yellow = np.array([160, 110, 60], dtype=np.uint8)
+        lower_yellow = np.array([20, 100, 100], dtype=np.uint8)
+        upper_yellow = np.array([30, 255, 255], dtype=np.uint8)
 
-        lower_orange = np.array([240, 240, 140], dtype=np.uint8)
-        upper_orange = np.array([255, 255, 175], dtype=np.uint8)
+        lower_orange = np.array([10, 50, 50], dtype=np.uint8)
+        upper_orange = np.array([20, 255, 255], dtype=np.uint8)
 
         # Threshold the image to get only the colors in the defined range
         white_mask = cv2.inRange(hsv, lower_white, upper_white)

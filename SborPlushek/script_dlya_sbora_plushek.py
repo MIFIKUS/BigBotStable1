@@ -228,7 +228,7 @@ class Image:
             lvl = lvl.replace('LV.', '')
             return lvl
 
-        self.take_screenshot(f'{PATH_TO_SCRIPT}lvl.png', (20, 990, 130, 1030))
+        self.take_screenshot(f'{PATH_TO_SCRIPT}lvl.png', (30, 938, 115, 1000))
 
         lvl = pytesseract.image_to_string(f'{PATH_TO_SCRIPT}lvl.png', config='--psm 6 -c tessedit_char_whitelist=0123456789LV.')
         lvl = _prepare_lvl(lvl)

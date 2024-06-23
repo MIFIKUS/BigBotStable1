@@ -1199,9 +1199,7 @@ def autosell_global_market(market_balance, sold_balance, hwnd, current_time):
                     amount_of_wheels_down += 1
                     continue
                 if amount_of_wheels_up < 2:
-                    ingame.wheel_inventory_up()
-                    amount_of_wheels_up += 1
-                    continue
+                    ahk.mouse_actions('drag', x=0, y=-50)
                 else:
                     amount_of_wheels_down = 0
                     amount_of_wheels_up = 0

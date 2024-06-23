@@ -70,7 +70,7 @@ inventory_matrix = {}
 red_slots = []
 template_list_00 = []
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
-    LIST_OF_RARE_ITEMS = list(rare_items.read().split('\n'))
+    yLIST_OF_RARE_ITEMS = list(rare_items.read().split('\n'))
 
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
     LIST_OF_RARE_ITEMS_FOR_ALCHEMY = list(rare_items.read().replace(' ', '').lower().split('\n'))
@@ -447,12 +447,12 @@ class Image:
 
     def is_forecast_opened(self):
         start_time = time.time()
-        self.take_screenshot(f'{PATH_TO_ALCHEMY}imgs\\is_forecast_opened.png', area_of_screenshot=(1040, 790, 1050, 800))
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}imgs\\is_forecast_opened.png', area_of_screenshot=(1040, 790, 1050, 796))
         color = self.get_main_color(f'{PATH_TO_ALCHEMY}imgs\\is_forecast_opened.png')
         print(color)
         end_time = time.time()
         print(end_time-start_time)
-        if (200 < color[0] < 220) and (85 < color[1] < 105) and (0 < color[2] < 15):
+        if (200 < color[0] < 220) and (80 < color[1] < 110) and (0 < color[2] < 20):
             return True
         print('Предсказание не открыто, пробует еще раз')
         return False
@@ -1254,20 +1254,20 @@ class Rolls():
 
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\color_of_forecast.png', area_of_screenshot=(930, 547, 950, 564))
         img = cv2.imread(f'{PATH_TO_ALCHEMY}\\imgs\\color_of_forecast.png')
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         # Define the range of colors for each color
-        lower_white = np.array([0, 0, 180], dtype=np.uint8)
-        upper_white = np.array([360, 30, 255], dtype=np.uint8)
+        lower_white = np.array([90, 135, 145], dtype=np.uint8)
+        upper_white = np.array([190, 245, 255], dtype=np.uint8)
 
-        lower_blue = np.array([80, 50, 50], dtype=np.uint8)
-        upper_blue = np.array([130, 255, 255], dtype=np.uint8)
+        lower_blue = np.array([240, 240, 240], dtype=np.uint8)
+        upper_blue = np.array([255, 255, 255], dtype=np.uint8)
 
-        lower_yellow = np.array([20, 100, 100], dtype=np.uint8)
-        upper_yellow = np.array([30, 255, 255], dtype=np.uint8)
+        lower_yellow = np.array([140, 80, 30], dtype=np.uint8)
+        upper_yellow = np.array([160, 110, 60], dtype=np.uint8)
 
-        lower_orange = np.array([10, 50, 50], dtype=np.uint8)
-        upper_orange = np.array([20, 255, 255], dtype=np.uint8)
+        lower_orange = np.array([240, 240, 140], dtype=np.uint8)
+        upper_orange = np.array([255, 255, 175], dtype=np.uint8)
 
         # Threshold the image to get only the colors in the defined range
         white_mask = cv2.inRange(hsv, lower_white, upper_white)

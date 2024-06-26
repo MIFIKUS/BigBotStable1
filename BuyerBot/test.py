@@ -1,13 +1,5 @@
-from BuyerBot.web.market import get_all_items_prices
+from BuyerBot.database.get_prices import get_prices
 
-import asyncio
+a = get_prices(1)
 
-import time
-
-
-async def main():
-    while True:
-        start = time.time()
-        await get_all_items_prices()
-        print(time.time()- start)
-asyncio.run(main())
+print(a)

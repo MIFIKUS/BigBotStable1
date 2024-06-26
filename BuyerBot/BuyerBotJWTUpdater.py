@@ -7,14 +7,13 @@ from BuyerBot.database.update_bot_data import set_jwt_token, set_need_to_update_
 import time
 
 
-DELAY = 10
+DELAY = 3600
 
 while True:
-    if need_to_update_jwt():
-        update_token.update_token()
-        token = get_new_token.get_token()
+    #if need_to_update_jwt():
+    update_token.update_token()
+    token = get_new_token.get_token()
 
-        set_jwt_token(token)
-        set_need_to_update_jwt(False)
+    set_jwt_token(token)
 
     time.sleep(DELAY)

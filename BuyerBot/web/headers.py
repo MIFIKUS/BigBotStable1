@@ -5,7 +5,7 @@ HEADERS = {
     "Accept": "application/json",
     "Accept-Language": "ru-RU",
     "Authorization": "",
-    "User-Agent": "NCMop/3.18.0 (2555DA2C-0C84-4A6D-A3ED-7383CA112935/5.0.62; Windows; ru-RU; RU)"
+    "User-Agent": "NCMop/3.18.0 (2555DA2C-0C84-4A6D-A3ED-7383CA112935/5.0.67; Windows; ru-RU; RU)"
 }
 
 KOREAN_API_KEY = 'Bearer eyJraWQiOiI2YWFmYzEzZi1hMGJjLTQ1YjYtYTUyMS00YTAyMGUzMTljYWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1aWQiOiI3MERFOTg3NS01OEZCLTQ0RTYtOEQ2MS0yNTMxQTU4REUzQTIifQ.aYZQcKmLGAW0-y-XE6xnOAy0q77w5MQUWPDCpErsHz8P8neb6VagevXAyke9quon7MqTpa5qufjIn8zJl2POGuBx-epQ2qKz-nBixSYyuxExOr8RnFJVROYHOoJ2X9xWsIkIrFi0O3dESSZvWOxEXi2KvFnoBAoKoqf7XA3CGBEjkCsHytbPOilwypE0AXvhaasglzUiYVzeUDyTKdn7h9SedVq-jmnvdzsOs-tCIlUvKesKLg1kFVy7_inipXWHuQrTtAtSVkN4-O2RtG_Pocl2wMHYBrOawxPbttS8ac35kMxzPPp7MkxsW6Krz6SVfGzsHJ0CCBIgHElyDzPIeQ'

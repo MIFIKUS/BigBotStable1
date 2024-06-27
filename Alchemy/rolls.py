@@ -1740,16 +1740,16 @@ class Rolls():
                                 elif color is self.BLUE:
                                     inventory_matrix = {}
 
-                                    items_list = self.get_cheapest_blue_items(amount_of_items_to_craft, self.SERVER_ID)
+                                    #items_list = self.get_cheapest_blue_items(amount_of_items_to_craft, self.SERVER_ID)
                                     self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
 
                                     sort_inventory()
                                     self._go_to_alchemy()
                                 elif color is self.PLUS_1_ACCESORY:
                                     inventory_matrix = {}
-                                    accesory_items_list = self.get_cheapest_blue_accesories(amount_of_items_to_craft, self.SERVER_ID)
-                                    self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
-                                    #self.craft_plus_1_accesories(amount_of_items_to_craft, accesory_items_list)
+                                    #accesory_items_list = self.get_cheapest_blue_accesories(amount_of_items_to_craft, self.SERVER_ID)
+                                    #self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
+                                    self.craft_plus_1_accesories(amount_of_items_to_craft, accesory_items_list)
 
                                     sort_inventory()
                                     self._go_to_alchemy()

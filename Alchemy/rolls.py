@@ -1,3 +1,5 @@
+import traceback
+
 from ahk import AHK
 from PIL import Image as pil
 from difflib import SequenceMatcher
@@ -20,6 +22,8 @@ import gspread
 import mysql.connector
 import TGNotifier
 
+import requests
+
 import time
 import string
 import random
@@ -36,7 +40,8 @@ ROLL_000_MINIMAL_PRICE_2ND_SLOT_FOR_CHECK_1ST_SLOT = 130
 ROLL_000_MINIMAL_PRICE_1ST_SLOT = 80
 TOTAL_PRICE = 200
 
-LIST_OF_BLUE_ITEMS_THAT_IN_2ND_SLOT = ('Магический Камень Духа Огня', 'Магический Камень Духа Воды', 'Магический Камень Духа Земли', 'Магический Камень Духа Тьмы', 'Цербер')
+LIST_OF_BLUE_ITEMS_THAT_IN_2ND_SLOT = ('Магический Камень Духа Огня', 'Магический Камень Духа Воды', 'Магический Камень Духа Земли', 'Магический Камень Духа Тьмы', 'Цербер',
+                                       'Меч Гигантов')
 
 with open('settings.txt') as f:
     for i in f.readlines():
@@ -72,6 +77,12 @@ template_list_00 = []
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
     LIST_OF_RARE_ITEMS = list(rare_items.read().split('\n'))
 
+with open(f'{PATH_TO_ALCHEMY}blue_items_ids.json', 'r', encoding='utf-8') as rare_items_json:
+    LIST_OF_RARE_ITEMS_JSON = json.load(rare_items_json)
+
+with open(f'{PATH_TO_ALCHEMY}blue_accessory_ids.json', 'r', encoding='utf-8') as rare_accessories_json:
+    LIST_OF_RARE_ACCESSORIES_JSON = json.load(rare_accessories_json)
+
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
     LIST_OF_RARE_ITEMS_FOR_ALCHEMY = list(rare_items.read().replace(' ', '').lower().split('\n'))
 
@@ -92,6 +103,10 @@ with open(f'{PATH_TO_ALCHEMY}roll_00_max_amount_on_server.json', 'r', encoding='
 
 with open(f'{PATH_TO_ALCHEMY}roll_00_max_amount_on_server.json', 'r', encoding='utf-8') as max_amount:
     ROLL_00_MAX_AMOUNT_ON_SERVER = json.load(max_amount)
+
+with open(f'{PATH_TO_ALCHEMY}servers_list.json', 'r', encoding='utf-8') as servers_list_json:
+    SERVERS_LIST = json.load(servers_list_json)
+
 
 ADDITIONAL_GOOD_RARE_ITEMS_LIST = ('Исскуство Парных Мечей (Гнев Звука)',
                                    'Учебник Арблатетчика (Интеснивная Стрельба)',
@@ -664,6 +679,17 @@ class Image:
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', area_of_screenshot=(150, 930, 235, 980))
         return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', is_digits=True).replace('\n', '').split('/')[0])
 
+    def get_acc_server_id(self):
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\server.png', (1200, 450, 1430, 480))
+        server_name = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\server.png', False)
+        print(server_name)
+        server_name = server_name.replace(' ', '')
+        server_name = server_name.replace('\n', '')
+
+        for server, server_id in SERVERS_LIST.items():
+            if server.replace(' ', '').lower() == server_name.lower():
+                return server_id
+
 
 ahk = AHKActions()
 image = Image()
@@ -762,14 +788,19 @@ class GoogleSheets:
 #
 #        return wrapper
 
+
 class DataBase:
     def __init__(self):
-        self.host = '192.168.0.10'
-        #self.host = '127.0.0.1'
+        #self.host = '192.168.0.10'
+        self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'
         self.AMOUNT_OF_ROLL_00_ITEMS = 188
+
+        self.host_for_buy_items = '31.128.37.77'
+        self.user_for_buy_items = 'lineika'
+        self.password_for_buy_items = '!Qwertqwert1'
 
     def add_to_gained_items(self, acc_name, item_name):
         connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password)
@@ -955,7 +986,14 @@ class DataBase:
         print('Данные в таблице выпавших шмоток обновлены')
         print('Весь процесс записи выпавших шмоток занял', time.time()-start)
 
+    def get_jwt_token(self) -> str:
+        connection = mysql.connector.connect(host=self.host_for_buy_items, user=self.user_for_buy_items, password=self.password_for_buy_items)
+        connection.autocommit = True
+        cursor = connection.cursor()
 
+        query = "SELECT * FROM l2m.bot_data;"
+        cursor.execute(query)
+        return cursor.fetchall()[0][0]
 
 def sort_inventory():
     ahk.mouse_actions('i')
@@ -1088,6 +1126,8 @@ class Rolls():
             if 'Lineage2M' in acc_name:
                 print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
                 acc_name = get_acc_name()
+
+            self.SERVER_ID = self.get_server_id()
 
             if need_check_sql:
                 sql.update_less_100_items(acc_name)
@@ -1247,7 +1287,8 @@ class Rolls():
 
                     return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time
         except Exception as e:
-            TGNotifier.send_break_msg('Алхимка', acc_name, e)
+            traceback.print_exc()
+            #TGNotifier.send_break_msg('Алхимка', acc_name, e)
 
     def check_neccesary_color_of_forecast(self, colors):
         color_of_forecast = self._check_color_of_forecast()
@@ -1698,12 +1739,18 @@ class Rolls():
                                     self._go_to_alchemy()
                                 elif color is self.BLUE:
                                     inventory_matrix = {}
+
+                                    items_list = self.get_cheapest_blue_items(amount_of_items_to_craft, self.SERVER_ID)
                                     self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
+
                                     sort_inventory()
                                     self._go_to_alchemy()
                                 elif color is self.PLUS_1_ACCESORY:
                                     inventory_matrix = {}
-                                    self.craft_plus_1_accesories(amount_of_items_to_craft, accesory_items_list)
+                                    accesory_items_list = self.get_cheapest_blue_accesories(amount_of_items_to_craft, self.SERVER_ID)
+                                    self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
+                                    #self.craft_plus_1_accesories(amount_of_items_to_craft, accesory_items_list)
+
                                     sort_inventory()
                                     self._go_to_alchemy()
                                 elif color is self.PLUS_2_ACCESORY:
@@ -2960,6 +3007,135 @@ class Rolls():
     def _close_market(self):
         ahk.mouse_actions('move', x=1800, y=90)
         ahk.mouse_actions('click')
+
+    def get_cheapest_blue_items(self, amount, server_id):
+        def _get_full_market_data(headers) -> list:
+            url = "https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/min_unit_price"
+            print('json ', {'game_server_id': server_id})
+            return requests.post(url=url, headers=headers, json={'game_server_id': server_id}).json()['list']
+
+        def _sort_items_info_buy_price(item_info: dict) -> dict:
+            return {k: v for k, v in sorted(item_info.items(), key=lambda item: item[1])}
+
+        jwt_token = sql.get_jwt_token()
+
+        headers = {
+            "Host": "ncus1-api.g.nc.com",
+            "Accept-Encoding": "deflate, gzip",
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json",
+            "Accept-Language": "ru-RU",
+            "Authorization": jwt_token,
+            "User-Agent": "NCMop/3.20.0 (2555DA2C-0C84-4A6D-A3ED-7383CA112935/5.0.67; Windows; ru-RU; RU)"
+        }
+
+        full_market_data = _get_full_market_data(headers)
+
+        items_info = {}
+
+        for i in full_market_data:
+            item_id = i.get('group_game_item_key')
+            item_price = int(float(i.get('min_unit_price')))
+
+            if LIST_OF_RARE_ITEMS_JSON.get(item_id):
+                items_info.update({item_id: item_price})
+
+        sorted_items_info = _sort_items_info_buy_price(items_info)
+
+        for item_id, item_price in sorted_items_info.items():
+            url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/{item_id}/game_item_conditions/Enchant/min_unit_price?game_server_id={server_id}'
+            item_data = requests.post(url=url_for_item, headers=headers).json()['list']
+            for i in item_data:
+                item_info = i.items()
+
+                item_price = int(float(item_info['min_unit_price']))
+                amount_of_items = int(item_info['sale_count'])
+                conditions = items_info['game_item_conditions']
+                for j in conditions:
+                    enchant = j['value']
+
+                if item_price > 10:
+                    continue
+
+                if amount_of_items >= amount and enchant == "0":
+                    return [key for key, value in LIST_OF_RARE_ITEMS_JSON.items() if value == item_id]
+
+    def get_cheapest_blue_accesories(self, amount, server_id):
+        def _get_full_market_data(headers) -> list:
+            url = "https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/min_unit_price"
+
+            return requests.post(url=url, headers=headers, json={'game_server_id': server_id}).json()['list']
+
+        def _sort_items_info_buy_price(item_info: dict) -> dict:
+            return {k: v for k, v in sorted(item_info.items(), key=lambda item: item[1])}
+
+        jwt_token = sql.get_jwt_token()
+
+        headers = {
+            "Host": "ncus1-api.g.nc.com",
+            "Accept-Encoding": "deflate, gzip",
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json",
+            "Accept-Language": "ru-RU",
+            "Authorization": jwt_token,
+            "User-Agent": "NCMop/3.20.0 (2555DA2C-0C84-4A6D-A3ED-7383CA112935/5.0.67; Windows; ru-RU; RU)"
+        }
+
+        full_market_data = _get_full_market_data(headers)
+
+        items_info = {}
+
+        for i in full_market_data:
+            item_id = i.get('group_game_item_key')
+            item_price = int(float(i.get('min_unit_price')))
+
+            if LIST_OF_RARE_ACCESSORIES_JSON.get(item_id):
+                items_info.update({item_id: item_price})
+
+        sorted_items_info = _sort_items_info_buy_price(items_info)
+
+        for item_id, item_price in sorted_items_info.items():
+            url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/{item_id}/game_item_conditions/Enchant/min_unit_price?game_server_id={server_id}'
+            item_data = requests.post(url=url_for_item, headers=headers).json()['list']
+            for i in item_data:
+                item_info = i.items()
+
+                item_price = int(float(item_info['min_unit_price']))
+                amount_of_items = int(item_info['sale_count'])
+                conditions = items_info['game_item_conditions']
+                for j in conditions:
+                    enchant = j['value']
+
+                if item_price > 12:
+                    continue
+
+                if amount_of_items >= amount and enchant == "1":
+                    return [key for key, value in LIST_OF_RARE_ACCESSORIES_JSON.items() if value == item_id]
+
+    def get_server_id(self) -> str:
+        self._open_settings()
+        server_id = image.get_acc_server_id()
+        print(server_id)
+        self.close_settings()
+        return server_id
+
+    def _open_settings(self):
+        ahk.mouse_actions('move', x=1775, y=85)
+        ahk.mouse_actions('click')
+        time.sleep(2)
+
+        ahk.mouse_actions('move', x=1700, y=820)
+        ahk.mouse_actions('click')
+        time.sleep(3)
+
+        ahk.mouse_actions('move', x=1500, y=200)
+        ahk.mouse_actions('click')
+        time.sleep(3)
+
+    def close_settings(self):
+        ahk.mouse_actions('move', x=1775, y=85)
+        ahk.mouse_actions('click')
+        time.sleep(2)
 
 
 roll = Rolls()

@@ -1,5 +1,7 @@
+from Alchemy.rolls import Image
 import time
 
-for i in range(10):
-    print(f"Прогресс: {i}%", end="\r")
-    time.sleep(1)
+a = Image()
+
+
+print(a.get_gained_item_slot())

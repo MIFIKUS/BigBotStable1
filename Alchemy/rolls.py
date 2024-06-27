@@ -616,12 +616,16 @@ class Image:
         for column in range(6):
             x_additional = 0
             for row in range(4):
-                self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', (1407+x_additional, 330+y_additional,
+                self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', (1407+x_additional, 328+y_additional,
                                                                                                                   1510+x_additional, 431+y_additional))
 
-                if self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', f'{PATH_TO_ALCHEMY}\\imgs\\red_dot.png',
-                                 threshold=0.725):
-                    return column, row
+                if self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', f'{PATH_TO_ALCHEMY}\\imgs\\item_is_equiped.png',
+                                 threshold=0.85):
+                    if row == 0:
+                        column -= 1
+                        row = 3
+                        return column, row
+                    return column, row - 1
 
                 x_additional += 100
             y_additional += 100
@@ -1132,7 +1136,7 @@ class Rolls():
                         while not image.is_forecast_opened():
                             forecast_not_opened_counter += 1
                             self._open_forecast()
-                            if forecast_not_opened_counter >= 1000:
+                            if forecast_not_opened_counter >= 100:
                                 if image.is_dead():
                                     self._go_to_alchemy()
                                 self._go_to_alchemy()
@@ -1188,52 +1192,52 @@ class Rolls():
                     ahk.mouse_actions('move', x=1800, y=90)
                     ahk.mouse_actions('click')
 
-                    #self._go_to_market()
-                    #time.sleep(3)
-#
-                    #ahk.mouse_actions('move', x=400, y=180)
-                    #ahk.mouse_actions('click')
-                    #time.sleep(3)
-#
-                    #new_item_position = False
-#
-                    #for _ in range(3):
-                    #    new_item_position = image.get_gained_item_slot()
-                    #    if new_item_position:
-                    #        print('Найдена выпавшная шмотка')
-                    #        break
-#
-                    #    ahk.mouse_actions('move', x=1605, y=530)
-#
-                    #    self._wheel_inventory_down()
-#
-                    #if image.get_amount_of_slots() < 30:
-                    #    print('Колличество слотов меньше 30')
-                    #    if new_item_position:
-                    #        print(f"Позиция выпавшей шмотки {new_item_position}")
-#
-                    #        y, x = new_item_position
-                    #        ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
-                    #        ahk.mouse_actions('click')
-                    #        time.sleep(4)
-#
-                    #        minimal_price = image.get_minimal_price()
-                    #        if minimal_price:
-                    #            print(f'Минимальная цена получена {minimal_price}')
-#
-                    #            if minimal_price > 10:
-                    #                print("Миинимальная цена больше 10")
-                    #                minimal_price -= 1
-                    #            self.make_new_price(minimal_price)
-                    #            self.confirm_new_price()
-#
-                    #        else:
-                    #            print("Не удалось получить минимальную цену")
-#
-                    #        self._close_market()
-                    #        time.sleep(3)
-                    #else:
-                    #    print("Колличество слотов 30")
+                    self._go_to_market()
+                    time.sleep(3)
+
+                    ahk.mouse_actions('move', x=400, y=180)
+                    ahk.mouse_actions('click')
+                    time.sleep(3)
+
+                    new_item_position = False
+
+                    for _ in range(3):
+                        new_item_position = image.get_gained_item_slot()
+                        if new_item_position:
+                            print('Найдена выпавшная шмотка')
+                            break
+
+                        ahk.mouse_actions('move', x=1605, y=530)
+
+                        self._wheel_inventory_down()
+
+                    if image.get_amount_of_slots() < 30:
+                        print('Колличество слотов меньше 30')
+                        if new_item_position:
+                            print(f"Позиция выпавшей шмотки {new_item_position}")
+
+                            y, x = new_item_position
+                            ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
+                            ahk.mouse_actions('click')
+                            time.sleep(4)
+
+                            minimal_price = image.get_minimal_price()
+                            if minimal_price:
+                                print(f'Минимальная цена получена {minimal_price}')
+
+                                if minimal_price > 10:
+                                    print("Миинимальная цена больше 10")
+                                    minimal_price -= 1
+                                self.make_new_price(minimal_price)
+                                self.confirm_new_price()
+
+                            else:
+                                print("Не удалось получить минимальную цену")
+
+                            self._close_market()
+                            time.sleep(3)
+                    else:
+                        print("Колличество слотов 30")
 
                     end_time = time.time()
 

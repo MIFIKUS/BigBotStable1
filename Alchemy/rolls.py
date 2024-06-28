@@ -635,7 +635,7 @@ class Image:
                                                                                                                   1510+x_additional, 431+y_additional))
 
                 if self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', f'{PATH_TO_ALCHEMY}\\imgs\\item_is_equiped.png',
-                                 threshold=0.85):
+                                 threshold=0.8):
                     if row == 0:
                         column -= 1
                         row = 3

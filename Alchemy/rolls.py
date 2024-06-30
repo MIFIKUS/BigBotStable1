@@ -331,7 +331,7 @@ class Image:
                 PIL.ImageGrab.grab().save(image_name)
 
     def image_to_string(self, image_name, is_digits, fill_diamond=False):
-
+        print(f'fill_diamond {fill_diamond}')
         if fill_diamond is True:
             self.fill_the_diamond_with_black()
 
@@ -387,7 +387,7 @@ class Image:
         for pt in zip(*loc[::-1]):
             cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (15, 18, 22), -1)
 
-        cv2.imwrite(f'{PATH_TO_ALCHEMY}{file}', img_rgb)
+        cv2.imwrite(f'{PATH_TO_ALCHEMY}\\imgs\\{file}', img_rgb)
 
 
     def get_main_color(self, file, colors_amount=1024):
@@ -648,7 +648,7 @@ class Image:
         return False
 
     def get_minimal_price(self) -> int or bool:
-        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', area_of_screenshot=(1220, 457, 1360, 497))
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', area_of_screenshot=(1220, 459, 1360, 495))
         minimal_price = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\minimal_price.png', True, True)
 
         minimal_price = minimal_price.replace(' ', '')
@@ -1376,6 +1376,7 @@ class Rolls():
         return text
 
     def buy_neccesary_items(self, amount_of_neccesary_items, items_list, list_of_items_to_find_in, is_acessory=False):
+        print(f'items_list {items_list}')
         print(f'buy_neccesary_items is_accessory is {is_acessory}')
         self._go_to_market()
         time.sleep(1)
@@ -1394,65 +1395,70 @@ class Rolls():
 
         counter = amount_of_neccesary_items
 
-        if is_acessory:
-            items_list = accesory_items_on_market
-        else:
-            items_list = items_on_market
+        #if is_acessory:
+        #    items_list = accesory_items_on_market
+        #else:
+        #    items_list = items_on_market
 
-        for i in items_list.items():
-            if image.is_dead():
-                self._go_to_market()
-            self._check_if_need_go_to_find_menu()
-            if counter == 0:
-                break
-            item_name = i[0]
-            print(item_name)
-
-            ahk.mouse_actions('move', x=800, y=280)
-            ahk.mouse_actions('click')
-
-            ahk.mouse_actions('move', x=300, y=200)
-            ahk.mouse_actions('click')
-
-            name_of_item = item_name.replace(' ', '')
-            time.sleep(0.4)
-
-            ahk.mouse_actions('type', text=name_of_item)
-            time.sleep(0.4)
-
-            x_cord_to_buy_item = 260
-
-            need_to_double_click = True
-            for name in LIST_OF_BLUE_ITEMS_THAT_IN_2ND_SLOT:
-                if name.replace(' ', '').replace('\n', '').lower() == item_name.replace(' ', '').replace('\n', '').lower():
-                    x_cord_to_buy_item = 1000
-                    need_to_double_click = False
+        while counter != 0:
+            for i in items_list.items():
+                if image.is_dead():
+                    self._go_to_market()
+                self._check_if_need_go_to_find_menu()
+                if counter == 0:
                     break
-            if need_to_double_click:
-                amount_of_clicks = 2
-            else:
-                amount_of_clicks = 1
+                item_name = i[0]
+                print(item_name)
 
-            for y in range(amount_of_clicks):
-                ahk.mouse_actions('move', x=x_cord_to_buy_item, y=300)
+                ahk.mouse_actions('move', x=800, y=280)
                 ahk.mouse_actions('click')
-            time.sleep(0.2)
 
-            item_price = i[1]
-            print(item_price)
-            time.sleep(3)
+                ahk.mouse_actions('move', x=300, y=200)
+                ahk.mouse_actions('click')
 
-            image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', area_of_screenshot=(1100, 450, 1230, 490))
+                name_of_item = item_name.replace(' ', '')
+                time.sleep(0.4)
 
-            try:
-                сurrent_price = int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', is_digits=True))
-            except:
-                print('Не смог определить текущую цену шмотки, скипает')
-                continue
+                ahk.mouse_actions('type', text=name_of_item)
+                time.sleep(0.4)
 
-            if сurrent_price <= item_price:
-                if self._buy_item(сurrent_price) is False:
+                x_cord_to_buy_item = 260
+
+                need_to_double_click = True
+                for name in LIST_OF_BLUE_ITEMS_THAT_IN_2ND_SLOT:
+                    if name.replace(' ', '').replace('\n', '').lower() == item_name.replace(' ', '').replace('\n', '').lower():
+                        x_cord_to_buy_item = 1000
+                        need_to_double_click = False
+                        break
+                if need_to_double_click:
+                    amount_of_clicks = 2
+                else:
+                    amount_of_clicks = 1
+
+                for y in range(amount_of_clicks):
+                    ahk.mouse_actions('move', x=x_cord_to_buy_item, y=300)
+                    ahk.mouse_actions('click')
+                time.sleep(0.2)
+
+                item_price = i[1]
+                print(item_price)
+                time.sleep(3)
+
+                image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', area_of_screenshot=(1100, 445, 1230, 490))
+
+                try:
+                    сurrent_price = int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', is_digits=True))
+                except:
+                    print('Не смог определить текущую цену шмотки, скипает')
                     continue
+
+            if сurrent_price <= item_price or is_acessory:
+                if is_acessory:
+                    if self._buy_item(item_price, True) is False:
+                        continue
+                else:
+                    if self._buy_item(сurrent_price) is False:
+                        continue
                 global diamonds_wasted
                 global items_bought
 
@@ -1470,6 +1476,8 @@ class Rolls():
                     items_on_market.update({item_name: сurrent_price})
                     items_on_market = self._sort_dict(items_on_market)
 
+                ahk.mouse_actions('esc')
+                return False
         ahk.mouse_actions('esc')
 
     def _sort_dict(self, dict_for_sort):
@@ -1546,7 +1554,7 @@ class Rolls():
 
                 time.sleep(1.1)
 
-                image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', area_of_screenshot=(1100, 450, 1230, 490))
+                image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', area_of_screenshot=(1100, 440, 1230, 490))
 
                 price = image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\price.png', is_digits=True)
 
@@ -1583,8 +1591,21 @@ class Rolls():
         prices_and_goods = __sort_dict(prices_and_goods)
         return prices_and_goods
 
-    def _buy_item(self, price):
+    def _buy_item(self, price, is_accesspry=False):
         time.sleep(4)
+        if is_accesspry:
+            time.sleep(1)
+            ahk.mouse_actions('move', x=900, y=470)
+            ahk.mouse_actions('click')
+            time.sleep(0.5 * MULTIPLIER)
+
+            self.set_neccesary_sharp('+1')
+
+            time.sleep(1)
+            ahk.mouse_actions('move', x=900, y=470)
+            ahk.mouse_actions('click')
+            time.sleep(0.5 * MULTIPLIER)
+
         for i in range(2):
             time.sleep(1)
             ahk.mouse_actions('move', x=900, y=470)
@@ -1595,10 +1616,13 @@ class Rolls():
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\current_price.png', area_of_screenshot=(1625, 445, 1685, 500))
 
         try:
-            current_price = int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\current_price.png', is_digits=True))
+            current_price = int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\current_price.png', is_digits=True).replace('\n', ''))
         except:
             print('Не удалось определить текущую цену')
             return False
+
+        print(f'price {price}')
+        print(f'current_price {current_price}')
 
         if int(price) < current_price:
 
@@ -1740,16 +1764,26 @@ class Rolls():
                                 elif color is self.BLUE:
                                     inventory_matrix = {}
 
-                                    #items_list = self.get_cheapest_blue_items(amount_of_items_to_craft, self.SERVER_ID)
-                                    self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
+                                    items_list = self.get_cheapest_blue_items(amount_of_items_to_craft, self.SERVER_ID)
+                                    if self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS) is False:
+                                        items_list = self.get_cheapest_blue_items(amount_of_items_to_craft,
+                                                                                  self.SERVER_ID)
+                                        self.buy_neccesary_items(amount_of_items_to_craft, items_list,
+                                                                    LIST_OF_RARE_ITEMS)
 
                                     sort_inventory()
                                     self._go_to_alchemy()
                                 elif color is self.PLUS_1_ACCESORY:
                                     inventory_matrix = {}
-                                    #accesory_items_list = self.get_cheapest_blue_accesories(amount_of_items_to_craft, self.SERVER_ID)
-                                    #self.buy_neccesary_items(amount_of_items_to_craft, items_list, LIST_OF_RARE_ITEMS)
-                                    self.craft_plus_1_accesories(amount_of_items_to_craft, accesory_items_list)
+
+                                    accesory_items_list = self.get_cheapest_blue_accesories(amount_of_items_to_craft, self.SERVER_ID)
+                                    if self.buy_neccesary_items(amount_of_items_to_craft, accesory_items_list, LIST_OF_RARE_ITEMS, True) is False:
+                                        accesory_items_list = self.get_cheapest_blue_accesories(
+                                            amount_of_items_to_craft, self.SERVER_ID)
+                                        self.buy_neccesary_items(amount_of_items_to_craft, accesory_items_list,
+                                                                    LIST_OF_RARE_ITEMS, True)
+
+                                    #self.craft_plus_1_accesories(amount_of_items_to_craft, accesory_items_list)
 
                                     sort_inventory()
                                     self._go_to_alchemy()
@@ -3012,7 +3046,7 @@ class Rolls():
         def _get_full_market_data(headers) -> list:
             url = "https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/min_unit_price"
             print('json ', {'game_server_id': server_id})
-            return requests.post(url=url, headers=headers, json={'game_server_id': server_id}).json()['list']
+            return requests.post(url=url, headers=headers, json={'game_server_id': server_id}, verify=False).json()['list']
 
         def _sort_items_info_buy_price(item_info: dict) -> dict:
             return {k: v for k, v in sorted(item_info.items(), key=lambda item: item[1])}
@@ -3043,28 +3077,35 @@ class Rolls():
         sorted_items_info = _sort_items_info_buy_price(items_info)
 
         for item_id, item_price in sorted_items_info.items():
-            url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/{item_id}/game_item_conditions/Enchant/min_unit_price?game_server_id={server_id}'
-            item_data = requests.post(url=url_for_item, headers=headers).json()['list']
-            for i in item_data:
-                item_info = i.items()
+            if LIST_OF_RARE_ITEMS_JSON.get(item_id):
+                url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/{item_id}/game_item_conditions/Enchant/min_unit_price?game_server_id={server_id}'
+                print(url_for_item)
+                item_data = requests.get(url=url_for_item, headers=headers, verify=False).json()['list']
+                for i in item_data:
+                    print(i)
+                    item_key, conditions, item_price, amount_of_items = i.items()
 
-                item_price = int(float(item_info['min_unit_price']))
-                amount_of_items = int(item_info['sale_count'])
-                conditions = items_info['game_item_conditions']
-                for j in conditions:
-                    enchant = j['value']
+                    print(f'item_key {item_key}')
+                    print(f'conditions {conditions}')
+                    print(f'item_price {item_price}')
+                    print(f'amount_of_items {amount_of_items}')
 
-                if item_price > 10:
-                    continue
+                    item_price = int(float(item_price[1]))
 
-                if amount_of_items >= amount and enchant == "0":
-                    return [key for key, value in LIST_OF_RARE_ITEMS_JSON.items() if value == item_id]
+                    for j in conditions[1]:
+                        enchant = j['value']
+
+                    if item_price > 10:
+                        continue
+
+                    if int(amount_of_items[1]) >= amount and enchant == "0":
+                        return {LIST_OF_RARE_ITEMS_JSON.get(item_id): item_price}
 
     def get_cheapest_blue_accesories(self, amount, server_id):
         def _get_full_market_data(headers) -> list:
             url = "https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/min_unit_price"
 
-            return requests.post(url=url, headers=headers, json={'game_server_id': server_id}).json()['list']
+            return requests.post(url=url, headers=headers, json={'game_server_id': server_id}, verify=False).json()['list']
 
         def _sort_items_info_buy_price(item_info: dict) -> dict:
             return {k: v for k, v in sorted(item_info.items(), key=lambda item: item[1])}
@@ -3092,25 +3133,31 @@ class Rolls():
             if LIST_OF_RARE_ACCESSORIES_JSON.get(item_id):
                 items_info.update({item_id: item_price})
 
+        print(f'items_info {items_info}')
         sorted_items_info = _sort_items_info_buy_price(items_info)
 
         for item_id, item_price in sorted_items_info.items():
             url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/summary/group_game_items/{item_id}/game_item_conditions/Enchant/min_unit_price?game_server_id={server_id}'
-            item_data = requests.post(url=url_for_item, headers=headers).json()['list']
+            item_data = requests.get(url=url_for_item, headers=headers, verify=False).json()['list']
             for i in item_data:
-                item_info = i.items()
+                print(i)
+                item_key, conditions, item_price, amount_of_items = i.items()
 
-                item_price = int(float(item_info['min_unit_price']))
-                amount_of_items = int(item_info['sale_count'])
-                conditions = items_info['game_item_conditions']
-                for j in conditions:
+                print(f'item_key {item_key}')
+                print(f'conditions {conditions}')
+                print(f'item_price {item_price}')
+                print(f'amount_of_items {amount_of_items}')
+
+                item_price = int(float(item_price[1]))
+
+                for j in conditions[1]:
                     enchant = j['value']
 
-                if item_price > 12:
+                if item_price > 10:
                     continue
 
-                if amount_of_items >= amount and enchant == "1":
-                    return [key for key, value in LIST_OF_RARE_ACCESSORIES_JSON.items() if value == item_id]
+                if int(amount_of_items[1]) >= amount and enchant == "1":
+                    return {LIST_OF_RARE_ACCESSORIES_JSON.get(item_id): item_price}
 
     def get_server_id(self) -> str:
         self._open_settings()

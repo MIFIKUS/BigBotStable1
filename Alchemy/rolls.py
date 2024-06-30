@@ -1605,12 +1605,12 @@ class Rolls():
             ahk.mouse_actions('move', x=900, y=470)
             ahk.mouse_actions('click')
             time.sleep(0.5 * MULTIPLIER)
-
-        for i in range(2):
-            time.sleep(1)
-            ahk.mouse_actions('move', x=900, y=470)
-            ahk.mouse_actions('click')
-            time.sleep(0.5*MULTIPLIER)
+        else:
+            for i in range(2):
+                time.sleep(1)
+                ahk.mouse_actions('move', x=900, y=470)
+                ahk.mouse_actions('click')
+                time.sleep(0.5*MULTIPLIER)
 
         time.sleep(2)
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\current_price.png', area_of_screenshot=(1625, 445, 1685, 500))

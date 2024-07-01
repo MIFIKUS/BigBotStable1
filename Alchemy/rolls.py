@@ -1627,7 +1627,7 @@ class Rolls():
         print(f'price {price}')
         print(f'current_price {current_price}')
 
-        if int(price) < current_price:
+        if int(price) < current_price or is_accesspry:
 
             print('Текущая цена больше нужной')
             return False

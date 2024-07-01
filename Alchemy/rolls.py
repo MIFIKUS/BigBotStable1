@@ -1268,8 +1268,11 @@ class Rolls():
                                 if minimal_price > 10:
                                     print("Миинимальная цена больше 10")
                                     minimal_price -= 1
-                                self.make_new_price(minimal_price)
-                                self.confirm_new_price()
+                                    self.make_new_price(minimal_price)
+                                    self.confirm_new_price()
+                                else:
+                                    ahk.mouse_actions('move', x=700, y=930)
+                                    ahk.mouse_actions('click')
 
                             else:
                                 print("Не удалось получить минимальную цену")

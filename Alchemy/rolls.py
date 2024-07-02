@@ -690,6 +690,17 @@ class Image:
             if server.replace(' ', '').lower() == server_name.lower():
                 return server_id
 
+    def get_item_name_from_market(self) -> str:
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\item_name_on_market.png', (600, 165, 1260, 200))
+        item_name = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\item_name_on_market.png', False)
+
+        item_name = item_name.replace(' ', '')
+        item_name = item_name.replace('\n', '')
+
+        return item_name
+
+
+
 
 ahk = AHKActions()
 image = Image()
@@ -1261,24 +1272,38 @@ class Rolls():
                             ahk.mouse_actions('click')
                             time.sleep(4)
 
+                            item_name = image.get_item_name_from_market()
                             minimal_price = image.get_minimal_price()
-                            if minimal_price:
-                                print(f'Минимальная цена получена {minimal_price}')
 
-                                if minimal_price > 10:
-                                    print("Миинимальная цена больше 10")
-                                    minimal_price -= 1
-                                    self.make_new_price(minimal_price)
-                                    self.confirm_new_price()
-                                else:
+                            print(f'item_name {item_name}')
+                            print(f'minimal_price {minimal_price}')
+
+                            is_piece = False
+                            for c in ('авадон', 'молнии', 'зубе', 'кронвист'):
+                                if c in item_name.lower():
                                     ahk.mouse_actions('move', x=700, y=930)
                                     ahk.mouse_actions('click')
+                                    is_piece = True
+                                    break
 
-                            else:
-                                print("Не удалось получить минимальную цену")
+                            if not is_piece:
+                                if minimal_price:
+                                    print(f'Минимальная цена получена {minimal_price}')
 
-                            self._close_market()
-                            time.sleep(3)
+                                    if minimal_price > 10:
+                                        print("Миинимальная цена больше 10")
+                                        minimal_price -= 1
+                                        self.make_new_price(minimal_price)
+                                        self.confirm_new_price()
+                                    else:
+                                        ahk.mouse_actions('move', x=700, y=930)
+                                        ahk.mouse_actions('click')
+
+                                else:
+                                    print("Не удалось получить минимальную цену")
+
+                                self._close_market()
+                                time.sleep(3)
                     else:
                         print("Колличество слотов 30")
 
@@ -1471,14 +1496,14 @@ class Rolls():
                 counter -= 1
 
             else:
-                if is_acessory:
-                    accesory_items_on_market.update({item_name: сurrent_price})
-                    accesory_items_on_market = self._sort_dict(accesory_items_on_market)
-
-                else:
-                    items_on_market.update({item_name: сurrent_price})
-                    items_on_market = self._sort_dict(items_on_market)
-
+                #if is_acessory:
+                #    accesory_items_on_market.update({item_name: сurrent_price})
+                #    accesory_items_on_market = self._sort_dict(accesory_items_on_market)
+#
+                #else:
+                #    items_on_market.update({item_name: сurrent_price})
+                #    items_on_market = self._sort_dict(items_on_market)
+#
                 ahk.mouse_actions('esc')
                 return False
         ahk.mouse_actions('esc')
@@ -1627,10 +1652,11 @@ class Rolls():
         print(f'price {price}')
         print(f'current_price {current_price}')
 
-        if int(price) < current_price or is_accesspry:
+        if not is_accesspry:
+            if int(price) < current_price:
 
-            print('Текущая цена больше нужной')
-            return False
+                print('Текущая цена больше нужной')
+                return False
 
         ahk.mouse_actions('move', x=900, y=470)
         ahk.mouse_actions('click')

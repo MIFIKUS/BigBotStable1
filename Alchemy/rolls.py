@@ -3242,7 +3242,7 @@ class Rolls():
                 for j in conditions[1]:
                     enchant = j['value']
 
-                if item_price > 12:
+                if item_price > 15:
                     continue
 
                 if int(amount_of_items[1]) >= amount and enchant == "1":

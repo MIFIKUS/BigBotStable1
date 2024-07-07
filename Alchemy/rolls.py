@@ -1717,6 +1717,10 @@ class Rolls():
 
                 print('Текущая цена больше нужной')
                 return False
+        else:
+            if 16 > current_price:
+                print('Текущая цена больше нужной')
+                return False
 
         ahk.mouse_actions('move', x=900, y=470)
         ahk.mouse_actions('click')

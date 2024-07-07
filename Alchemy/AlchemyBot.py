@@ -233,6 +233,52 @@ class Image():
         except TypeError:
             raise Exception("Too many colors in the image")
 
+    def get_adena_amount(self) -> int:
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png', (1010, 65, 1180, 100))
+        amount_of_adena = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png', True, False)
+
+        amount_of_adena = amount_of_adena.replace('\n', '')
+        amount_of_adena = amount_of_adena.replace(' ', '')
+        amount_of_adena = amount_of_adena.replace('.', '')
+        amount_of_adena = amount_of_adena.replace(',', '')
+
+        return int(amount_of_adena)
+
+    def get_diamonds_amount(self) -> int:
+        def _delete_diamond_from_img(filename: str):
+            img_rgb = cv2.imread(f'{PATH_TO_ALCHEMY}\\imgs\\{filename}')
+
+            img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+            template = cv2.imread(f'{PATH_TO_ALCHEMY}\\imgs\\balance_diamond.png', 0)
+
+            w, h = template.shape[::-1]
+
+            res = cv2.matchTemplate(img_gray, template, cv2.TM_CCOEFF_NORMED)
+
+            threshold = 0.7
+            loc = np.where(res >= threshold)
+
+            for pt in zip(*loc[::-1]):
+                cv2.rectangle(img_rgb, pt, (pt[0] + w, pt[1] + h), (15, 18, 22), -1)
+
+            cv2.imwrite(f'{PATH_TO_ALCHEMY}\\imgs\\{filename}', img_rgb)
+
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_diamonds.png', (800, 65, 910, 100))
+        _delete_diamond_from_img('amount_of_diamonds.png')
+
+        amount_of_diamonds = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_diamonds.png', True, False)
+
+        amount_of_diamonds = amount_of_diamonds.replace(' ', '')
+        amount_of_diamonds = amount_of_diamonds.replace('\n', '')
+        amount_of_diamonds = amount_of_diamonds.replace('.', '')
+        amount_of_diamonds = amount_of_diamonds.replace(',', '')
+
+        return int(amount_of_diamonds)
+
+    def get_amount_of_slots(self) -> int:
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', area_of_screenshot=(150, 930, 235, 980))
+        return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', True, False).replace('\n', '').split('/')[0])
+
 ahk = AHKActions()
 image = Image()
 
@@ -269,8 +315,8 @@ class Windows():
         accs_names_list = []
         for hwnd in l2m_windows:
             acc_name = self.get_window_name(hwnd)
-            if acc_name in accs_and_rolls_dict:
-                accs_names_list.append(hwnd)
+            #if acc_name in accs_and_rolls_dict:
+            accs_names_list.append(hwnd)
         return accs_names_list
 
     def _is_dead(self):
@@ -406,43 +452,49 @@ class Windows():
 class Telegram:
 
     def send_msg_in_tg(self, hwnd, type='', adena_wasted=0, roll_type='', amount_of_rolls=0, diamonds_wasted=0, items_bought={}, gained_slot=0, gained_item='', wasted_time=0):
-        acc_name = win32gui.GetWindowText(hwnd)
-        acc_name = acc_name.replace('Lineage2M l ', '')
+        while True:
+            try:
+                acc_name = win32gui.GetWindowText(hwnd)
+                acc_name = acc_name.replace('Lineage2M l ', '')
 
-        if type == 'overflow':
-            bot.send_message(TG_USER_ID, f'На аккаунте {acc_name} переполнен инвентарь (')
-            print("Сообщение в тг отправлено")
+                if type == 'overflow':
+                    bot.send_message(TG_USER_ID, f'На аккаунте {acc_name} переполнен инвентарь (')
+                    print("Сообщение в тг отправлено")
 
-        if type == 'not_found_items':
-            bot.send_message(TG_USER_ID, f'На аккаунте {acc_name} не достаточно шмоток для ролла')
+                if type == 'not_found_items':
+                    bot.send_message(TG_USER_ID, f'На аккаунте {acc_name} не достаточно шмоток для ролла')
 
-        if type == 'roll info':
-            bought_items_str = ''
-            adena_wasted = '{0:,}'.format(adena_wasted).replace(',', ' ')
-            if len(items_bought) == 0:
-                items_bought == "Ничего не купил\n"
-            else:
-                for i in items_bought.items():
-                    item_name = i[0]
-                    item_price = i[1]
-                    item_str = '*' + item_name + ': ' + str(item_price) + '*' + '\n'
-                    bought_items_str += item_str
-            gained_item = gained_item.replace("\n", '')
-            roll_type = roll_type.replace('Roll_', '').replace('().start_roll', '')
-            bot.send_message(TG_USER_ID, f'Аккаунт: *{acc_name}*\n'
-                                         f'Ролл: *{roll_type}\n*'
-                                         f'Потрачено адены: *{adena_wasted}*\n'
-                                         f'Алмазов потрачено: *{diamonds_wasted}*\n'
-                                         f'Купленные шмотки:\n'
-                                         f'{bought_items_str}'
-                                         f'Выпал слот: *{gained_slot}*\n'
-                                         f'Выпала шмотка: *{gained_item}*\n'
-                                         f'Потрачено времени: *{datetime.timedelta(seconds=round(wasted_time))}*',
-                                           parse_mode="Markdown")
+                if type == 'roll info':
+                    bought_items_str = ''
+                    adena_wasted = '{0:,}'.format(adena_wasted).replace(',', ' ')
+                    if len(items_bought) == 0:
+                        items_bought == "Ничего не купил\n"
+                    else:
+                        for i in items_bought.items():
+                            item_name = i[0]
+                            item_price = i[1]
+                            item_str = '*' + item_name + ': ' + str(item_price) + '*' + '\n'
+                            bought_items_str += item_str
+                    gained_item = gained_item.replace("\n", '')
+                    roll_type = roll_type.replace('Roll_', '').replace('().start_roll', '')
+                    bot.send_message(TG_USER_ID, f'Аккаунт: *{acc_name}*\n'
+                                                 f'Ролл: *{roll_type}\n*'
+                                                 f'Потрачено адены: *{adena_wasted}*\n'
+                                                 f'Алмазов потрачено: *{diamonds_wasted}*\n'
+                                                 f'Купленные шмотки:\n'
+                                                 f'{bought_items_str}'
+                                                 f'Выпал слот: *{gained_slot}*\n'
+                                                 f'Выпала шмотка: *{gained_item}*\n'
+                                                 f'Потрачено времени: *{datetime.timedelta(seconds=round(wasted_time))}*',
+                                                   parse_mode="Markdown")
 
-        if type == 'end':
-            bot.send_message(TG_USER_ID, f'{acc_name}\n'
-                                         f'Закончил крутить')
+                if type == 'end':
+                    bot.send_message(TG_USER_ID, f'{acc_name}\n'
+                                                 f'Закончил крутить')
+
+            except:
+                pass
+
 windows = Windows()
 
 
@@ -469,14 +521,55 @@ def sort_inventory():
     time.sleep(1)
 
 def run(hwnd):
+    def _open_menu():
+        ahk.mouse_actions('move', x=1775, y=90)
+        ahk.mouse_actions('click')
+
+    def _open_market():
+        ahk.mouse_actions('move', x=1775, y=340)
+        ahk.mouse_actions('click')
+
+    def _open_sale_menu():
+        ahk.mouse_actions('move', x=400, y=185)
+        ahk.mouse_actions('click')
+
     try:
         telegram = Telegram()
 
-        print(accs_and_rolls_dict)
+        _open_menu()
+        time.sleep(1)
+        _open_market()
+        time.sleep(3)
+        _open_sale_menu()
+        time.sleep(2)
+
+        amount_of_adena = image.get_adena_amount()
+        amount_of_diamonds = image.get_diamonds_amount()
+        amount_of_slots = image.get_amount_of_slots()
+
+        print(f'Адены {amount_of_adena}')
+        print(f'Алмазов {amount_of_diamonds}')
+        print(f'Слотов {amount_of_slots}')
+
+        if amount_of_adena < 40_000_000:
+            return
+
+        if amount_of_diamonds < 1000:
+            roll = 'Roll_00().start_roll'
+
+        elif amount_of_diamonds > 1000:
+            roll = 'Roll_66().start_roll'
+            if amount_of_adena < 110_000_000:
+                roll = 'Roll_66_Lite().start_roll'
+
+        roll_amount = 30 - amount_of_slots
+        ahk.mouse_actions('esc')
+
+        #print(accs_and_rolls_dict)
         acc_name = windows.get_window_name(hwnd)
-        roll = list(accs_and_rolls_dict[acc_name].items())[0][0]
-        print(roll)
-        roll_amount = int(list(accs_and_rolls_dict[acc_name].items())[0][1])
+        #roll = list(accs_and_rolls_dict[acc_name].items())[0][0]
+        #print(f'roll {roll}')
+        #roll_amount = int(list(accs_and_rolls_dict[acc_name].items())[0][1])
         print(roll_amount)
 
         items_list = None
@@ -487,9 +580,19 @@ def run(hwnd):
             #sort_inventory()
 
         open(f'{PATH_TO_ALCHEMY}gained_items_list.txt', 'w').close()
+
+        prev_roll = roll
+
+        need_80 = False
+
         for i in range(roll_amount):
             #sort_inventory()
-            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
+            roll = prev_roll
+
+            if need_80:
+                roll = 'Roll_80().start_roll'
+
+            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80 = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)
             print('accesory_items_list is ', accesory_items_list)
             telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
@@ -502,8 +605,8 @@ def run(hwnd):
                 telegram.send_msg_in_tg('overflow')
                 return
         telegram.send_msg_in_tg(hwnd, 'end')
-
         return
+
     except Exception as e:
         traceback.print_exc()
         pass

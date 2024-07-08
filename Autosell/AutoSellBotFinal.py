@@ -652,7 +652,7 @@ image = Image()
 
 class Database:
     def __init__(self):
-        self.host = '192.168.0.13'
+        self.host = '192.168.0.18'
         #self.host = '192.168.1.66'
         self.user = 'root'
         self.password = 'BigBot'

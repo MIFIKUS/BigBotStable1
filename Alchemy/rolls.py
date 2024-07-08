@@ -1543,10 +1543,10 @@ class Rolls():
             if сurrent_price <= item_price or is_acessory:
                 if is_acessory:
                     if self._buy_item(item_price, True) is False:
-                        continue
+                        return False
                 else:
                     if self._buy_item(сurrent_price) is False:
-                        continue
+                        return False
                 global diamonds_wasted
                 global items_bought
 

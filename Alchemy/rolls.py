@@ -1301,8 +1301,9 @@ class Rolls():
                                     need_80 = True
                                     break
 
-                            for j in RED_ITEMS_LIST.keys():
-                                if SequenceMatcher(a=j.replace(' ', '').lower(), b=item_name.replace(' ', '').replace('\n', '').lower()).ratio() > 0.85:
+                            for j in RED_ITEMS_LIST.values():
+                                if SequenceMatcher(a=j.replace(' ', '').lower(), b=item_name.replace(' ', '').replace('\n', '').lower()).ratio() > 0.8:
+                                    print('item is red')
                                     is_red = True
                                     break
 
@@ -1362,8 +1363,9 @@ class Rolls():
                                     ahk.mouse_actions('move', x=700, y=930)
                                     ahk.mouse_actions('click')
 
-                                self._close_market()
-                                time.sleep(3)
+                            self._close_market()
+                            time.sleep(3)
+
                     else:
                         print("Колличество слотов 30")
 
@@ -1718,7 +1720,7 @@ class Rolls():
                 print('Текущая цена больше нужной')
                 return False
         else:
-            if 16 > current_price:
+            if 16 < current_price:
                 print('Текущая цена больше нужной')
                 return False
 

@@ -595,16 +595,16 @@ def run(hwnd):
             items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80 = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)
             print('accesory_items_list is ', accesory_items_list)
-            telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
-                                    diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
+            #telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
+            #y                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
 
             if roll_amount == 0:
                 return
 
-            if items_list is False:
-                telegram.send_msg_in_tg('overflow')
-                return
-        telegram.send_msg_in_tg(hwnd, 'end')
+         #   if items_list is False:
+          #      telegram.send_msg_in_tg('overflow')
+           #     return
+        #telegram.send_msg_in_tg(hwnd, 'end')
         return
 
     except Exception as e:

@@ -771,7 +771,7 @@ class InGame():
         image.take_screenshot(f'{PATH_TO_AUTOSELL}is_market_opened.png', (1560, 70, 1745, 120))
 
         while image.matching(f'{PATH_TO_AUTOSELL}is_market_opened.png', f'{PATH_TO_AUTOSELL}market_opened.png') is False:
-            ahk.mouse_actions('move', x=1770, y=340)
+            ahk.mouse_actions('move', x=1500, y=450)
             ahk.mouse_actions('click')
             time.sleep(2)
 
@@ -782,7 +782,7 @@ class InGame():
 
         while image.matching(f'{PATH_TO_AUTOSELL}is_market_opened.png',
                              f'{PATH_TO_AUTOSELL}market_opened.png') is False:
-            ahk.mouse_actions('move', x=1780, y=340)
+            ahk.mouse_actions('move', x=1500, y=450)
             ahk.mouse_actions('click')
             time.sleep(2)
 

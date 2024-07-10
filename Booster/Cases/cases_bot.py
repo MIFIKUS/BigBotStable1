@@ -13,6 +13,7 @@ windows = Windows()
 FIRST_SLOT_INVENTORY_CORDS = [1440, 290]
 SECOND_SLOT_INVENTORY_CORDS = [1540, 290]
 
+
 def main():
     try:
         ingame_actions.open_inventory()

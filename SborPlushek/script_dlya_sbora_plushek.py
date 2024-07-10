@@ -599,7 +599,7 @@ class InGame():
         time.sleep(2)
 
     def go_to_bonus_menu(self):
-        ahk.mouse_actions('move', x=1590, y=575)
+        ahk.mouse_actions('move', x=1700, y=575)
         ahk.mouse_actions('click')
 
     def get_bonuses_from_bonus_menu(self):
@@ -882,7 +882,7 @@ class InGame():
         ahk.mouse_actions('click')
 
     def go_to_dungeon_menu(self):
-        ahk.mouse_actions('move', x=1690, y=450)
+        ahk.mouse_actions('move', x=1580, y=450)
         ahk.mouse_actions('click')
 
     def choose_dungeon(self):

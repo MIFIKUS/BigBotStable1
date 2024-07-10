@@ -1772,8 +1772,7 @@ class Rolls():
         ahk.mouse_actions('click')
         time.sleep(1)
 
-
-        ahk.mouse_actions('move', x=1780, y=335)
+        ahk.mouse_actions('move', x=1500, y=450)
         ahk.mouse_actions('click')
 
         time.sleep(2)
@@ -2766,7 +2765,7 @@ class Rolls():
         ahk.mouse_actions('move', x=1775, y=85)
         ahk.mouse_actions('click')
 
-        ahk.mouse_actions('move', x=1680, y=350)
+        ahk.mouse_actions('move', x=1400, y=450)
         ahk.mouse_actions('click')
 
         time.sleep(1)
@@ -3062,9 +3061,10 @@ class Rolls():
             ahk.mouse_actions('click')
             time.sleep(1)
 
-        ahk.mouse_actions('move', x=1425, y=340)
+        ahk.mouse_actions('move', x=1700, y=340)
         ahk.mouse_actions('click')
         time.sleep(2)
+
     def get_window_name(self, hwnd):
         acc_name = win32gui.GetWindowText(hwnd)
         acc_name = acc_name.replace('Lineage2M l ', '')

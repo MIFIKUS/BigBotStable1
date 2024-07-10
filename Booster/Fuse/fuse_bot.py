@@ -11,6 +11,7 @@ windows = Windows()
 fuse = FuseClasses()
 confirm_menu = ConfirmMenu()
 
+
 def fuse_classes():
     print('Начинается процесс слияния классов')
 

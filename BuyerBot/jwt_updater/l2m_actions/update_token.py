@@ -16,7 +16,7 @@ def main():
         mouse_and_keyboard.click()
 
     def _open_market():
-        mouse_and_keyboard.move(1250, 240, 0)
+        mouse_and_keyboard.move(1500, 450, 0)
         mouse_and_keyboard.click()
 
     while not image.menu_opened():

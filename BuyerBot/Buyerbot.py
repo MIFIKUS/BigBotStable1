@@ -42,6 +42,7 @@ servers_and_hwnds_list = get_all_servers()
 
 proxy_num = 0
 
+
 def main():
 
     while True:
@@ -56,7 +57,7 @@ def main():
                 is_purple = bool(puprle_items_list.get(item_id))
 
                 if is_purple and price <= minimal_price_for_purple:
-                    sender.low_price_notification(item_name, price, server_name, 'purple')
+                    #sender.low_price_notification(item_name, price, server_name, 'purple')
                     hwnd = get_hwnd_from_list(servers_and_hwnds_list, server_name)
                     print(hwnd)
                     windows.open_window_by_hwnd(hwnd)

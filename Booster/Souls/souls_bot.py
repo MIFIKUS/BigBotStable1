@@ -8,6 +8,7 @@ import time
 ahk = AHKActions()
 windows = Windows()
 
+
 def main():
     ingame_actions.open_menu()
     ingame_actions.open_souls_menu()

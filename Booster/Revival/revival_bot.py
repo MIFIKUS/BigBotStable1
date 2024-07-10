@@ -22,6 +22,7 @@ windows = Windows()
 revive = Revive()
 acc = AccActions()
 
+
 def main():
     try:
         ingame_actions.open_menu()

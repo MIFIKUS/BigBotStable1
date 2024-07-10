@@ -526,7 +526,7 @@ def run(hwnd):
         ahk.mouse_actions('click')
 
     def _open_market():
-        ahk.mouse_actions('move', x=1775, y=340)
+        ahk.mouse_actions('move', x=1510, y=450)
         ahk.mouse_actions('click')
 
     def _open_sale_menu():

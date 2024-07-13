@@ -228,10 +228,12 @@ class Image:
             lvl = lvl.replace('LV.', '')
             return lvl
 
-        self.take_screenshot(f'{PATH_TO_SCRIPT}lvl.png', (30, 938, 115, 1000))
+        self.take_screenshot(f'{PATH_TO_SCRIPT}lvl.png', (90, 985, 130, 1020))
 
         lvl = pytesseract.image_to_string(f'{PATH_TO_SCRIPT}lvl.png', config='--psm 6 -c tessedit_char_whitelist=0123456789LV.')
         lvl = _prepare_lvl(lvl)
+
+        print(f'current_lvl {lvl}')
 
         try:
             return int(lvl)
@@ -285,6 +287,7 @@ class Windows():
 
                 while self.is_screen_locked() is True:
                     self.unlock_screen()
+                    time.sleep(2)
 
                 time.sleep(2*MULTIPLIER)
                 if self._is_dead() is True:

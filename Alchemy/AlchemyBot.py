@@ -279,6 +279,20 @@ class Image():
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', area_of_screenshot=(150, 930, 235, 980))
         return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', True, False).replace('\n', '').split('/')[0])
 
+    def get_amount_of_neccesary_scrolls(self) -> int or bool:
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_neccessary_scrolls.png', (1060, 710, 1090, 750))
+        amount_of_scrolls = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_neccessary_scrolls.png', True, False)
+
+        amount_of_scrolls = amount_of_scrolls.replace(' ', '')
+        amount_of_scrolls = amount_of_scrolls.replace('\n', '')
+
+        print(f'amount_of_scrolls {amount_of_scrolls}')
+
+        try:
+            return int(amount_of_scrolls)
+        except:
+            return False
+
 ahk = AHKActions()
 image = Image()
 
@@ -520,6 +534,245 @@ def sort_inventory():
 
     time.sleep(1)
 
+
+def sharp_accessory():
+    def _check_if_not_enough_scrolls_for_sharp():
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_enough_scrolls_for_sharp.png', area_of_screenshot=(750, 780, 752, 782))
+        color_of_button = image.get_main_color(f'{PATH_TO_ALCHEMY}\\imgs\\is_enough_scrolls_for_sharp.png')
+
+        if 200 <= color_of_button[0] <= 230 and 95 <= color_of_button[1] <= 115 and 5 <= color_of_button[2] <= 20:
+            return True
+        return False
+
+    def _check_red(image_path):
+        image = cv2.imread(image_path)
+        hsv_image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        # устанавливаем диапазон красного цвета в HSV
+        lower_red = np.array([0, 50, 50])
+        upper_red = np.array([10, 255, 255])
+        lower_red_2 = np.array([170, 50, 50])
+        upper_red_2 = np.array([180, 255, 255])
+        # создаем маску для выделения красного цвета в изображении
+        mask1 = cv2.inRange(hsv_image, lower_red, upper_red)
+        mask2 = cv2.inRange(hsv_image, lower_red_2, upper_red_2)
+        mask = cv2.bitwise_or(mask1, mask2)
+        # вычисляем количество пикселей, соответствующих красному цветунн
+        num_red_pixels = cv2.countNonZero(mask)
+        # если количество пикселей больше некоторого порога,
+        # то считаем, что на изображении есть красный цвет
+        if num_red_pixels >= 1:
+            return True
+        else:
+            return False
+
+    def take_off_red_items_from_sharp_menu():
+        y_cords = 460
+        for i in range(8):
+            image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_in_sharp_menu_red.png', area_of_screenshot=(572+(i*93), y_cords, 574+(i*93), y_cords+1))
+            if _check_red(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_in_sharp_menu_red.png') is True:
+                print(f'Обнаружена красная шмотка в {i} слоте 1ый ряд')
+                ahk.mouse_actions('move', x=575+(i*95), y=y_cords)
+                ahk.mouse_actions('click')
+                return False
+        y_cords = 560
+        for i in range(8):
+            image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_in_sharp_menu_red.png', area_of_screenshot=(572+(i*93), y_cords, 574+(i*93), y_cords+1))
+            if _check_red(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_in_sharp_menu_red.png') is True:
+                print(f'Обнаружена красная шмотка в {i} слоте 1ый ряд')
+                ahk.mouse_actions('move', x=575+(i*95), y=y_cords-15)
+                ahk.mouse_actions('click')
+                return False
+        print('Красных шмоток не найдено')
+        return True
+
+    def _exit_from_sharp_scroll():
+        ahk.mouse_actions('move', x=1300, y=180)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+
+        ahk.mouse_actions('move', x=1785, y=180)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+
+    def _close_sharp_menu():
+        ahk.mouse_actions('i')
+
+        ahk.mouse_actions('move', x=1340, y=440)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('move', x=1050, y=180)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('move', x=1350, y=720)
+        ahk.mouse_actions('click')
+        while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_filter_selected.png',
+                             f'{PATH_TO_ALCHEMY}\\imgs\\filter_is_selected.png', need_for_taking_screenshot=True,
+                             area_of_screenshot=(1755, 250, 1805, 310), threshold=0.6) is False:
+            ahk.mouse_actions('move', x=1600, y=280)
+            ahk.mouse_actions('click')
+            time.sleep(0.5)
+        ahk.mouse_actions('move', x=1600, y=280)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+        ahk.mouse_actions('move', x=1350, y=720)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+        ahk.mouse_actions('esc')
+
+    def _craft_sharp_scrolls():
+        ahk.mouse_actions('move', x=930, y=320)
+
+        ahk.mouse_actions('press')
+
+        while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_scroll_craft_button_found.png',
+                             f'{PATH_TO_ALCHEMY}\\imgs\\sharp_scroll_craft_button.png',
+                              need_for_taking_screenshot=True, area_of_screenshot=(1390, 595, 1580, 660)) is False:
+            ahk.mouse_actions('move', x=1700, y=450)
+            ahk.mouse_actions('drag', x=0, y=-100)
+            time.sleep(1)
+
+        ahk.mouse_actions('move', x=1500, y=630)
+        ahk.mouse_actions('click')
+
+        time.sleep(2)
+
+        ahk.mouse_actions('move', x=1070, y=960)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('move', x=1540, y=950)
+        ahk.mouse_actions('click')
+
+        time.sleep(5)
+
+        for _ in range(5):
+            ahk.mouse_actions('move', x=770, y=950)
+            ahk.mouse_actions('click')
+            time.sleep(0.1)
+
+        ahk.mouse_actions('esc')
+
+    def _find_and_open_accessory_sharp_scroll():
+        time.sleep(0.5)
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\inventory.png',area_of_screenshot=(1390, 240, 1800, 770))
+
+        scroll_cords = image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\inventory.png', f'{PATH_TO_ALCHEMY}\\imgs\\sharp_scroll.png', threshold=0.75, func=1)
+
+        if scroll_cords:
+            x = scroll_cords[0] + 1400
+            y = scroll_cords[1] + 280
+            print(scroll_cords)
+
+            ahk.mouse_actions('move', x=x, y=y)
+            for i in range(2):
+                ahk.mouse_actions('click')
+        else:
+            _craft_sharp_scrolls()
+            return False
+
+    def _open_sharp_menu():
+        ahk.mouse_actions('i')
+
+        ahk.mouse_actions('move', x=1350, y=440)
+        ahk.mouse_actions('click')
+        ahk.mouse_actions('move', x=1350, y=720)
+        ahk.mouse_actions('click')
+        time.sleep(1.5)
+        while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_filter_selected.png',
+                             f'{PATH_TO_ALCHEMY}\\imgs\\filter_is_selected.png', need_for_taking_screenshot=True,
+                             area_of_screenshot=(1755, 250, 1805, 310), threshold=0.6) is True:
+            ahk.mouse_actions('move', x=1600, y=280)
+            ahk.mouse_actions('click')
+            time.sleep(0.5)
+        time.sleep(1.5)
+
+        while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_filter_selected.png',
+                             f'{PATH_TO_ALCHEMY}\\imgs\\filter_is_selected_half.png', need_for_taking_screenshot=True,
+                             area_of_screenshot=(1750, 720, 1810, 785), threshold=0.6) is False:
+            ahk.mouse_actions('move', x=1600, y=750)
+            ahk.mouse_actions('click')
+            time.sleep(0.5)
+            #ahk.mouse_actions('move', x=1600, y=500)
+            #ahk.mouse_actions('wheel')
+            #time.sleep(1.5)
+
+        ahk.mouse_actions('wheel_up')
+        time.sleep(1.5)
+        ahk.mouse_actions('move', x=1350, y=720)
+        ahk.mouse_actions('click')
+        time.sleep(0.5)
+        if _find_and_open_accessory_sharp_scroll() is False:
+            return False
+        time.sleep(1.5)
+        ahk.mouse_actions('move', x=1050, y=180)
+        ahk.mouse_actions('click')
+
+        time.sleep(0.5)
+
+    def _put_items_in_sharp_scrol(amount, is_2_sharp=False):
+        time.sleep(1.5)
+        ahk.mouse_actions('move', x=1705, y=815)
+        ahk.mouse_actions('click')
+
+        time.sleep(1.5)
+        ahk.mouse_actions('move', x=1450, y=285)
+        ahk.mouse_actions('click')
+
+        time.sleep(1.5)
+        ahk.mouse_actions('move', x=1600, y=820)
+        ahk.mouse_actions('click')
+
+        time.sleep(0.3)
+
+        equiped_items = image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_equiped.png', f'{PATH_TO_ALCHEMY}\\imgs\\item_equiped_in_sharp_menu.png',
+                                       need_for_taking_screenshot=True, threshold=0.8, area_of_screenshot=(550, 375, 1300, 570), func=1)
+        while equiped_items:
+                ahk.mouse_actions('move', x=600+equiped_items[0], y=400+equiped_items[1])
+                ahk.mouse_actions('click')
+                time.sleep(0.3)
+                equiped_items = image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_equiped.png', f'{PATH_TO_ALCHEMY}\\imgs\\item_equiped_in_sharp_menu.png',
+                               need_for_taking_screenshot=True, threshold=0.8, area_of_screenshot=(550, 375, 1300, 570), func=1)
+
+        red_items = False
+        while red_items is False:
+            red_items = take_off_red_items_from_sharp_menu()
+
+        if not _check_if_not_enough_scrolls_for_sharp() and image.get_amount_of_neccesary_scrolls() > 0:
+            print('Недостаточно свитков для заточки бижи')
+            _craft_sharp_scrolls()
+            return False
+
+        ahk.mouse_actions('move', x=950, y=800)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('move', x=1100, y=700)
+        ahk.mouse_actions('click')
+
+        time.sleep(4)
+
+        if is_2_sharp:
+            ahk.mouse_actions('move', x=670, y=680)
+            ahk.mouse_actions('click')
+
+            ahk.mouse_actions('move', x=950, y=800)
+            ahk.mouse_actions('click')
+
+            ahk.mouse_actions('move', x=1100, y=700)
+            ahk.mouse_actions('click')
+
+        time.sleep(4)
+
+        _exit_from_sharp_scroll()
+
+        _close_sharp_menu()
+
+    accessory_shapred = False
+    while accessory_shapred is False:
+        if _open_sharp_menu() is False:
+            _close_sharp_menu()
+        if _put_items_in_sharp_scrol(0) is not False:
+            accessory_shapred = True
+
+
 def run(hwnd):
     def _open_menu():
         ahk.mouse_actions('move', x=1775, y=90)
@@ -584,6 +837,9 @@ def run(hwnd):
         prev_roll = roll
 
         need_80 = False
+
+        sharp_accessory()
+        time.sleep(2)
 
         for i in range(roll_amount):
             #sort_inventory()

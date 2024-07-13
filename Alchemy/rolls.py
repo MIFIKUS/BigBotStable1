@@ -638,7 +638,7 @@ class Image:
                                                                                                                   1510+x_additional, 431+y_additional))
 
                 if self.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_gained.png', f'{PATH_TO_ALCHEMY}\\imgs\\item_is_equiped.png',
-                                 threshold=0.77):
+                                 threshold=0.7):
                     if row == 0:
                         column -= 1
                         row = 3
@@ -1306,7 +1306,7 @@ class Rolls():
                                     print('item is red')
                                     is_red = True
                                     break
-
+                            is_accessory = False
                             if not is_piece:
                                 if is_red:
                                     ahk.mouse_actions('esc')
@@ -1343,10 +1343,18 @@ class Rolls():
                                             item_name = image.get_item_name_from_market()
                                             minimal_price = image.get_minimal_price()
 
+                                            is_accessory = False
+
+                                            for m in ('кольцо', 'ожерелье', 'пояс'):
+                                                if m in item_name.lower():
+                                                    is_accessory = True
+                                                    break
+
                                             print(f'item_name {item_name}')
                                             print(f'minimal_price {minimal_price}')
+                                            if is_accessory:print(f'Шмотка является бижой')
 
-                                if minimal_price:
+                                if minimal_price and not is_accessory:
                                     if is_red and minimal_price < 400:
                                         ahk.mouse_actions('move', x=700, y=930)
                                         ahk.mouse_actions('click')
@@ -2819,6 +2827,8 @@ class Rolls():
         ahk.mouse_actions('click')
 
         time.sleep(0.5)
+
+
     def _close_sharp_menu(self):
         ahk.mouse_actions('i')
 
@@ -2870,6 +2880,8 @@ class Rolls():
         else:
             self._craft_sharp_scrolls()
             return False
+
+
     def _put_items_in_sharp_scrol(self, amount, is_2_sharp=False):
         time.sleep(1.5)
         ahk.mouse_actions('move', x=1705, y=815)

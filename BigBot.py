@@ -1,12 +1,5 @@
-import tkinter as tk
-from tkinter import ttk
-import json
-import multiprocessing
-
-import update_statistics
-
-
 from Autosell import AutoSellBotFinal
+from Autosell import market_header_updater
 from CheckGreen import BotForCheckingGreen
 from SborPlushek import script_dlya_sbora_plushek
 from BotForCards import botForCards
@@ -18,6 +11,14 @@ from Booster.Souls import souls_bot
 from Booster.Stamps import stamps_bot
 from Booster.Revival import revival_bot
 from Booster.Cases import cases_bot
+
+import tkinter as tk
+from tkinter import ttk
+import json
+import multiprocessing
+import asyncio
+
+import update_statistics
 
 LIST_OF_ROLLS = (
     'Roll_00',
@@ -161,6 +162,9 @@ def Autosell():
 
         autosell = multiprocessing.Process(target=AutoSellBotFinal.run, args=(schedule, multiplier, path,))
         autosell.start()
+
+        headers_updater = multiprocessing.Process(target=market_header_updater.run)
+        headers_updater.start()
 
 
 def CheckGreen():

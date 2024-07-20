@@ -790,11 +790,11 @@ def run(hwnd):
         telegram = Telegram()
 
         _open_menu()
-        time.sleep(1)
-        _open_market()
-        time.sleep(3)
-        _open_sale_menu()
         time.sleep(2)
+        _open_market()
+        time.sleep(4)
+        _open_sale_menu()
+        time.sleep(5)
 
         amount_of_adena = image.get_adena_amount()
         amount_of_diamonds = image.get_diamonds_amount()

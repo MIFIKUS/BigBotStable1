@@ -1250,17 +1250,17 @@ class Rolls():
                     roll_amount -= 1
                     ahk.mouse_actions('move', x=950, y=950)
                     ahk.mouse_actions('click')
-                    time.sleep(1)
+                    time.sleep(2)
 
                     ahk.mouse_actions('move', x=1800, y=90)
                     ahk.mouse_actions('click')
 
                     self._go_to_market()
-                    time.sleep(3)
+                    time.sleep(5)
 
                     ahk.mouse_actions('move', x=400, y=180)
                     ahk.mouse_actions('click')
-                    time.sleep(3)
+                    time.sleep(5)
 
                     new_item_position = False
 
@@ -1310,15 +1310,15 @@ class Rolls():
                             if not is_piece:
                                 if is_red:
                                     ahk.mouse_actions('esc')
-                                    time.sleep(1)
+                                    time.sleep(2)
 
                                     ahk.mouse_actions('move', x=1400, y=90)
                                     ahk.mouse_actions('click')
-                                    time.sleep(3)
+                                    time.sleep(5)
 
                                     ahk.mouse_actions('move', x=400, y=180)
                                     ahk.mouse_actions('click')
-                                    time.sleep(3)
+                                    time.sleep(5)
 
                                     for _ in range(3):
                                         new_item_position = image.get_gained_item_slot()

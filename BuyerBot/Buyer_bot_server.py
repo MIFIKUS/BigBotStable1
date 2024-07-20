@@ -35,6 +35,8 @@ async def main():
         market_info = await get_all_items_prices()
         #database.set_jwt_token(token)
 
+        print(market_info)
+
         update_list = {}
         for j in market_info:
             list_of_items = {}

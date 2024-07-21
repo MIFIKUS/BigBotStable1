@@ -1252,134 +1252,134 @@ class Rolls():
                     ahk.mouse_actions('click')
                     time.sleep(2)
 
-                    ahk.mouse_actions('move', x=1800, y=90)
-                    ahk.mouse_actions('click')
-
-                    self._go_to_market()
-                    time.sleep(5)
-
-                    ahk.mouse_actions('move', x=400, y=180)
-                    ahk.mouse_actions('click')
-                    time.sleep(5)
-
-                    new_item_position = False
-
-                    for _ in range(3):
-                        new_item_position = image.get_gained_item_slot()
-                        if new_item_position:
-                            print('Найдена выпавшная шмотка')
-                            break
-
-                        ahk.mouse_actions('move', x=1605, y=530)
-
-                        self._wheel_inventory_down()
-
-                    if image.get_amount_of_slots() < 30:
-                        print('Колличество слотов меньше 30')
-                        if new_item_position:
-                            print(f"Позиция выпавшей шмотки {new_item_position}")
-
-                            y, x = new_item_position
-                            ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
-                            ahk.mouse_actions('click')
-                            time.sleep(4)
-
-                            item_name = image.get_item_name_from_market()
-                            minimal_price = image.get_minimal_price()
-
-                            print(f'item_name {item_name}')
-                            print(f'minimal_price {minimal_price}')
-
-                            is_piece = False
-                            is_red = False
-
-                            for c in ('авадон', 'молнии', 'зубе', 'кронвист'):
-                                if c in item_name.lower():
-                                    ahk.mouse_actions('move', x=700, y=930)
-                                    ahk.mouse_actions('click')
-                                    is_piece = True
-                                    need_80 = True
-                                    break
-
-                            for j in RED_ITEMS_LIST.values():
-                                if SequenceMatcher(a=j.replace(' ', '').lower(), b=item_name.replace(' ', '').replace('\n', '').lower()).ratio() > 0.8:
-                                    print('item is red')
-                                    is_red = True
-                                    break
-                            is_accessory = False
-                            if not is_piece:
-                                if is_red:
-                                    ahk.mouse_actions('esc')
-                                    time.sleep(2)
-
-                                    ahk.mouse_actions('move', x=1400, y=90)
-                                    ahk.mouse_actions('click')
-                                    time.sleep(5)
-
-                                    ahk.mouse_actions('move', x=400, y=180)
-                                    ahk.mouse_actions('click')
-                                    time.sleep(5)
-
-                                    for _ in range(3):
-                                        new_item_position = image.get_gained_item_slot()
-                                        if new_item_position:
-                                            print('Найдена выпавшная шмотка')
-                                            break
-
-                                        ahk.mouse_actions('move', x=1605, y=530)
-
-                                        self._wheel_inventory_down()
-
-                                    if image.get_amount_of_slots() < 30:
-                                        print('Колличество слотов меньше 30')
-                                        if new_item_position:
-                                            print(f"Позиция выпавшей шмотки {new_item_position}")
-
-                                            y, x = new_item_position
-                                            ahk.mouse_actions('move', x=1450 + (x * 100), y=350 + (y * 100))
-                                            ahk.mouse_actions('click')
-                                            time.sleep(4)
-
-                                            item_name = image.get_item_name_from_market()
-                                            minimal_price = image.get_minimal_price()
-
-                                            is_accessory = False
-
-                                            for m in ('кольцо', 'ожерелье', 'пояс'):
-                                                if m in item_name.lower():
-                                                    is_accessory = True
-                                                    break
-
-                                            print(f'item_name {item_name}')
-                                            print(f'minimal_price {minimal_price}')
-                                            if is_accessory:print(f'Шмотка является бижой')
-
-                                if minimal_price and not is_accessory:
-                                    if is_red and minimal_price < 400:
-                                        ahk.mouse_actions('move', x=700, y=930)
-                                        ahk.mouse_actions('click')
-                                    else:
-                                        print(f'Минимальная цена получена {minimal_price}')
-
-                                        if minimal_price > 10:
-                                            print("Миинимальная цена больше 10")
-                                            minimal_price -= 1
-                                            self.make_new_price(minimal_price)
-                                            self.confirm_new_price()
-                                        else:
-                                            ahk.mouse_actions('move', x=700, y=930)
-                                            ahk.mouse_actions('click')
-
-                                else:
-                                    print("Не удалось получить минимальную цену")
-                                    ahk.mouse_actions('move', x=700, y=930)
-                                    ahk.mouse_actions('click')
-
-                            self._close_market()
-                            time.sleep(3)
-
-                    else:
-                        print("Колличество слотов 30")
+                    #ahk.mouse_actions('move', x=1800, y=90)
+                    #ahk.mouse_actions('click')
+#
+                    #self._go_to_market()
+                    #time.sleep(5)
+#
+                    #ahk.mouse_actions('move', x=400, y=180)
+                    #ahk.mouse_actions('click')
+                    #time.sleep(5)
+#
+                    #new_item_position = False
+#
+                    #for _ in range(3):
+                    #    new_item_position = image.get_gained_item_slot()
+                    #    if new_item_position:
+                    #        print('Найдена выпавшная шмотка')
+                    #        break
+#
+                    #    ahk.mouse_actions('move', x=1605, y=530)
+#
+                    #    self._wheel_inventory_down()
+#
+                    #if image.get_amount_of_slots() < 30:
+                    #    print('Колличество слотов меньше 30')
+                    #    if new_item_position:
+                    #        print(f"Позиция выпавшей шмотки {new_item_position}")
+#
+                    #        y, x = new_item_position
+                    #        ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
+                    #        ahk.mouse_actions('click')
+                    #        time.sleep(4)
+#
+                    #        item_name = image.get_item_name_from_market()
+                    #        minimal_price = image.get_minimal_price()
+#
+                    #        print(f'item_name {item_name}')
+                    #        print(f'minimal_price {minimal_price}')
+#
+                    #        is_piece = False
+                    #        is_red = False
+#
+                    #        for c in ('авадон', 'молнии', 'зубе', 'кронвист'):
+                    #            if c in item_name.lower():
+                    #                ahk.mouse_actions('move', x=700, y=930)
+                    #                ahk.mouse_actions('click')
+                    #                is_piece = True
+                    #                need_80 = True
+                    #                break
+#
+                    #        for j in RED_ITEMS_LIST.values():
+                    #            if SequenceMatcher(a=j.replace(' ', '').lower(), b=item_name.replace(' ', '').replace('\n', '').lower()).ratio() > 0.8:
+                    #                print('item is red')
+                    #                is_red = True
+                    #                break
+                    #        is_accessory = False
+                    #        if not is_piece:
+                    #            if is_red:
+                    #                ahk.mouse_actions('esc')
+                    #                time.sleep(2)
+#
+                    #                ahk.mouse_actions('move', x=1400, y=90)
+                    #                ahk.mouse_actions('click')
+                    #                time.sleep(5)
+#
+                    #                ahk.mouse_actions('move', x=400, y=180)
+                    #                ahk.mouse_actions('click')
+                    #                time.sleep(5)
+#
+                    #                for _ in range(3):
+                    #                    new_item_position = image.get_gained_item_slot()
+                    #                    if new_item_position:
+                    #                        print('Найдена выпавшная шмотка')
+                    #                        break
+#
+                    #                    ahk.mouse_actions('move', x=1605, y=530)
+#
+                    #                    self._wheel_inventory_down()
+#
+                    #                if image.get_amount_of_slots() < 30:
+                    #                    print('Колличество слотов меньше 30')
+                    #                    if new_item_position:
+                    #                        print(f"Позиция выпавшей шмотки {new_item_position}")
+#
+                    #                        y, x = new_item_position
+                    #                        ahk.mouse_actions('move', x=1450 + (x * 100), y=350 + (y * 100))
+                    #                        ahk.mouse_actions('click')
+                    #                        time.sleep(4)
+#
+                    #                        item_name = image.get_item_name_from_market()
+                    #                        minimal_price = image.get_minimal_price()
+#
+                    #                        is_accessory = False
+#
+                    #                        for m in ('кольцо', 'ожерелье', 'пояс'):
+                    #                            if m in item_name.lower():
+                    #                                is_accessory = True
+                    #                                break
+#
+                    #                        print(f'item_name {item_name}')
+                    #                        print(f'minimal_price {minimal_price}')
+                    #                        if is_accessory:print(f'Шмотка является бижой')
+#
+                    #            if minimal_price and not is_accessory:
+                    #                if is_red and minimal_price < 400:
+                    #                    ahk.mouse_actions('move', x=700, y=930)
+                    #                    ahk.mouse_actions('click')
+                    #                else:
+                    #                    print(f'Минимальная цена получена {minimal_price}')
+#
+                    #                    if minimal_price > 10:
+                    #                        print("Миинимальная цена больше 10")
+                    #                        minimal_price -= 1
+                    #                        self.make_new_price(minimal_price)
+                    #                        self.confirm_new_price()
+                    #                    else:
+                    #                        ahk.mouse_actions('move', x=700, y=930)
+                    #                        ahk.mouse_actions('click')
+#
+                    #            else:
+                    #                print("Не удалось получить минимальную цену")
+                    #                ahk.mouse_actions('move', x=700, y=930)
+                    #                ahk.mouse_actions('click')
+#
+                    #        self._close_market()
+                    #        time.sleep(3)
+#
+                    #else:
+                    #    print("Колличество слотов 30")
 
                     end_time = time.time()
 

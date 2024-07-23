@@ -22,10 +22,10 @@ def update_prices(data: dict):
 
             full_query = ''
 
-            for i in data.keys():
-                server_column = servers_list.get(i)
+            for server, items in data.items():
+                server_column = servers_list.get(server)
                 for item_id, item_name in items_list_to_iterate.items():
-                    price = data.get(item_id)
+                    price = items.get(item_id)
                     if price:
                         full_query += f"UPDATE l2m.{server_column} SET price = {price} WHERE item_id = '{item_id}';"
                     else:

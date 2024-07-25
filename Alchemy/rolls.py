@@ -1496,6 +1496,8 @@ class Rolls():
             else:
                 items_list = self.get_cheapest_blue_items(amount_of_neccesary_items, self.SERVER_ID)
 
+            print(f'buy_neccessary items items_list {items_list}')
+
             for i in items_list.items():
                 if image.is_dead():
                     self._go_to_market()
@@ -1546,6 +1548,8 @@ class Rolls():
                 except:
                     print('Не смог определить текущую цену шмотки, скипает')
                     continue
+
+            print(f'is_accessory {is_acessory}')
 
             if сurrent_price <= item_price or is_acessory:
                 if is_acessory:
@@ -3170,6 +3174,8 @@ class Rolls():
 
         sorted_items_info = _sort_items_info_buy_price(items_info)
 
+        items_dict = {}
+
         for item_id, item_price in sorted_items_info.items():
             if LIST_OF_RARE_ITEMS_JSON.get(item_id):
                 url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/min_unit_price/top'
@@ -3196,7 +3202,18 @@ class Rolls():
                     if item_price > 11:
                         continue
 
-                    return {LIST_OF_RARE_ITEMS_JSON.get(item_id): item_price}
+                    if item_price == 10:
+                        return {LIST_OF_RARE_ITEMS_JSON.get(item_id): item_price}
+
+                    if LIST_OF_RARE_ITEMS_JSON.get(item_id):
+                        items_dict.update({LIST_OF_RARE_ITEMS_JSON.get(item_id): item_price})
+
+        print(f'items_dict {items_dict}')
+
+        sorted_items_dict = sorted(items_dict.items(), key=lambda x: x[1])
+        items_dict = {sorted_items_dict[0][0]: sorted_items_dict[0][1]}
+
+        return items_dict
 
     def get_cheapest_blue_accesories(self, amount, server_id):
         def _get_full_market_data(headers) -> list:
@@ -3233,6 +3250,8 @@ class Rolls():
         print(f'items_info {items_info}')
         sorted_items_info = _sort_items_info_buy_price(items_info)
 
+        items_dict = {}
+
         for item_id, item_price in sorted_items_info.items():
             url_for_item = f'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/min_unit_price/top'
 
@@ -3255,7 +3274,18 @@ class Rolls():
                 if item_price > 15:
                     continue
 
-                return {LIST_OF_RARE_ACCESSORIES_JSON.get(item_id): item_price}
+                if item_price == 10:
+                    return {LIST_OF_RARE_ACCESSORIES_JSON.get(item_id): item_price}
+
+                if LIST_OF_RARE_ACCESSORIES_JSON.get(item_id):
+                    items_dict.update({LIST_OF_RARE_ACCESSORIES_JSON.get(item_id): item_price})
+
+        print(f'items_dict {items_dict}')
+
+        sorted_items_dict = sorted(items_dict.items(), key=lambda x: x[1])
+        items_dict = {sorted_items_dict[0][0]: sorted_items_dict[0][1]}
+
+        return items_dict
 
     def get_server_id(self) -> str:
         self._open_settings()

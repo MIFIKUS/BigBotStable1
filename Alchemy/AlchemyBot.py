@@ -223,15 +223,12 @@ class Image():
 
     def get_main_color(self, file):
         img = pil.open(file)
-        colors = img.getcolors(256)  # put a higher value if there are many colors in your image
-        max_occurence, most_present = 0, 0
-        try:
-            for c in colors:
-                if c[0] > max_occurence:
-                    (max_occurence, most_present) = c
-            return most_present
-        except TypeError:
-            raise Exception("Too many colors in the image")
+        colors = img.getcolors(1024)  # put a higher value if there are many colors in your image
+        colors = sorted(colors)
+        if (0,0,0) in colors:
+           colors.remove(colors[0])
+        return colors[0][1]
+
 
     def get_adena_amount(self) -> int:
         self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png', (1010, 65, 1180, 100))
@@ -293,10 +290,99 @@ class Image():
         except:
             return False
 
+    def delete_all_colors_except_blue(self, file):
+        im = cv2.imread(file)
+        BlueMin = np.array([10, 110, 190], np.uint8)
+        BlueMax = np.array([35, 150, 225], np.uint8)
+
+        # Go to HSV colourspace and get mask of blue pixels
+        HSV = cv2.cvtColor(im,cv2.COLOR_BGR2RGB)
+        mask = cv2.inRange(HSV, BlueMin, BlueMax)
+
+        inverse_cachement_mask = cv2.bitwise_not(mask)
+        # Make all pixels in mask white
+        im[inverse_cachement_mask>0] = [0, 0, 0]
+        cv2.imwrite('blue.png', im)
+
+    def delete_all_colors_except_green(self, file):
+        im = cv2.imread(file)
+
+        GreenMin = np.array([15, 150, 70], np.uint8)
+        GreenMax = np.array([30, 175, 90], np.uint8)
+
+        # Go to HSV colourspace and get mask of blue pixels
+        HSV  = cv2.cvtColor(im,cv2.COLOR_BGR2RGB)
+        mask = cv2.inRange(HSV, GreenMin, GreenMax)
+        #inverse_catchment_mask = (np.logical_not(np.where(np.isnan(mask), 1, np.nan)))
+        inverse_cachement_mask = cv2.bitwise_not(mask)
+        # Make all pixels in mask white
+        im[inverse_cachement_mask>0] = [0, 0, 0]
+        cv2.imwrite('green.png', im)
+
+    def delete_all_colors_except_red(self, file):
+        im = cv2.imread(file)
+
+        GreenMin = np.array([160, 30, 60], np.uint8)
+        GreenMax = np.array([255, 45, 75], np.uint8)
+
+        # Go to HSV colourspace and get mask of blue pixels
+        HSV  = cv2.cvtColor(im,cv2.COLOR_BGR2RGB)
+        mask = cv2.inRange(HSV, GreenMin, GreenMax)
+
+        inverse_cachement_mask = cv2.bitwise_not(mask)
+        # Make all pixels in mask white
+        im[inverse_cachement_mask>0] = [0, 0, 0]
+        cv2.imwrite('red.png', im)
+
+    def _is_item_color_green(self, img):
+        try:
+            color = image.get_main_color(img)
+            print(color)
+            if color:
+                if (0 <= color[0] <= 40) and (140 <= color[1] <= 180) and (50 <= color[2] <= 90):
+                    print(color)
+                    print('items is green')
+                    return True
+                return False
+            else:
+                print('Не смог определить зеленая шмотка или нет. Место: _is_item_color_green')
+        except Exception as e:
+            print('Error: place: _is_item_color_green\n', e)
+
+    def is_item_color_blue(self, img):
+        try:
+            color = image.get_main_color(img)
+            print(color)
+            if color:
+                if (5 <= color[0] <= 35) and (100 <= color[1] <= 130) and (170 <= color[2] <= 256):
+                    if image.image_to_string(img, False, False):
+                        return True
+                return False
+            else:
+                print('Не смог определить синяя шмотка или нет. Место: _is_item_color_blue')
+        except Exception as e:
+            print('Error: place: _is_item_color_blue\n', e)
+
+    def _is_item_color_red(self, img):
+        try:
+            color = image.get_main_color(img)
+            print(color)
+            if color:
+                if (140 < color[0] < 255) and (20 < color[1] < 45) and (45 < color[2] < 70):
+                    if image.image_to_string(img, False, False):
+                        return True
+                return False
+            else:
+                print('Не смог определить красная шмотка или нет. Место: _is_item_color_red')
+        except Exception as e:
+            print('Error: place: _is_item_color_red\n', e)
+
+
 ahk = AHKActions()
 image = Image()
 
-class Windows():
+
+class Windows:
 
     def switch_windows(self, func):
         shell = win32com.client.Dispatch("WScript.Shell")
@@ -312,7 +398,6 @@ class Windows():
 
                 win32gui.ShowWindow(window, win32con.SW_RESTORE)
                 win32gui.SetForegroundWindow(window)
-
 
                 while self.is_screen_locked() is True:
                    self.unlock_screen()
@@ -773,6 +858,138 @@ def sharp_accessory():
             accessory_shapred = True
 
 
+def get_inventory_info() -> str or None:
+    def _check_item_in_inventory_color(row, column):
+        def __check_is_item_appropriate(row, column):
+            x = row
+            y = column
+
+            print(x)
+            print(y)
+            if y > 6:
+                print('Посмотрел весь инвентарь')
+                return False
+
+            elif image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_equiped.png',
+                                             f'{PATH_TO_ALCHEMY}\\imgs\\item_is_equiped.png',
+                                             need_for_taking_screenshot=True, area_of_screenshot=(1400+x*100+1-100, 260+y*100+1-100,
+                                                                                                  1425+x*100+1-100, 290+y*100+1-100),
+                                             threshold=0.8) is True:
+                print('Предмет экипирован')
+                return
+
+        y = row*100
+
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\item_in_inventory_name.png', area_of_screenshot=(1400, 50+y, 1800, 162+y+5))
+        item_name = image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\item_in_inventory_name.png', False, False).split('\n')
+        print('Название шмотки без обработки', item_name)
+
+        if __check_is_item_appropriate(row, column) is False:
+            print(item_name, 'Нельзя положить')
+            return 'END'
+
+        try:
+            for i in item_name:
+                if '&' in i:
+                    item_name.remove(i)
+                elif '.' in i:
+                    item_name.remove(i)
+                elif '@' in i:
+                    item_name.remove(i)
+                elif "'" in i:
+                    item_name.remove(i)
+                elif "," in i:
+                    item_name.remove(i)
+                elif "}" in i:
+                    item_name.remove(i)
+                elif "!" in i:
+                    item_name.remove(i)
+                elif "*" in i:
+                    item_name.remove(i)
+                elif '"' in i:
+                    item_name.remove(i)
+                elif "_" in i:
+                    item_name.remove(i)
+                elif "=" in i:
+                    item_name.remove(i)
+                elif "®" in i:
+                    item_name.remove(i)
+                elif "’" in i:
+                    item_name.remove(i)
+                elif ")" in i:
+                    item_name.remove(i)
+                elif "(" in i:
+                    item_name.remove(i)
+                elif "0" in i:
+                    item_name.remove(i)
+                elif "!" in i:
+                    item_name.remove(i)
+                elif "?" in i:
+                    item_name.remove(i)
+                elif ">" in i:
+                    item_name.remove(i)
+        except Exception as e:
+            print(e)
+            print("Скип шмотки и")
+            return
+
+        item_name = "".join(item_name).replace(' ', '').replace('\n', '').lower()
+        item_name = item_name.replace('%', '').replace('.', '').replace('{', '').replace('°', '').replace(',', '').replace('“','').replace('.','').replace('№', '')
+
+        print('Название шмотки ', item_name)
+
+        if 'гермункус' in item_name:
+            print('Гермункус')
+            return False
+
+        image.delete_all_colors_except_blue(f'{PATH_TO_ALCHEMY}\\imgs\\item_in_inventory_name.png')
+        print('Blue template for item matching ready')
+        image.delete_all_colors_except_green(f'{PATH_TO_ALCHEMY}\\imgs\\item_in_inventory_name.png')
+        print('Green template for item matching ready')
+        image.delete_all_colors_except_red(f'{PATH_TO_ALCHEMY}\\imgs\\item_in_inventory_name.png')
+        print('Red template for item matching ready')
+
+        if image.is_item_color_blue('blue.png'):
+            print('Blue')
+
+            #item_name = image.image_to_string('blue.png', False, False)
+            print(f'item name from blue template is {item_name}')
+
+            if __check_is_item_appropriate(row, column) is False:
+                print(item_name, 'Нельзя положить')
+                return
+
+            print('item_name is ', item_name)
+            print('Название шмотки ', item_name)
+            found_item = False
+            LIST_OF_ACCESORIES_WORDS = ('кольцо', 'ожерелье', 'серьга', 'пояс', 'браслет', 'ожёрелье', 'глаз')
+            LIST_OF_PIECE_WORDS = ('авадон', 'молнии', 'зубе', 'кронвист')
+
+            for i in LIST_OF_ACCESORIES_WORDS:
+                if i in item_name.replace('\n', '').lower():
+                    if '+1' in item_name.replace('\n', '').lower():
+                        print('+1 Accessory')
+                        return '+1 Accessory'
+
+            print(item_name, 'is not accessory')
+
+            for i in LIST_OF_PIECE_WORDS:
+                if i in item_name.replace('\n', '').lower():
+                    if '8' in item_name.replace('\n', '').lower():
+                        return 'piece'
+
+    for column in range(1, 6):
+        for row in range(1, 4):
+            ahk.mouse_actions('move', x=1350 + row * 100, y=200 + column * 100)
+            ahk.mouse_actions('click')
+            time.sleep(0.2)
+
+            item_type = _check_item_in_inventory_color(column, row)
+            if item_type:
+                ahk.mouse_actions('esc')
+                return item_type
+
+
 def run(hwnd):
     def _open_menu():
         ahk.mouse_actions('move', x=1775, y=90)
@@ -784,6 +1001,10 @@ def run(hwnd):
 
     def _open_sale_menu():
         ahk.mouse_actions('move', x=400, y=185)
+        ahk.mouse_actions('click')
+
+    def _open_alchemy():
+        ahk.mouse_actions('move', x=1680, y=330)
         ahk.mouse_actions('click')
 
     try:
@@ -804,6 +1025,12 @@ def run(hwnd):
         print(f'Алмазов {amount_of_diamonds}')
         print(f'Слотов {amount_of_slots}')
 
+        ahk.mouse_actions('esc')
+        time.sleep(1)
+
+        sharp_accessory()
+        time.sleep(2)
+
         if amount_of_adena < 40_000_000:
             return
 
@@ -816,7 +1043,6 @@ def run(hwnd):
                 roll = 'Roll_66_Lite().start_roll'
 
         roll_amount = 30 - amount_of_slots
-        ahk.mouse_actions('esc')
 
         #print(accs_and_rolls_dict)
         acc_name = windows.get_window_name(hwnd)
@@ -838,15 +1064,20 @@ def run(hwnd):
 
         need_80 = False
 
-        sharp_accessory()
-        time.sleep(2)
-
         for i in range(roll_amount):
-            #sort_inventory()
-            roll = prev_roll
+            _open_menu()
+            time.sleep(2)
+            _open_alchemy()
+            time.sleep(3)
+            item_type = get_inventory_info()
 
-            if need_80:
-                roll = 'Roll_80().start_roll'
+            match item_type:
+                case 'piece':
+                    roll = 'Roll_80().start_roll'
+                case '+1 Accessory':
+                    roll = 'Roll_66().start_roll'
+                case None:
+                    roll = prev_roll
 
             items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80 = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)

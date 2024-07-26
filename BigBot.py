@@ -11,6 +11,8 @@ from Booster.Souls import souls_bot
 from Booster.Stamps import stamps_bot
 from Booster.Revival import revival_bot
 from Booster.Cases import cases_bot
+from Booster.Rewards import rewards_bot
+
 
 import tkinter as tk
 from tkinter import ttk
@@ -823,6 +825,11 @@ class AllBotsSecondPage(tk.Frame):
                           borderwidth=0,
                           command=lambda: BotForCards())
 
+        rewards = tk.Button(self, text='Награды', bg='#404040', fg='#ffd700',
+                          font='Arial 24',
+                          borderwidth=0,
+                          command=lambda: rewards_bot.run())
+
         #collection_master_frame.place(x=15, y=460)
         #collection_master_label.place(x=60, y=480)
 
@@ -839,6 +846,8 @@ class AllBotsSecondPage(tk.Frame):
         revivals.place(x=500, y=530)
         cases.place(x=750, y=530)
         cards.place(x=920, y=530)
+        rewards.place(x=50, y=620)
+
 
 
         go_to_all_bots.place(x=0, y=0)

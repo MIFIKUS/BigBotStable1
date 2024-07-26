@@ -37,6 +37,7 @@ def main():
             time.sleep(5)
     ahk.esc()
 
+
 def run():
     try:
         windows.switch_windows(main)

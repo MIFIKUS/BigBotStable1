@@ -585,6 +585,15 @@ class AllBots(tk.Frame):
         bot_for_raking_rewards_start_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_start_button: h.configure(fg='#459330'))
         bot_for_raking_rewards_start_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_start_button: h.configure(fg='#5ecb41'))
 
+        alchemy_frame = tk.Frame(self, bg='#404040', width=1260, height=150)
+        alchemy_label = tk.Label(self, text='Алхимка', bg='#404040', fg='#d4d3d3', font='Arial 24')
+
+        alchemy_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41', font='Arial 24', borderwidth=0,
+                                         command=lambda: alchemy_bot())
+        alchemy_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3', font='Arial 24', borderwidth=0)
+        alchemy_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e', font='Arial 24',
+                                            borderwidth=0, command=lambda: controller.show_frame('AlchemySettings'))
+
         #bot_for_raking_rewards_logs_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#1b9591'))
         #bot_for_raking_rewards_logs_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#24c9c3'))
 
@@ -608,6 +617,18 @@ class AllBots(tk.Frame):
         bot_for_taking_rewards_apples_button.place(x=550, y=360)
         bot_for_taking_rewards_event_button.place(x=700, y=360)
 
+        #cards_frame.place(x=15, y=630)
+        #cards_label.place(x=60, y=650)
+        #cards_start_button.place(x=50, y=700)
+        #cards_logs_button.place(x=210, y=700)
+
+        alchemy_frame.place(x=15, y=630)
+        alchemy_label.place(x=60, y=650)
+
+        alchemy_start_button.place(x=50, y=700)
+        alchemy_logs_button.place(x=210, y=700)
+        alchemy_settings_button.place(x=350,y=700)
+
         go_to_all_bots.place(x=0, y=0)
         go_to_main.place(x=430, y=0)
         go_to_settings.place(x=860, y=0)
@@ -629,20 +650,20 @@ class AllBots(tk.Frame):
         autosell_settings_button.bind('<Enter>', lambda event, h=autosell_settings_button: h.configure(fg='#875520'))
         autosell_settings_button.bind("<Leave>", lambda event, h=autosell_settings_button: h.configure(fg='#c17a2e'))
 
-        cards_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
-        cards_label = tk.Label(self, text='Бот для сбора карточек', bg='#404040', fg='#d4d3d3', font='Arial 24')
+        #cards_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
+        #cards_label = tk.Label(self, text='Бот для сбора карточек', bg='#404040', fg='#d4d3d3', font='Arial 24')
 
-        cards_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41',font='Arial 24', borderwidth=0, command=lambda: BotForCards())
-        cards_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3',font='Arial 24', borderwidth=0)
+        #cards_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41',font='Arial 24', borderwidth=0, command=lambda: BotForCards())
+        #cards_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3',font='Arial 24', borderwidth=0)
 
         go_to_next_page = tk.Button(self, text="🢂", background='#d4d3d3', fg='#535353', height=1, width=2, borderwidth = 0, compound='center',font='Arial 24', command=lambda: controller.show_frame('AllBotsSecondPage'))
 
 
-        cards_start_button.bind('<Enter>', lambda event, h=cards_start_button: h.configure(fg='#459330'))
-        cards_start_button.bind("<Leave>", lambda event, h=cards_start_button: h.configure(fg='#5ecb41'))
+        #cards_start_button.bind('<Enter>', lambda event, h=cards_start_button: h.configure(fg='#459330'))
+        #cards_start_button.bind("<Leave>", lambda event, h=cards_start_button: h.configure(fg='#5ecb41'))
 
-        cards_logs_button.bind('<Enter>', lambda event, h=cards_logs_button: h.configure(fg='#1b9591'))
-        cards_logs_button.bind("<Leave>", lambda event, h=cards_logs_button: h.configure(fg='#24c9c3'))
+        #cards_logs_button.bind('<Enter>', lambda event, h=cards_logs_button: h.configure(fg='#1b9591'))
+        #cards_logs_button.bind("<Leave>", lambda event, h=cards_logs_button: h.configure(fg='#24c9c3'))
 
         check_green_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
         check_green_label = tk.Label(self, text='Бот для проверки зеленого', bg='#404040', fg='#d4d3d3', font='Arial 24')
@@ -681,10 +702,10 @@ class AllBots(tk.Frame):
         autosell_settings_button.place(x=350, y=530)
 
 
-        cards_frame.place(x=15, y=630)
-        cards_label.place(x=60, y=650)
-        cards_start_button.place(x=50, y=700)
-        cards_logs_button.place(x=210, y=700)
+        #cards_frame.place(x=15, y=630)
+        #cards_label.place(x=60, y=650)
+        #cards_start_button.place(x=50, y=700)
+        #cards_logs_button.place(x=210, y=700)
 
 
         check_green_frame.place(x=15, y=800)
@@ -722,12 +743,12 @@ class AllBotsSecondPage(tk.Frame):
         bot_for_stat_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3',font='Arial 24',borderwidth=0)
         bot_for_stat_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e',font='Arial 24', borderwidth=0, command=lambda: controller.show_frame('BotForStatSettings'))
 
-        alchemy_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
-        alchemy_label = tk.Label(self, text='Алхимка', bg='#404040',fg='#d4d3d3',font='Arial 24')
+        #alchemy_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
+        #alchemy_label = tk.Label(self, text='Алхимка', bg='#404040',fg='#d4d3d3',font='Arial 24')
 
-        alchemy_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41',font='Arial 24',borderwidth=0, command=lambda: alchemy_bot())
-        alchemy_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3',font='Arial 24',borderwidth=0)
-        alchemy_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e',font='Arial 24', borderwidth=0, command=lambda: controller.show_frame('AlchemySettings'))
+        #alchemy_start_button = tk.Button(self, text='Старт', bg='#404040', fg='#5ecb41',font='Arial 24',borderwidth=0, command=lambda: alchemy_bot())
+        #alchemy_logs_button = tk.Button(self, text='Логи', bg='#404040', fg='#24c9c3',font='Arial 24',borderwidth=0)
+        #alchemy_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e',font='Arial 24', borderwidth=0, command=lambda: controller.show_frame('AlchemySettings'))
 
         go_to_previous_page = tk.Button(self, text="🢀", background='#d4d3d3', fg='#535353', height=1, width=2, borderwidth = 0, compound='center',font='Arial 24', command=lambda: controller.show_frame('AllBots'))
 
@@ -748,12 +769,12 @@ class AllBotsSecondPage(tk.Frame):
         bot_for_stat_logs_button.place(x=210, y=190)
         bot_for_stat_settings_button.place(x=350,y=190)
 
-        alchemy_frame.place(x=15, y=290)
-        alchemy_label.place(x=60, y=310)
-
-        alchemy_start_button.place(x=50, y=360)
-        alchemy_logs_button.place(x=210, y=360)
-        alchemy_settings_button.place(x=350,y=360)
+        #alchemy_frame.place(x=15, y=290)
+        #alchemy_label.place(x=60, y=310)
+#
+        #alchemy_start_button.place(x=50, y=360)
+        #alchemy_logs_button.place(x=210, y=360)
+        #alchemy_settings_button.place(x=350,y=360)
 
         collection_master_frame = tk.Frame(self, bg='#404040', width = 1260, height=150)
         collection_master_label = tk.Label(self, text='Заточка', bg='#404040',fg='#d4d3d3',font='Arial 24')
@@ -764,14 +785,14 @@ class AllBotsSecondPage(tk.Frame):
         collection_master_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e', font='Arial 24',
                                             borderwidth=0, )
 
-        collection_master_frame.place(x=15, y=460)
-        collection_master_label.place(x=60, y=480)
+        collection_master_frame.place(x=15, y=290)
+        collection_master_label.place(x=60, y=310)
 
-        collection_master_start_button.place(x=50, y=530)
-        collection_master_logs_button.place(x=210, y=530)
-        collection_master_settings_button.place(x=350, y=530)
+        collection_master_start_button.place(x=50, y=360)
+        collection_master_logs_button.place(x=210, y=360)
+        collection_master_settings_button.place(x=350, y=360)
 
-        booster_frame = tk.Frame(self, bg='#404040', width=1260, height=150)
+        booster_frame = tk.Frame(self, bg='#404040', width=1260, height=250)
         booster_label = tk.Label(self, text='Бустера', bg='#404040', fg='#d4d3d3', font='Arial 24')
 
         fuse = tk.Button(self, text='Фьюз', bg='#404040', fg='#5ecb41', font='Arial 24',
@@ -797,14 +818,28 @@ class AllBotsSecondPage(tk.Frame):
                            borderwidth=0,
                            command=lambda: cases_bot.run())
 
-        booster_frame.place(x=15, y=630)
-        booster_label.place(x=60, y=650)
+        cards = tk.Button(self, text='Карточки', bg='#404040', fg='#8A2BE2',
+                          font='Arial 24',
+                          borderwidth=0,
+                          command=lambda: BotForCards())
 
-        fuse.place(x=50, y=700)
-        souls.place(x=210, y=700)
-        stamps.place(x=350, y=700)
-        revivals.place(x=500, y=700)
-        cases.place(x=750, y=700)
+        #collection_master_frame.place(x=15, y=460)
+        #collection_master_label.place(x=60, y=480)
+
+        #collection_master_start_button.place(x=50, y=530)
+        #collection_master_logs_button.place(x=210, y=530)
+        #collection_master_settings_button.place(x=350, y=530)
+
+        booster_frame.place(x=15, y=460)
+        booster_label.place(x=60, y=480)
+
+        fuse.place(x=50, y=530)
+        souls.place(x=210, y=530)
+        stamps.place(x=350, y=530)
+        revivals.place(x=500, y=530)
+        cases.place(x=750, y=530)
+        cards.place(x=920, y=530)
+
 
         go_to_all_bots.place(x=0, y=0)
         go_to_main.place(x=430, y=0)

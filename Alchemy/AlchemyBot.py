@@ -1079,6 +1079,7 @@ def run(hwnd):
                 case None:
                     roll = prev_roll
 
+
             items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80 = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)
             print('accesory_items_list is ', accesory_items_list)

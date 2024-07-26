@@ -713,6 +713,19 @@ class Image:
 
         return int(amount_of_adena)
 
+    def check_possible_to_craft(self) -> bool:
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png', (1580, 923, 1581, 924))
+        color = self.get_main_color(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png')
+
+        if 95 <= color[0] <= 115 and 40 <= color[1] <= 60 and 0 <= color[1] <= 15:
+            return False
+        return True
+
+    def check_lowest_price_for_each(self) -> bool:
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\is_lowest_price_for_each.png', (1745, 360, 1770, 393))
+        return image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_lowest_price_for_each.png',
+                              f'{PATH_TO_ALCHEMY}\\imgs\\lowest_price_for_each.png')
+
 
 ahk = AHKActions()
 image = Image()
@@ -2743,6 +2756,51 @@ class Rolls():
             return False
 
         self._go_to_craft_menu()
+
+        time.sleep(1)
+
+        if not image.check_possible_to_craft():
+            self.go_to_craft_stone()
+            time.sleep(1)
+            if image.check_possible_to_craft():
+                self.set_max_amount_in_craft_menu()
+                self.craft()
+                time.sleep(6)
+                for _ in range(5):
+                    self.skip()
+            else:
+                self.go_to_craft_stone()
+                time.sleep(4)
+
+                ahk.mouse_actions('move', x=520, y=450)
+                ahk.mouse_actions('click')
+                time.sleep(3)
+
+                self.set_price_for_each()
+
+                while not image.check_lowest_price_for_each():
+                    self.set_price_for_each()
+                    time.sleep(0.2)
+
+                ahk.mouse_actions('move', x=520, y=450)
+                ahk.mouse_actions('click')
+
+                ahk.mouse_actions('move', x=970, y=920)
+                ahk.mouse_actions('click')
+
+                ahk.mouse_actions('move', x=970, y=900)
+                ahk.mouse_actions('click')
+
+                ahk.mouse_actions('esc')
+
+                self.set_max_amount_in_craft_menu()
+                self.craft()
+                self.skip()
+
+                ahk.mouse_actions('esc')
+
+                self._go_to_craft_menu()
+
         for i in range(amount):
             time.sleep(1)
             ahk.mouse_actions('move', x=1670, y=940)
@@ -2759,6 +2817,30 @@ class Rolls():
             ahk.mouse_actions('click')
 
         ahk.mouse_actions('esc')
+
+    def go_to_craft_stone(self):
+        ahk.mouse_actions('move', x=1400, y=400)
+        ahk.mouse_actions('click')
+
+        time.sleep(0.5)
+
+        ahk.mouse_actions('move', x=1775, y=400)
+        ahk.mouse_actions('click')
+    def set_price_for_each(self):
+        ahk.mouse_actions('move', x=1700, y=350)
+        ahk.mouse_actions('click')
+
+    def craft(self):
+        ahk.mouse_actions('move', x=1545, y=950)
+        ahk.mouse_actions('click')
+
+    def skip(self):
+        ahk.mouse_actions('move', x=1010, y=950)
+        ahk.mouse_actions('click')
+
+    def set_max_amount_in_craft_menu(self):
+        ahk.mouse_actions('move', x=1050, y=950)
+        ahk.mouse_actions('click')
 
     def _go_to_craft_menu(self):
         ahk.mouse_actions('move', x=1775, y=85)

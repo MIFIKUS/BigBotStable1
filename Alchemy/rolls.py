@@ -717,7 +717,7 @@ class Image:
         self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png', (1580, 923, 1581, 924))
         color = self.get_main_color(f'{PATH_TO_ALCHEMY}\\imgs\\amount_of_adena.png')
 
-        if 95 <= color[0] <= 115 and 40 <= color[1] <= 60 and 0 <= color[1] <= 15:
+        if 95 <= color[0] <= 115 and 40 <= color[1] <= 60 and 0 <= color[2] <= 15:
             return False
         return True
 

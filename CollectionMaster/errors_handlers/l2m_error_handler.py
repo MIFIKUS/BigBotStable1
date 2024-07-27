@@ -38,7 +38,7 @@ def check_if_enough_scrolls():
     if color_presets.NOT_ENOUGH_SCROLLS_MIN_COLOR[0] <= color[0] <= color_presets.NOT_ENOUGH_SCROLLS_MAX_COLOR[0] and \
        color_presets.NOT_ENOUGH_SCROLLS_MIN_COLOR[1] <= color[1] <= color_presets.NOT_ENOUGH_SCROLLS_MAX_COLOR[1] and \
        color_presets.NOT_ENOUGH_SCROLLS_MIN_COLOR[2] <= color[2] <= color_presets.NOT_ENOUGH_SCROLLS_MAX_COLOR[2]:
-        print('Not enough scrolls')
+        print('Not enough Scrolls')
         return False
     print('Enough Scrolls')
     return True

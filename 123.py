@@ -1,4 +1,3 @@
-from Booster.Scrolls.scrolls_bot import main
+from Booster.All.start_all_boosters import start_all_bots
 
-if __name__ == '__main__':
-    main()
+start_all_bots()

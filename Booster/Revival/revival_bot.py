@@ -38,7 +38,7 @@ def main():
             ingame_actions.switch_revival_class(i)
             time.sleep(3)
 
-            if acc.get_balance() < 200:
+            if acc.get_balance() < 300:
                 print('Недостаточный баланс')
                 ahk.esc()
                 return

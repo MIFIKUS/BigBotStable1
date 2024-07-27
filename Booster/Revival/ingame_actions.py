@@ -11,11 +11,11 @@ def open_revival_menu():
     ahk.click()
 
 def switch_revival_class(class_num: int):
-    ahk.move(80, 225 + (class_num * 90))
+    ahk.move(80, 300 + (class_num * 90))
     ahk.click()
 
 def click_revive_button():
-    ahk.move(1400, 960)
+    ahk.move(1470, 960)
     ahk.click()
 
 def click_on_revive_lvl(x: int, y: int):

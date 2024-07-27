@@ -79,11 +79,9 @@ def fuse_aghathions():
     ahk.esc()
 
 def main():
-    try:
-        fuse_classes()
-        fuse_aghathions()
-    except Exception as e:
-        TGNotifier.send_break_msg('Фьюз', '', e)
+    fuse_classes()
+    fuse_aghathions()
+
 
 def run():
     windows.switch_windows(main)

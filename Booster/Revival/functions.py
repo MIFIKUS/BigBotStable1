@@ -11,18 +11,21 @@ class Revive:
         time.sleep(3)
 
         while self._revival_going():
+            print('123')
             ingame_actions.click_revive_button()
-            time.sleep(12)
+            time.sleep(13)
             if not self.revive_availible():
                 for _ in range(2):
                     ahk.esc()
                 break
 
     def _revival_going(self):
-        image.take_screenshot('Booster\\Revival\\imgs\\screenshots\\is_revival_going.png', (40, 900, 345, 1000))
+        image.take_screenshot('Booster\\Revival\\imgs\\screenshots\\is_revival_going.png', (40, 895, 345, 1000))
 
         main_img_path = 'Booster\\Revival\\imgs\\screenshots\\is_revival_going.png'
         template_img_path = 'Booster\\Revival\\imgs\\templates\\revival_going.png'
+
+        print(f'revival going status {image.matching(main_img_path, template_img_path)}')
 
         return image.matching(main_img_path, template_img_path)
 
@@ -30,9 +33,11 @@ class Revive:
         image.take_screenshot('Booster\\Revival\\imgs\\screenshots\\is_revive_availible.png', (1435, 935, 1436, 936))
         color = image.get_main_color('Booster\\Revival\\imgs\\screenshots\\is_revive_availible.png')
 
-        if 85 <= color[0] <= 125 and 30 <= color[1] <= 70 and 0 <= color[2] <= 25:
-            return False
-        return True
+        print(color)
+
+        if 180 <= color[0] <= 230 and 100 <= color[1] <= 140 and 0 <= color[2] <= 25:
+            return True
+        return False
 
 
 class AccActions:

@@ -13,7 +13,7 @@ from Booster.Revival import revival_bot
 from Booster.Cases import cases_bot
 from Booster.Rewards import rewards_bot
 from Booster.Scrolls import scrolls_bot
-
+from Booster.All import start_all_boosters
 
 
 import tkinter as tk
@@ -837,6 +837,11 @@ class AllBotsSecondPage(tk.Frame):
                           borderwidth=0,
                           command=lambda: scrolls_bot.run())
 
+        all_boosters = tk.Button(self, text='Все', bg='#404040', fg='#5ecb41',
+                          font='Arial 24',
+                          borderwidth=0,
+                          command=lambda: start_all_boosters.run())
+
         #collection_master_frame.place(x=15, y=460)
         #collection_master_label.place(x=60, y=480)
 
@@ -855,6 +860,7 @@ class AllBotsSecondPage(tk.Frame):
         cards.place(x=920, y=530)
         rewards.place(x=50, y=620)
         sings.place(x=210, y=620)
+        all_boosters.place(x=350, y=620)
 
 
         go_to_all_bots.place(x=0, y=0)

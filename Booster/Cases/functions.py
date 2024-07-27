@@ -50,7 +50,7 @@ class Checks:
 
     def check_if_nomore_cases(self, slot):
         image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\is_nomore_cases.png', (1385+(slot*102), 235,
-                                                                                                                      1495+(slot*102), 345))
+                                                                                                                      1500+(slot*102), 345))
 
         main_img_name = 'Booster\\Cases\\imgs\\screenshots\\is_nomore_cases.png'
         template_img_name = 'Booster\\Cases\\imgs\\templates\\nomore_cases.png'
@@ -65,10 +65,15 @@ class Checks:
 
         return image.matching(main_img_name, template_img_name)
 
+
     def red_recipe_open(self):
         image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\is_red_recipe_menu_open.png', (615, 280, 1250, 810))
 
         main_img_name = 'Booster\\Cases\\imgs\\screenshots\\is_red_recipe_menu_open.png'
         template_img_name = 'Booster\\Cases\\imgs\\templates\\red_recipe_menu.png'
 
-        return image.matching(main_img_name, template_img_name)
+        result = image.matching(main_img_name, template_img_name)
+        if result is False:
+            return image.matching(main_img_name, 'Booster\\Cases\\imgs\\templates\\red_recipe_menu_1.png')
+
+        return result

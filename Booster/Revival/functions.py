@@ -15,8 +15,7 @@ class Revive:
             ingame_actions.click_revive_button()
             time.sleep(13)
             if not self.revive_availible():
-                for _ in range(2):
-                    ahk.esc()
+                ingame_actions.click_on_cancel()
                 break
 
     def _revival_going(self):

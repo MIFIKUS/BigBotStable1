@@ -21,3 +21,7 @@ def click_revive_button():
 def click_on_revive_lvl(x: int, y: int):
     ahk.move(x, y)
     ahk.click()
+
+def click_on_cancel():
+    ahk.move(80, 950)
+    ahk.click()

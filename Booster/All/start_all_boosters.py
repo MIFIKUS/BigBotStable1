@@ -18,6 +18,10 @@ windows = Windows()
 
 
 def start_all_bots():
+    print('Начало работы карточек')
+    cards()
+    print('Конец работы карточек')
+
     print('Начало работы фьюза')
     fuse()
     time.sleep(2)
@@ -52,10 +56,6 @@ def start_all_bots():
     scrolls()
     time.sleep(2)
     print('Конец работы знаков')
-
-    print('Начало работы карточек')
-    cards()
-    print('Конец работы карточек')
 
 
 def run():

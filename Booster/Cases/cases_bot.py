@@ -35,6 +35,9 @@ def main():
         x = FIRST_SLOT_INVENTORY_CORDS[0]
         cords = [x, FIRST_SLOT_INVENTORY_CORDS[1]]
         while not nomore_cases:
+            if not checks.enough_slots_in_inventory():
+                break
+
             if checks.check_if_case_is_apple(slot):
                 slot += 1
                 x += 100

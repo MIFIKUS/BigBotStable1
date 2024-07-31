@@ -77,5 +77,11 @@ class Checks:
         return result
 
     def enough_slots_in_inventory(self) -> bool:
-        image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\amounts_of_slots.png', ())
+        image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\amounts_of_slots.png', (1310, 290, 1390, 322))
+
+        slots = image.image_to_string('Booster\\Cases\\imgs\\screenshots\\amounts_of_slots.png', True).split('/')
+
+        return True if int(slots[0]) != int(slots[1]) else False
+
+
 

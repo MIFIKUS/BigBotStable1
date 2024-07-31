@@ -862,7 +862,6 @@ class AllBotsSecondPage(tk.Frame):
         sings.place(x=210, y=620)
         all_boosters.place(x=350, y=620)
 
-
         go_to_all_bots.place(x=0, y=0)
         go_to_main.place(x=430, y=0)
         go_to_settings.place(x=860, y=0)

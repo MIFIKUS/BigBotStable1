@@ -28,7 +28,7 @@ def click_autochoise_button():
     ahk.click()
 
 def start_fuse():
-    ahk.move(1320, 960)
+    ahk.move(1400, 960)
     ahk.click()
 
 def show_fuse_result():

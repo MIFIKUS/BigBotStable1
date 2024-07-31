@@ -47,7 +47,6 @@ class Checks:
 
         return image.matching(main_img_name, template_img_name, threshold=0.7)
 
-
     def check_if_nomore_cases(self, slot):
         image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\is_nomore_cases.png', (1385+(slot*102), 235,
                                                                                                                       1500+(slot*102), 345))
@@ -65,7 +64,6 @@ class Checks:
 
         return image.matching(main_img_name, template_img_name)
 
-
     def red_recipe_open(self):
         image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\is_red_recipe_menu_open.png', (615, 280, 1250, 810))
 
@@ -77,3 +75,7 @@ class Checks:
             return image.matching(main_img_name, 'Booster\\Cases\\imgs\\templates\\red_recipe_menu_1.png')
 
         return result
+
+    def enough_slots_in_inventory(self) -> bool:
+        image.take_screenshot('Booster\\Cases\\imgs\\screenshots\\amounts_of_slots.png', ())
+

@@ -10,7 +10,7 @@ import time
 DELAY = 3600
 
 while True:
-    #if need_to_update_jwt():
+
     update_token.update_token()
     token = get_new_token.get_token()
 

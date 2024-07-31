@@ -35,7 +35,7 @@ def main():
         set_max_amount()
         craft()
         time.sleep(6)
-        for _ in range(4):
+        for _ in range(7):
             skip_craft()
 
     exit_from_craft_menu()

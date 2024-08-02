@@ -10,7 +10,10 @@ windows = Windows()
 
 
 def main():
-    ingame_actions.open_menu()
+    while not functions.menu_opened():
+        ingame_actions.open_menu()
+        time.sleep(1)
+
     ingame_actions.open_souls_menu()
 
     if functions.is_fuse_availible():

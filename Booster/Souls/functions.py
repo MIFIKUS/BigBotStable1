@@ -48,3 +48,8 @@ def is_fuse_availible():
     if 95 <= color[0] <= 115 and 40 <= color[1] <= 65 and 0 <= color[2] <= 20:
         return False
     return True
+
+
+def menu_opened() -> bool:
+    image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+    return image.matching('is_menu_opened.png', 'menu_opened.png')

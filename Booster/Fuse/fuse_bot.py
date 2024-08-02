@@ -1,6 +1,6 @@
 from Booster.MainClasses.classes import AHKActions, Image, Windows
 from Booster.Fuse import ingame_actions
-from Booster.Fuse.functions import FuseClasses, ConfirmMenu
+from Booster.Fuse.functions import FuseClasses, ConfirmMenu, Checks
 
 import TGNotifier
 import time
@@ -15,8 +15,9 @@ confirm_menu = ConfirmMenu()
 def fuse_classes():
     print('Начинается процесс слияния классов')
 
-    ingame_actions.open_menu()
-    time.sleep(1)
+    while not Checks.menu_opened():
+        ingame_actions.open_menu()
+        time.sleep(1)
 
     print('Меню открылось')
 
@@ -54,8 +55,9 @@ def fuse_classes():
 
 
 def fuse_aghathions():
-    ingame_actions.open_menu()
-    time.sleep(1)
+    while not Checks.menu_opened():
+        ingame_actions.open_menu()
+        time.sleep(1)
 
     ingame_actions.open_aghathions_menu()
     time.sleep(5)

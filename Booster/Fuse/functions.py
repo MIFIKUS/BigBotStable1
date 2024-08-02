@@ -100,3 +100,9 @@ class ConfirmMenu:
 
         return image.matching(main_img_path, template_path)
 
+
+class Checks:
+    @staticmethod
+    def menu_opened() -> bool:
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+        return image.matching('is_menu_opened.png', 'menu_opened.png')

@@ -83,5 +83,7 @@ class Checks:
 
         return True if int(slots[0]) != int(slots[1]) else False
 
-
+    def menu_opened(self) -> bool:
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+        return image.matching('is_menu_opened.png', 'menu_opened.png')
 

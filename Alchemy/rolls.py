@@ -1051,8 +1051,11 @@ def get_acc_name():
         acounts_cells_for_sheet = data
 
     def __go_to_server_settings():
-        ahk.mouse_actions('move', x=1780, y=75)
-        ahk.mouse_actions('click')
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
+        while not image.matching('is_menu_opened.png', 'menu_opened.png'):
+            ahk.mouse_actions('move', x=1780, y=75)
+            ahk.mouse_actions('click')
 
         ahk.mouse_actions('move', x=1690, y=820)
         ahk.mouse_actions('click')
@@ -1789,10 +1792,12 @@ class Rolls():
 
     def _go_to_market(self):
         time.sleep(4)
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
-        ahk.mouse_actions('move', x=1775, y=85)
-        ahk.mouse_actions('click')
-        time.sleep(1)
+        while not image.matching('is_menu_opened.png', 'menu_opened.png'):
+            ahk.mouse_actions('move', x=1775, y=85)
+            ahk.mouse_actions('click')
+            time.sleep(1)
 
         ahk.mouse_actions('move', x=1500, y=450)
         ahk.mouse_actions('click')
@@ -2843,8 +2848,12 @@ class Rolls():
         ahk.mouse_actions('click')
 
     def _go_to_craft_menu(self):
-        ahk.mouse_actions('move', x=1775, y=85)
-        ahk.mouse_actions('click')
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
+        while not image.matching('is_menu_opened.png', 'menu_opened.png'):
+            ahk.mouse_actions('move', x=1775, y=85)
+            ahk.mouse_actions('click')
+            time.sleep(1)
 
         ahk.mouse_actions('move', x=1400, y=450)
         ahk.mouse_actions('click')
@@ -3139,9 +3148,9 @@ class Rolls():
     def _go_to_alchemy(self):
         time.sleep(3)
 
-        while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_menu_opened.png',
-                             f'{PATH_TO_ALCHEMY}\\imgs\\menu_opened.png',
-                              need_for_taking_screenshot=True, area_of_screenshot=(1745, 55, 1800, 110)) is False:
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
+        while not image.matching('is_menu_opened.png', 'menu_opened.png'):
             ahk.mouse_actions('move', x=1775, y=85)
             ahk.mouse_actions('click')
             time.sleep(1)

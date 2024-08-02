@@ -10,8 +10,9 @@ windows = Windows()
 
 
 def main():
-    open_menu()
-    time.sleep(1)
+    while not menu_opened():
+        open_menu()
+        time.sleep(1)
 
     open_craft_menu()
     time.sleep(1)

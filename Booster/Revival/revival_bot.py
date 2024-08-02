@@ -1,5 +1,5 @@
 from Booster.Revival import ingame_actions
-from Booster.Revival.functions import Revive, AccActions
+from Booster.Revival.functions import Revive, AccActions, Checks
 from Booster.MainClasses.classes import AHKActions, Windows
 
 import TGNotifier
@@ -25,7 +25,10 @@ acc = AccActions()
 
 def main():
     try:
-        ingame_actions.open_menu()
+        while not Checks.menu_opened():
+            ingame_actions.open_menu()
+            time.sleep(1)
+
         ingame_actions.open_revival_menu()
 
         time.sleep(3)

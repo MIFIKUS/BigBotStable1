@@ -13,7 +13,10 @@ impress = ImpressStamps()
 
 
 def main():
-    ingame_actions.open_menu()
+    while not impress.menu_opened():
+        ingame_actions.open_menu()
+        time.sleep(1)
+
     ingame_actions.open_stamps_menu()
 
     for i in range(8):

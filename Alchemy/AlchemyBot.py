@@ -978,8 +978,8 @@ def get_inventory_info() -> str or None:
                     if '8' in item_name.replace('\n', '').lower():
                         return 'piece'
 
-    for column in range(1, 6):
-        for row in range(1, 4):
+    for column in range(1, 7):
+        for row in range(1, 5):
             ahk.mouse_actions('move', x=1350 + row * 100, y=200 + column * 100)
             ahk.mouse_actions('click')
             time.sleep(0.2)
@@ -988,7 +988,7 @@ def get_inventory_info() -> str or None:
             if item_type:
                 ahk.mouse_actions('esc')
                 return item_type
-
+    ahk.mouse_actions('esc')
 
 def run(hwnd):
     def _open_menu():

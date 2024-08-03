@@ -1057,6 +1057,8 @@ def get_acc_name():
             ahk.mouse_actions('move', x=1780, y=75)
             ahk.mouse_actions('click')
 
+            image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
         ahk.mouse_actions('move', x=1690, y=820)
         ahk.mouse_actions('click')
 
@@ -1798,6 +1800,7 @@ class Rolls():
             ahk.mouse_actions('move', x=1775, y=85)
             ahk.mouse_actions('click')
             time.sleep(1)
+            image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
         ahk.mouse_actions('move', x=1500, y=450)
         ahk.mouse_actions('click')
@@ -2854,6 +2857,7 @@ class Rolls():
             ahk.mouse_actions('move', x=1775, y=85)
             ahk.mouse_actions('click')
             time.sleep(1)
+            image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
         ahk.mouse_actions('move', x=1400, y=450)
         ahk.mouse_actions('click')
@@ -3154,6 +3158,7 @@ class Rolls():
             ahk.mouse_actions('move', x=1775, y=85)
             ahk.mouse_actions('click')
             time.sleep(1)
+            image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
         ahk.mouse_actions('move', x=1700, y=340)
         ahk.mouse_actions('click')

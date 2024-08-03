@@ -992,8 +992,13 @@ def get_inventory_info() -> str or None:
 
 def run(hwnd):
     def _open_menu():
-        ahk.mouse_actions('move', x=1775, y=90)
-        ahk.mouse_actions('click')
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
+        while not image.matching('is_menu_opened.png', 'menu_opened.png'):
+            ahk.mouse_actions('move', x=1775, y=90)
+            ahk.mouse_actions('click')
+            time.sleep(1)
+            image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
     def _open_market():
         ahk.mouse_actions('move', x=1510, y=450)

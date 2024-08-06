@@ -3,6 +3,8 @@ from PIL import Image as pil
 
 from .rolls import Roll_00, Roll_000, Roll_66, Roll_66_Lite, Roll_32, Roll_80, Roll_80_Red, Roll_888, Roll_888_K, Roll_40, Roll_50, Roll_40_Symbol, Roll_50_Symbol, Roll_50_Symbol_Plus
 from .rolls import roll
+
+
 import pyscreenshot
 import numpy as np
 import cv2
@@ -990,6 +992,11 @@ def get_inventory_info() -> str or None:
                 return item_type
     ahk.mouse_actions('esc')
 
+
+def start_side_bots():
+    pass
+
+
 def run(hwnd):
     def _open_menu():
         image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
@@ -1085,11 +1092,14 @@ def run(hwnd):
                     roll = prev_roll
 
 
-            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80 = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
+            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80, need_to_change_bot = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)
             print('accesory_items_list is ', accesory_items_list)
             #telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
             #y                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
+
+            if need_to_change_bot:
+                pass
 
             if roll_amount == 0:
                 return

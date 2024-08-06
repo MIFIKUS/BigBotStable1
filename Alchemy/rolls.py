@@ -33,6 +33,8 @@ import json
 #Время раз в которое удаляются значения из таблицы less_100_items
 DIFERNCE_IN_TIME = 24
 
+TIME_TO_CHANGE_BOTS = ('10:00', '10:01', '10:02', '10:03')
+
 BOT_NAME = 'Алхимка'
 
 ROLL_000_MINIMAL_PRICE_2ND_SLOT = 240
@@ -68,6 +70,8 @@ accesory_items_on_market = None
 out_of_blue_items = None
 out_of_green_items = None
 green_item_crafted = False
+
+is_rune = False
 
 
 inventory_matrix = {}
@@ -1154,6 +1158,8 @@ class Rolls():
             global items_bought
             global template_list_00
 
+            need_to_change_bot = False
+
             image.check_if_there_is_error_after_unlock_window()
 
             sql.update_gained_items_google_table()
@@ -1205,6 +1211,9 @@ class Rolls():
                 is_color_good = False
 
                 while not is_color_good:
+                    if self._is_time_to_change_bot():
+                        need_to_change_bot = True
+
                     if image.is_dead():
                         self._go_to_alchemy()
                         time.sleep(2)
@@ -1254,6 +1263,11 @@ class Rolls():
 
                     gained_item, slot = self._get_slot_and_name_of_item_that_gained()
 
+                    is_rune = False
+
+                    if 'руна' in gained_item.replace(' ', '').lower():
+                        is_rune = True
+
                     print('gained_item', gained_item)
                     print('slot', slot)
 
@@ -1266,138 +1280,139 @@ class Rolls():
                     global inventory_matrix
                     inventory_matrix = {}
                     roll_amount -= 1
-                    ahk.mouse_actions('move', x=950, y=950)
-                    ahk.mouse_actions('click')
-                    time.sleep(2)
+                    if not is_rune:
+                        ahk.mouse_actions('move', x=950, y=950)
+                        ahk.mouse_actions('click')
+                        time.sleep(2)
 
-                    ahk.mouse_actions('move', x=1800, y=90)
-                    ahk.mouse_actions('click')
+                        ahk.mouse_actions('move', x=1800, y=90)
+                        ahk.mouse_actions('click')
 
-                    self._go_to_market()
-                    time.sleep(5)
+                        self._go_to_market()
+                        time.sleep(5)
 
-                    ahk.mouse_actions('move', x=400, y=180)
-                    ahk.mouse_actions('click')
-                    time.sleep(5)
+                        ahk.mouse_actions('move', x=400, y=180)
+                        ahk.mouse_actions('click')
+                        time.sleep(5)
 
-                    new_item_position = False
+                        new_item_position = False
 
-                    for _ in range(3):
-                        new_item_position = image.get_gained_item_slot()
-                        if new_item_position:
-                            print('Найдена выпавшная шмотка')
-                            break
+                        for _ in range(3):
+                            new_item_position = image.get_gained_item_slot()
+                            if new_item_position:
+                                print('Найдена выпавшная шмотка')
+                                break
 
-                        ahk.mouse_actions('move', x=1605, y=530)
+                            ahk.mouse_actions('move', x=1605, y=530)
 
-                        self._wheel_inventory_down()
+                            self._wheel_inventory_down()
 
-                    if image.get_amount_of_slots() < 30:
-                        print('Колличество слотов меньше 30')
-                        if new_item_position:
-                            print(f"Позиция выпавшей шмотки {new_item_position}")
+                        if image.get_amount_of_slots() < 30:
+                            print('Колличество слотов меньше 30')
+                            if new_item_position:
+                                print(f"Позиция выпавшей шмотки {new_item_position}")
 
-                            y, x = new_item_position
-                            ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
-                            ahk.mouse_actions('click')
-                            time.sleep(4)
+                                y, x = new_item_position
+                                ahk.mouse_actions('move', x=1450+(x*100), y=350+(y*100))
+                                ahk.mouse_actions('click')
+                                time.sleep(4)
 
-                            item_name = image.get_item_name_from_market()
-                            minimal_price = image.get_minimal_price()
+                                item_name = image.get_item_name_from_market()
+                                minimal_price = image.get_minimal_price()
 
-                            print(f'item_name {item_name}')
-                            print(f'minimal_price {minimal_price}')
+                                print(f'item_name {item_name}')
+                                print(f'minimal_price {minimal_price}')
 
-                            is_piece = False
-                            is_red = False
+                                is_piece = False
+                                is_red = False
 
-                            for c in ('авадон', 'молнии', 'зубе', 'кронвист'):
-                                if c in item_name.lower():
-                                    ahk.mouse_actions('move', x=700, y=930)
-                                    ahk.mouse_actions('click')
-                                    is_piece = True
-                                    need_80 = True
-                                    break
-
-                            for j in RED_ITEMS_LIST.values():
-                                if SequenceMatcher(a=j.replace(' ', '').lower(), b=item_name.replace(' ', '').replace('\n', '').lower()).ratio() > 0.8:
-                                    print('item is red')
-                                    is_red = True
-                                    break
-                            is_accessory = False
-                            if not is_piece:
-                                if is_red:
-                                    ahk.mouse_actions('esc')
-                                    time.sleep(2)
-
-                                    ahk.mouse_actions('move', x=1400, y=90)
-                                    ahk.mouse_actions('click')
-                                    time.sleep(5)
-
-                                    ahk.mouse_actions('move', x=400, y=180)
-                                    ahk.mouse_actions('click')
-                                    time.sleep(5)
-
-                                    for _ in range(3):
-                                        new_item_position = image.get_gained_item_slot()
-                                        if new_item_position:
-                                            print('Найдена выпавшная шмотка')
-                                            break
-
-                                        ahk.mouse_actions('move', x=1605, y=530)
-
-                                        self._wheel_inventory_down()
-
-                                    if image.get_amount_of_slots() < 30:
-                                        print('Колличество слотов меньше 30')
-                                        if new_item_position:
-                                            print(f"Позиция выпавшей шмотки {new_item_position}")
-
-                                            y, x = new_item_position
-                                            ahk.mouse_actions('move', x=1450 + (x * 100), y=350 + (y * 100))
-                                            ahk.mouse_actions('click')
-                                            time.sleep(4)
-
-                                            item_name = image.get_item_name_from_market()
-                                            minimal_price = image.get_minimal_price()
-
-                                            is_accessory = False
-
-                                            for m in ('кольцо', 'ожерелье', 'пояс'):
-                                                if m in item_name.lower():
-                                                    is_accessory = True
-                                                    break
-
-                                            print(f'item_name {item_name}')
-                                            print(f'minimal_price {minimal_price}')
-                                            if is_accessory:print(f'Шмотка является бижой')
-
-                                if minimal_price and not is_accessory:
-                                    if is_red and minimal_price < 400:
+                                for c in ('авадон', 'молнии', 'зубе', 'кронвист'):
+                                    if c in item_name.lower():
                                         ahk.mouse_actions('move', x=700, y=930)
                                         ahk.mouse_actions('click')
-                                    else:
-                                        print(f'Минимальная цена получена {minimal_price}')
+                                        is_piece = True
+                                        need_80 = True
+                                        break
 
-                                        if minimal_price > 10:
-                                            print("Миинимальная цена больше 10")
-                                            minimal_price -= 1
-                                            self.make_new_price(minimal_price)
-                                            self.confirm_new_price()
-                                        else:
+                                for j in RED_ITEMS_LIST.values():
+                                    if SequenceMatcher(a=j.replace(' ', '').lower(), b=item_name.replace(' ', '').replace('\n', '').lower()).ratio() > 0.8:
+                                        print('item is red')
+                                        is_red = True
+                                        break
+                                is_accessory = False
+                                if not is_piece:
+                                    if is_red:
+                                        ahk.mouse_actions('esc')
+                                        time.sleep(2)
+
+                                        ahk.mouse_actions('move', x=1400, y=90)
+                                        ahk.mouse_actions('click')
+                                        time.sleep(5)
+
+                                        ahk.mouse_actions('move', x=400, y=180)
+                                        ahk.mouse_actions('click')
+                                        time.sleep(5)
+
+                                        for _ in range(3):
+                                            new_item_position = image.get_gained_item_slot()
+                                            if new_item_position:
+                                                print('Найдена выпавшная шмотка')
+                                                break
+
+                                            ahk.mouse_actions('move', x=1605, y=530)
+
+                                            self._wheel_inventory_down()
+
+                                        if image.get_amount_of_slots() < 30:
+                                            print('Колличество слотов меньше 30')
+                                            if new_item_position:
+                                                print(f"Позиция выпавшей шмотки {new_item_position}")
+
+                                                y, x = new_item_position
+                                                ahk.mouse_actions('move', x=1450 + (x * 100), y=350 + (y * 100))
+                                                ahk.mouse_actions('click')
+                                                time.sleep(4)
+
+                                                item_name = image.get_item_name_from_market()
+                                                minimal_price = image.get_minimal_price()
+
+                                                is_accessory = False
+
+                                                for m in ('кольцо', 'ожерелье', 'пояс'):
+                                                    if m in item_name.lower():
+                                                        is_accessory = True
+                                                        break
+
+                                                print(f'item_name {item_name}')
+                                                print(f'minimal_price {minimal_price}')
+                                                if is_accessory:print(f'Шмотка является бижой')
+
+                                    if minimal_price and not is_accessory:
+                                        if is_red and minimal_price < 400:
                                             ahk.mouse_actions('move', x=700, y=930)
                                             ahk.mouse_actions('click')
+                                        else:
+                                            print(f'Минимальная цена получена {minimal_price}')
 
-                                else:
-                                    print("Не удалось получить минимальную цену")
-                                    ahk.mouse_actions('move', x=700, y=930)
-                                    ahk.mouse_actions('click')
+                                            if minimal_price > 10:
+                                                print("Миинимальная цена больше 10")
+                                                minimal_price -= 1
+                                                self.make_new_price(minimal_price)
+                                                self.confirm_new_price()
+                                            else:
+                                                ahk.mouse_actions('move', x=700, y=930)
+                                                ahk.mouse_actions('click')
 
-                            self._close_market()
-                            time.sleep(3)
+                                    else:
+                                        print("Не удалось получить минимальную цену")
+                                        ahk.mouse_actions('move', x=700, y=930)
+                                        ahk.mouse_actions('click')
 
-                    else:
-                        print("Колличество слотов 30")
+                                self._close_market()
+                                time.sleep(3)
+
+                        else:
+                            print("Колличество слотов 30")
 
                     end_time = time.time()
 
@@ -1405,7 +1420,7 @@ class Rolls():
 
                     #decrease_roll_amount(acc_name)
 
-                    return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80
+                    return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot
         except Exception as e:
             traceback.print_exc()
             #TGNotifier.send_break_msg('Алхимка', acc_name, e)
@@ -1791,6 +1806,10 @@ class Rolls():
                 time.sleep(1)
             else:
                 is_market_open = True
+
+    def _is_time_to_change_bot(self) -> bool:
+        return datetime.datetime.now().strftime("%H:%M") in TIME_TO_CHANGE_BOTS
+
 
     def _go_to_market(self):
         time.sleep(4)
@@ -3428,13 +3447,13 @@ class Roll_00():
         self.roll = '00'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 
 class Roll_000():
@@ -3454,13 +3473,13 @@ class Roll_000():
         self.roll = '000'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 
 class Roll_66():
@@ -3482,13 +3501,13 @@ class Roll_66():
         self.roll = '66'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,
                                                                                                                                                         accesory_items_list=accesory_items_list, need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_66_Lite():
     def __init__(self, colors=(roll.GOLD, roll.BLUE)):
@@ -3507,13 +3526,13 @@ class Roll_66_Lite():
         self.roll = '66'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,
                                                                                                                                                         accesory_items_list=accesory_items_list, need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_32():
     def __init__(self, colors=(roll.BLUE, roll.GOLD)):
@@ -3534,13 +3553,13 @@ class Roll_32():
         self.roll = '32'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_80():
     def __init__(self, colors=(roll.BLUE, roll.GOLD)):
@@ -3560,13 +3579,13 @@ class Roll_80():
         self.roll = '80'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=True)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_888():
     def __init__(self, colors=(roll.BLUE, roll.GOLD)):
@@ -3583,11 +3602,11 @@ class Roll_888():
         self.is_888 = True
         self.need_sequence_matching = True
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching)
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 
 class Roll_888_K():
@@ -3608,13 +3627,13 @@ class Roll_888_K():
         self.roll = '888'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=True)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_40():
     def __init__(self, colors=(roll.GOLD)):
@@ -3636,13 +3655,13 @@ class Roll_40():
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_40_Symbol():
     def __init__(self, colors=(roll.GOLD)):
@@ -3664,13 +3683,13 @@ class Roll_40_Symbol():
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_50():
     def __init__(self, colors=(roll.GOLD)):
@@ -3692,13 +3711,13 @@ class Roll_50():
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_50_Symbol:
     def __init__(self, colors=(roll.GOLD)):
@@ -3720,13 +3739,13 @@ class Roll_50_Symbol:
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 class Roll_50_Symbol_Plus:
     def __init__(self, colors=(roll.GOLD)):
@@ -3748,13 +3767,13 @@ class Roll_50_Symbol_Plus:
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 
 class Roll_80_Red:
@@ -3775,12 +3794,12 @@ class Roll_80_Red:
         self.roll = '80red'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80 = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=False)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
 
 

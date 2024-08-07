@@ -62,8 +62,8 @@ for i in accs_and_rols:
             acc_roll = acc_info[1] + '().start_roll'
         amount_of_rols = int(acc_info[2])
         accs_and_rolls_dict[acc_name] = {acc_roll: amount_of_rols}
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 class AHKActions():
 
@@ -1020,89 +1020,98 @@ def run(hwnd):
         ahk.mouse_actions('click')
 
     try:
-        telegram = Telegram()
-
-        _open_menu()
-        time.sleep(2)
-        _open_market()
-        time.sleep(4)
-        _open_sale_menu()
-        time.sleep(5)
-
-        amount_of_adena = image.get_adena_amount()
-        amount_of_diamonds = image.get_diamonds_amount()
-        amount_of_slots = image.get_amount_of_slots()
-
-        print(f'Адены {amount_of_adena}')
-        print(f'Алмазов {amount_of_diamonds}')
-        print(f'Слотов {amount_of_slots}')
-
-        ahk.mouse_actions('esc')
-        time.sleep(1)
-
-        sharp_accessory()
-        time.sleep(2)
-
-        if amount_of_adena < 40_000_000:
-            return
-
-        if amount_of_diamonds < 1000:
-            roll = 'Roll_00().start_roll'
-
-        elif amount_of_diamonds > 1000:
-            roll = 'Roll_66().start_roll'
-            if amount_of_adena < 110_000_000:
-                roll = 'Roll_66_Lite().start_roll'
-
-        roll_amount = 30 - amount_of_slots
-
-        #print(accs_and_rolls_dict)
         acc_name = windows.get_window_name(hwnd)
-        #roll = list(accs_and_rolls_dict[acc_name].items())[0][0]
-        #print(f'roll {roll}')
-        #roll_amount = int(list(accs_and_rolls_dict[acc_name].items())[0][1])
-        print(roll_amount)
+
+        seted_roll = list(accs_and_rolls_dict[acc_name].items())[0][0]
+
+        telegram = Telegram()
 
         items_list = None
         accesory_items_list = None
 
-        if '40' not in roll and '50' not in roll:
-            pass
-            #sort_inventory()
+        roll_amount = 1
 
-        open(f'{PATH_TO_ALCHEMY}gained_items_list.txt', 'w').close()
+        if 'Roll_40' in seted_roll:
+            roll = seted_roll
 
-        prev_roll = roll
-
-        need_80 = False
-
-        for i in range(roll_amount):
+        if 'Roll_40' not in seted_roll:
             _open_menu()
             time.sleep(2)
-            _open_alchemy()
-            time.sleep(3)
-            item_type = get_inventory_info()
+            _open_market()
+            time.sleep(4)
+            _open_sale_menu()
+            time.sleep(5)
 
-            match item_type:
-                case 'piece':
-                    roll = 'Roll_80().start_roll'
-                case '+1 Accessory':
-                    roll = 'Roll_66().start_roll'
-                case None:
-                    roll = prev_roll
+            amount_of_adena = image.get_adena_amount()
+            amount_of_diamonds = image.get_diamonds_amount()
+            amount_of_slots = image.get_amount_of_slots()
 
+            print(f'Адены {amount_of_adena}')
+            print(f'Алмазов {amount_of_diamonds}')
+            print(f'Слотов {amount_of_slots}')
 
-            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80, need_to_change_bot = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
-            print('items list is ',items_list)
-            print('accesory_items_list is ', accesory_items_list)
-            #telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
-            #y                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
+            ahk.mouse_actions('esc')
+            time.sleep(1)
 
-            if need_to_change_bot:
-                pass
+            sharp_accessory()
+            time.sleep(2)
 
-            if roll_amount == 0:
+            if amount_of_adena < 40_000_000:
                 return
+
+            if amount_of_diamonds < 1000:
+                roll = 'Roll_00().start_roll'
+
+            elif amount_of_diamonds > 1000:
+                roll = 'Roll_66().start_roll'
+                if amount_of_adena < 110_000_000:
+                    roll = 'Roll_66_Lite().start_roll'
+
+            roll_amount = 30 - amount_of_slots
+
+            #print(accs_and_rolls_dict)
+
+            #print(f'roll {roll}')
+            #roll_amount = int(list(accs_and_rolls_dict[acc_name].items())[0][1])
+            print(roll_amount)
+
+            if '40' not in roll and '50' not in roll:
+                pass
+                #sort_inventory()
+
+            open(f'{PATH_TO_ALCHEMY}gained_items_list.txt', 'w').close()
+
+            prev_roll = roll
+
+            need_80 = False
+
+            for i in range(roll_amount):
+                _open_menu()
+                time.sleep(2)
+                _open_alchemy()
+                time.sleep(3)
+                item_type = get_inventory_info()
+
+                match item_type:
+                    case 'piece':
+                        roll = 'Roll_80().start_roll'
+                    case '+1 Accessory':
+                        roll = 'Roll_66().start_roll'
+                    case None:
+                        roll = prev_roll
+
+
+        items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80, need_to_change_bot = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
+        print('items list is ',items_list)
+        print('accesory_items_list is ', accesory_items_list)
+        #telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
+        #y                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
+
+        if need_to_change_bot:
+            pass
+
+        if roll_amount == 0:
+            return
 
          #   if items_list is False:
           #      telegram.send_msg_in_tg('overflow')

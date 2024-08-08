@@ -1021,8 +1021,12 @@ def run(hwnd):
 
     try:
         acc_name = windows.get_window_name(hwnd)
-
-        seted_roll = list(accs_and_rolls_dict[acc_name].items())[0][0]
+        try:
+            seted_roll = list(accs_and_rolls_dict[acc_name].items())[0][0]
+            print(list(accs_and_rolls_dict[acc_name].items())[0][1])
+        except KeyError:
+            print('Этого аккаунта нет в списке')
+            seted_roll = ''
 
         telegram = Telegram()
 
@@ -1031,7 +1035,7 @@ def run(hwnd):
 
         roll_amount = 1
 
-        if 'Roll_40' in seted_roll:
+        if 'Roll_40 or Roll_50' in seted_roll:
             roll = seted_roll
 
         if 'Roll_40' not in seted_roll:

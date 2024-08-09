@@ -1035,10 +1035,10 @@ def run(hwnd):
 
         roll_amount = 1
 
-        if 'Roll_40 or Roll_50' in seted_roll:
+        if 'Roll_40' in seted_roll or 'Roll_50' in seted_roll:
             roll = seted_roll
 
-        if 'Roll_40' not in seted_roll:
+        if 'Roll_40' not in seted_roll and 'Roll_50' not in seted_roll:
             _open_menu()
             time.sleep(2)
             _open_market()

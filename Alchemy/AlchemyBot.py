@@ -4,6 +4,8 @@ from PIL import Image as pil
 from .rolls import Roll_00, Roll_000, Roll_66, Roll_66_Lite, Roll_32, Roll_80, Roll_80_Red, Roll_888, Roll_888_K, Roll_40, Roll_50, Roll_40_Symbol, Roll_50_Symbol, Roll_50_Symbol_Plus
 from .rolls import roll
 
+from Autosell import AutoSellBotFinal
+from SborPlushek import script_dlya_sbora_plushek
 
 import pyscreenshot
 import numpy as np
@@ -994,7 +996,8 @@ def get_inventory_info() -> str or None:
 
 
 def start_side_bots():
-    pass
+    AutoSellBotFinal.run(None, None, path)
+    script_dlya_sbora_plushek.run(5, None, path, None)
 
 
 def run(hwnd):
@@ -1112,7 +1115,7 @@ def run(hwnd):
         #y                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
 
         if need_to_change_bot:
-            pass
+            start_side_bots()
 
         if roll_amount == 0:
             return

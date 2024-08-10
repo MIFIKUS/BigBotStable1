@@ -44,7 +44,7 @@ autohotkey = AHK()
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 accs_and_rolls_dict = {}
 
-with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as file:
+with open('alchemy_account_preset.txt', 'r', encoding='windows-1251') as file:
     accs_and_rols = file.read().split('\n')
 
 for i in accs_and_rols:

@@ -139,7 +139,7 @@ autohotkey = AHK()
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 def decrease_roll_amount(acc_name):
-    with open('alchemy_account_preset.txt', encoding='utf-8') as accs_presets:
+    with open('alchemy_account_preset.txt', encoding='windows-1251') as accs_presets:
         accs_presets = accs_presets.read().split('\n')
 
     print(accs_presets)
@@ -160,7 +160,7 @@ def decrease_roll_amount(acc_name):
 
     print(redacted_info)
 
-    with open('alchemy_account_preset.txt', 'w', encoding='utf-8', ) as accs_presets:
+    with open('alchemy_account_preset.txt', 'w', encoding='windows-1251') as accs_presets:
         accs_presets.write(redacted_info)
 
 class AHKActions:

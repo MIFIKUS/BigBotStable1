@@ -1833,9 +1833,12 @@ class AlchemySettings(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self['bg'] = '#282828'
-
-        with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as accounts_presets_text:
-            accounts_presets = accounts_presets_text.read()
+        try:
+            with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as accounts_presets_text:
+                accounts_presets = accounts_presets_text.read()
+        except:
+            with open('alchemy_account_preset.txt', 'r', encoding='windows-1251') as accounts_presets_text:
+                accounts_presets = accounts_presets_text.read()
         acc_names = []
         acc_rolls = []
         amount_rolls_for_each_acc = []

@@ -139,8 +139,12 @@ autohotkey = AHK()
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 def decrease_roll_amount(acc_name):
-    with open('alchemy_account_preset.txt', encoding='windows-1251') as accs_presets:
-        accs_presets = accs_presets.read().split('\n')
+    try:
+        with open('alchemy_account_preset.txt', encoding='windows-1251') as accs_presets:
+            accs_presets = accs_presets.read().split('\n')
+    except:
+        with open('alchemy_account_preset.txt', encoding='utf-8') as accs_presets:
+            accs_presets = accs_presets.read().split('\n')
 
     print(accs_presets)
 
@@ -160,8 +164,13 @@ def decrease_roll_amount(acc_name):
 
     print(redacted_info)
 
-    with open('alchemy_account_preset.txt', 'w', encoding='windows-1251') as accs_presets:
-        accs_presets.write(redacted_info)
+    try:
+        with open('alchemy_account_preset.txt', 'r', encoding='windows-1251') as accs_presets:
+            accs_presets.write(redacted_info)
+    except:
+        with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as accs_presets:
+            accs_presets.write(redacted_info)
+
 
 class AHKActions:
     # Переменная action отвечает за то, какое действие нужно сделать. (кликнуть, перевести мышку, провести мышкой с нажатием)
@@ -2757,12 +2766,12 @@ class Rolls():
 
                 print('item name not ready is', item_name)
 
-                for c in item_name:
-                    for j in junk_symbols:
-                        if j in c:
-                            c = ''
-                            break
-                    item_name_ready += c
+                #for c in item_name:
+                #    for j in junk_symbols:
+                #        if j in c:
+                #            c = ''
+                #            break
+                #    item_name_ready += c
 
                 slot = i
                 return item_name_ready, slot

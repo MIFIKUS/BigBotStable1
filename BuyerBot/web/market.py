@@ -125,5 +125,5 @@ def get_market_info(server_id: int) -> list:
         except Exception as e:
             print(e)
 
-    return data.json()['list']
+    return data.json().get('list')
 

@@ -22,3 +22,4 @@ def need_to_update_jwt() -> bool:
 
     cursor.execute('SELECT * FROM l2m.update_jwt;')
     return bool(cursor.fetchall()[0][0])
+

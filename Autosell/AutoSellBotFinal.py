@@ -381,7 +381,12 @@ class Windows():
                 for i in range(3):
                     shell.SendKeys('%')
                     win32gui.ShowWindow(window, win32con.SW_RESTORE)
-                    win32gui.SetForegroundWindow(window)
+                    while True:
+                        try:
+                            win32gui.SetForegroundWindow(window)
+                            break
+                        except:
+                            pass
                     while self.is_screen_locked() is True:
                         self.unlock_screen()
                         image.check_if_there_is_error_after_unlock_window()

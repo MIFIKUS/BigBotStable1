@@ -1068,7 +1068,7 @@ def run(hwnd):
             sharp_accessory()
             time.sleep(2)
 
-            if amount_of_adena < 40_000_000:
+            if amount_of_adena < 40_000_000 or amount_of_adena < 100:
                 return
 
             if amount_of_diamonds < 1000:

@@ -1790,7 +1790,8 @@ class Rolls():
                              f'{PATH_TO_ALCHEMY}\\imgs\\item_bought.png',
                              need_for_taking_screenshot=True, area_of_screenshot=(1175, 300, 1275, 330)) is False:
             counter += 1
-            if image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_bought.png', False).replace(' ', '').replace('\n', '').lower() == 'неудача':
+            if is_item_bought := image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_bought.png', False).replace(' ', '').replace('\n', '').lower() == 'неудача':
+                print(f'При попытке покупки увидел этот текст {is_item_bought}')
                 break
             time.sleep(0.1)
 

@@ -1181,6 +1181,9 @@ class Rolls():
             items_bought = {}
             acc_name = win32gui.GetWindowText(hwnd)
             acc_name = acc_name.replace('Lineage2M l ', '')
+
+            item_is_not_selling = False
+
             if 'Lineage2M' in acc_name:
                 print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
                 acc_name = get_acc_name()
@@ -1344,6 +1347,7 @@ class Rolls():
                                         ahk.mouse_actions('click')
                                         is_piece = True
                                         need_80 = True
+                                        item_is_not_selling = True
                                         break
 
                                 for j in RED_ITEMS_LIST.values():
@@ -1354,6 +1358,7 @@ class Rolls():
                                 is_accessory = False
                                 if not is_piece:
                                     if is_red:
+                                        item_is_not_selling = True
                                         ahk.mouse_actions('esc')
                                         time.sleep(2)
 
@@ -1432,7 +1437,7 @@ class Rolls():
 
                     #decrease_roll_amount(acc_name)
 
-                    return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot
+                    return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
         except Exception as e:
             traceback.print_exc()
             #TGNotifier.send_break_msg('Алхимка', acc_name, e)
@@ -3492,13 +3497,13 @@ class Roll_00():
         self.roll = '00'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 
 class Roll_000():
@@ -3518,13 +3523,13 @@ class Roll_000():
         self.roll = '000'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 
 class Roll_66():
@@ -3546,13 +3551,13 @@ class Roll_66():
         self.roll = '66'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,
                                                                                                                                                         accesory_items_list=accesory_items_list, need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_66_Lite():
     def __init__(self, colors=(roll.GOLD, roll.BLUE)):
@@ -3571,13 +3576,13 @@ class Roll_66_Lite():
         self.roll = '66'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories,self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,
                                                                                                                                                         accesory_items_list=accesory_items_list, need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_32():
     def __init__(self, colors=(roll.BLUE, roll.GOLD)):
@@ -3598,13 +3603,13 @@ class Roll_32():
         self.roll = '32'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_80():
     def __init__(self, colors=(roll.BLUE, roll.GOLD)):
@@ -3624,13 +3629,13 @@ class Roll_80():
         self.roll = '80'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=True)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_888():
     def __init__(self, colors=(roll.BLUE, roll.GOLD)):
@@ -3647,11 +3652,11 @@ class Roll_888():
         self.is_888 = True
         self.need_sequence_matching = True
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching)
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 
 class Roll_888_K():
@@ -3672,13 +3677,13 @@ class Roll_888_K():
         self.roll = '888'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=True)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_40():
     def __init__(self, colors=(roll.GOLD)):
@@ -3700,13 +3705,13 @@ class Roll_40():
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_40_Symbol():
     def __init__(self, colors=(roll.GOLD)):
@@ -3728,13 +3733,13 @@ class Roll_40_Symbol():
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_50():
     def __init__(self, colors=(roll.GOLD)):
@@ -3756,13 +3761,13 @@ class Roll_50():
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_50_Symbol:
     def __init__(self, colors=(roll.GOLD)):
@@ -3784,13 +3789,13 @@ class Roll_50_Symbol:
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 class Roll_50_Symbol_Plus:
     def __init__(self, colors=(roll.GOLD)):
@@ -3812,13 +3817,13 @@ class Roll_50_Symbol_Plus:
         self.need_to_roll = False
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_888=False, need_check_symbol=self.need_check_symbol, need_to_roll=self.need_to_roll)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 
 class Roll_80_Red:
@@ -3839,12 +3844,12 @@ class Roll_80_Red:
         self.roll = '80red'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
                                                                                                                                                         self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
                                                                                                                                                         roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
                                                                                                                                                         need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=False)
 
         print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 

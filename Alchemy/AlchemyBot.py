@@ -1113,11 +1113,14 @@ def run(hwnd):
                     case None:
                         roll = prev_roll
 
-            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80, need_to_change_bot = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
+            items_list, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, gained_slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = eval(roll + f'({items_list}, {accesory_items_list}, {str(roll_amount)}, {str(hwnd)})')
             print('items list is ',items_list)
             print('accesory_items_list is ', accesory_items_list)
             #telegram.send_msg_in_tg(hwnd, type='roll info', adena_wasted=adena_wasted, roll_type=roll,
             #y                        diamonds_wasted=diamonds_wasted, items_bought=items_bought, gained_slot=gained_slot, gained_item=gained_item, wasted_time=wasted_time)
+
+            if item_is_not_selling:
+                roll_amount += 1
 
             if need_to_change_bot:
                 start_side_bots()

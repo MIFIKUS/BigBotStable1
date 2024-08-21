@@ -961,7 +961,7 @@ ingame = InGame()
 # Основная часть программы
 def main(hwnd):
     ingame.lock_window()
-    time.sleep(1)
+    time.sleep(2)
     lvl = image.get_lvl()
     ingame.unlock_window()
 

@@ -1785,12 +1785,17 @@ class Rolls():
         ahk.mouse_actions('move', x=1100, y=920)
         ahk.mouse_actions('click')
 
+        counter = 0
         while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_bought.png',
                              f'{PATH_TO_ALCHEMY}\\imgs\\item_bought.png',
                              need_for_taking_screenshot=True, area_of_screenshot=(1175, 300, 1275, 330)) is False:
+            counter += 1
             if image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\is_item_bought.png', False).replace(' ', '').replace('\n', '').lower() == 'неудача':
                 break
             time.sleep(0.1)
+
+            if counter > 50:
+                break
 
         time.sleep(2)
 

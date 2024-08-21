@@ -2912,6 +2912,26 @@ class Rolls():
         time.sleep(1)
         ahk.mouse_actions('move', x=500, y=280)
         ahk.mouse_actions('click')
+        time.sleep(1)
+
+        ahk.mouse_actions('move', x=1750, y=200)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+
+        ahk.mouse_actions('move', x=120, y=200)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+
+        ahk.mouse_actions('type', text='Ожерелье Феникса')
+
+        ahk.mouse_actions('move', x=120, y=300)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+
+        ahk.mouse_actions('move', x=300, y=280)
+        ahk.mouse_actions('click')
+        time.sleep(1)
+
 
     def craft_plus_1_accesories(self, amount, accesory_items_list):
         self.buy_neccesary_items(amount, accesory_items_list, ACESSORIES_LIST, is_acessory=True)

@@ -1799,8 +1799,15 @@ class Rolls():
 
         time.sleep(2)
 
-        ahk.mouse_actions('move', x=930, y=900)
-        ahk.mouse_actions('click')
+        image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\ok_in_buy_menu_clicked.png', (790, 850, 1070, 940))
+
+        while image.matching(f'{PATH_TO_ALCHEMY}\\imgs\\is_ok_in_buy_menu_clicked.png',
+                             f'{PATH_TO_ALCHEMY}\\imgs\\ok_in_buy_menu_clicked.png',
+                             need_for_taking_screenshot=True, area_of_screenshot=(790, 850, 1070, 940)):
+
+            ahk.mouse_actions('move', x=930, y=900)
+            ahk.mouse_actions('click')
+            time.sleep(0.2)
 
     def _check_if_need_go_to_find_menu(self):
         def __go_to_find_menu():

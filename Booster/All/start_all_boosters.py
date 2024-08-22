@@ -6,7 +6,7 @@ from Booster.Stamps.stamps_bot import main as stamps
 from Booster.Rewards.rewards_bot import main as rewards
 from Booster.Scrolls.scrolls_bot import main as scrolls
 
-from BotForCards.botForCards import main as cards
+from BotForCards.botForCards import run as cards
 
 from Booster.MainClasses.classes import Windows
 
@@ -15,11 +15,26 @@ import time
 
 
 windows = Windows()
+try:
+    with open('settings.txt', 'r', encoding='utf-8') as settings_txt:
+        settings = settings_txt.read()
+        settings.split('\n')
+        for i in settings:
+            if 'path' in i:
+                path = i.split('=')[1]
+except:
+    with open('settings.txt', 'r', encoding='windows-1251') as settings_txt:
+        settings = settings_txt.read()
+        settings.split('\n')
+        for i in settings:
+            if 'path' in i:
+                path = i.split('=')[1]
+
 
 
 def start_all_bots():
     print('Начало работы карточек')
-    cards()
+    cards(1, path)
     print('Конец работы карточек')
 
     print('Начало работы фьюза')

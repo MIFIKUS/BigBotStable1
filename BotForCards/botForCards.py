@@ -17,22 +17,6 @@ import psutil
 
 
 MULTIPLIER = 1
-try:
-    with open('settings.txt', 'r', encoding='utf-8') as settings_txt:
-        settings = settings_txt.read()
-        settings.split('\n')
-        for i in settings:
-            if 'path' in i:
-                PATH_TO_CARDS = i.split('=')[1]
-except:
-    with open('settings.txt', 'r', encoding='windows-1251') as settings_txt:
-        settings = settings_txt.read()
-        settings.split('\n')
-        for i in settings:
-            if 'path' in i:
-                PATH_TO_CARDS = i.split('=')[1]
-
-
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 

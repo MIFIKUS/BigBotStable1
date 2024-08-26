@@ -1435,11 +1435,7 @@ def run(schedule, multiplier, path):
     global cells_for_days
     global server_for_accs
 
-    time_tuple = schedule.split(',')
-    time_list = []
-    for i in range(3):
-        time_list.append(time_tuple[i].replace('(', '').replace(')', '').replace(' ', '').replace('\n', ''))
-    TIME_FOR_WORK = time_list
+    TIME_FOR_WORK = 'Авто'
     MULTIPLIER = int(multiplier)
     print('tuple', TIME_FOR_WORK)
     PATH_TO_AUTOSELL = f'{path}\\Autosell\\'

@@ -1387,7 +1387,7 @@ class Rolls():
                                                 print(f"Позиция выпавшей шмотки {new_item_position}")
 
                                                 y, x = new_item_position
-                                                ahk.mouse_actions('move', x=1450 + (x * 100), y=350 + (y * 100))
+                                                ahk.mouse_actions('move', x=1450 + (x * 100), y=352 + (y * 100))
                                                 ahk.mouse_actions('click')
                                                 time.sleep(4)
 

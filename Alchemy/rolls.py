@@ -2775,27 +2775,10 @@ class Rolls():
                 else:
                     print('Цвет выпавшей шмотки белый')
 
-                item_name = pytesseract.image_to_string(image_string, lang='rus', config='--psm 6').lower().split('\n')
-
-                junk_symbols = ('.', ',', '|', '"', "'", '_', '>', '<', '№', '!', '@', '#',
-                                '$', '%', '^', '&', '*', '=', '}', '{', ';', '?', '/', '\\',
-                                'аа', 'бб', 'вв', 'гг', 'дд', 'ее', 'жж', 'зз', 'ии', 'йй',
-                                'кк', 'лл', 'мм', 'нн', 'оо', 'пп', 'рр', 'сс', 'тт', 'уу',
-                                'фф', 'хх', 'цц', 'чч', 'шш', 'щщ', 'яя')
-
-                item_name_ready = ''
-
-                print('item name not ready is', item_name)
-
-                #for c in item_name:
-                #    for j in junk_symbols:
-                #        if j in c:
-                #            c = ''
-                #            break
-                #    item_name_ready += c
+                item_name = pytesseract.image_to_string(image_string, lang='rus', config='--psm 6').lower()
 
                 slot = i
-                return item_name_ready, slot
+                return item_name, slot
 
             x += 285
         return '', 1

@@ -1031,28 +1031,22 @@ def start():
             return
 
 def run(clan_clicks, multiplier, path, schedule, current_dungeon):
-    try:
-        global CLAN_CLICKS
-        global MULTIPLIER
-        global PATH_TO_SCRIPT
-        global TIME_FOR_WORK
-        global NUM_OF_DUNGEON
+    global CLAN_CLICKS
+    global MULTIPLIER
+    global PATH_TO_SCRIPT
+    global TIME_FOR_WORK
+    global NUM_OF_DUNGEON
 
-        CLAN_CLICKS = int(clan_clicks)
-        NUM_OF_DUNGEON = int(current_dungeon)
-        MULTIPLIER = int(multiplier)
-        PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
-        time_tuple = schedule.split(',')
-        time_list = []
+    CLAN_CLICKS = int(clan_clicks)
+    NUM_OF_DUNGEON = int(current_dungeon)
+    MULTIPLIER = int(multiplier)
+    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
 
-        time_list.append(time_tuple[0].replace('(', '').replace(')', '').replace(' ', '').replace('\n', ''))
-        TIME_FOR_WORK = time_list
+    TIME_FOR_WORK = ('Авто')
 
-        print(TIME_FOR_WORK)
+    print(TIME_FOR_WORK)
 
-        start()
-    except Exception as e:
-        TGNotifier.send_break_msg('Сбор плюшек', '', e)
+    start()
 
 def collect_apples(window):
     def _go_to_event_seller():

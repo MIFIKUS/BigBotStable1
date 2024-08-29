@@ -1001,8 +1001,8 @@ def get_inventory_info() -> str or None:
 
 
 def start_side_bots():
-    AutoSellBotFinal.run(None, None, path)
-    script_dlya_sbora_plushek.run(5, None, path, None)
+    AutoSellBotFinal.run(None, 1, path)
+    script_dlya_sbora_plushek.run(5, 1, path, None, 1)
 
 
 def run(hwnd):

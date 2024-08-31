@@ -1296,14 +1296,15 @@ class Rolls():
                     global inventory_matrix
                     inventory_matrix = {}
                     roll_amount -= 1
+
+                    ahk.mouse_actions('move', x=950, y=950)
+                    ahk.mouse_actions('click')
+                    time.sleep(2)
+
+                    ahk.mouse_actions('move', x=1800, y=90)
+                    ahk.mouse_actions('click')
+
                     if not is_rune:
-                        ahk.mouse_actions('move', x=950, y=950)
-                        ahk.mouse_actions('click')
-                        time.sleep(2)
-
-                        ahk.mouse_actions('move', x=1800, y=90)
-                        ahk.mouse_actions('click')
-
                         self._go_to_market()
                         time.sleep(5)
 

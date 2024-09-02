@@ -1407,7 +1407,7 @@ class Rolls():
                                                 if is_accessory:print(f'Шмотка является бижой')
 
                                     if minimal_price and not is_accessory:
-                                        if is_red and minimal_price < 400:
+                                        if is_red and minimal_price < 350:
                                             ahk.mouse_actions('move', x=700, y=930)
                                             ahk.mouse_actions('click')
                                         else:

@@ -706,6 +706,10 @@ class Image:
         server_name = server_name.replace(' ', '')
         server_name = server_name.replace('\n', '')
 
+        server_name = server_name.replace('О', '0')
+        server_name = server_name.replace('З', '3')
+
+
         for server, server_id in SERVERS_LIST.items():
             if server.replace(' ', '').lower() == server_name.lower():
                 return server_id

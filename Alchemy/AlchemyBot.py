@@ -1058,9 +1058,13 @@ def run(hwnd):
             amount_of_diamonds = image.get_diamonds_amount()
             amount_of_slots = image.get_amount_of_slots()
 
+            max_amount_of_rolls = round(amount_of_diamonds / 20)
+
             print(f'Адены {amount_of_adena}')
             print(f'Алмазов {amount_of_diamonds}')
             print(f'Слотов {amount_of_slots}')
+
+            print(f'Минимально доступное количество роллов судя по алмазам {max_amount_of_rolls}')
 
             ahk.mouse_actions('esc')
             time.sleep(1)
@@ -1080,6 +1084,8 @@ def run(hwnd):
                     roll = 'Roll_66_Lite().start_roll'
 
             roll_amount = 30 - amount_of_slots
+            if roll_amount > max_amount_of_rolls:
+                roll_amount = max_amount_of_rolls
 
             #print(accs_and_rolls_dict)
 

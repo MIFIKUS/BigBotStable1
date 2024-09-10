@@ -5,6 +5,7 @@ from SborPlushek import script_dlya_sbora_plushek
 from BotForCards import botForCards
 from BotForStats import BotForStat
 from Alchemy import AlchemyBot
+from Alchemy import roll_00_tg_notifier
 from CollectionMaster import collection_master
 from Booster.Fuse import fuse_bot
 from Booster.Souls import souls_bot
@@ -361,6 +362,7 @@ def collections():
     if __name__ == '__main__':
         collection = multiprocessing.Process(target=collection_master.run)
         collection.start()
+
 
 class Main(tk.Frame):
     def __init__(self, parent, controller):
@@ -1922,6 +1924,8 @@ class AlchemySettings(tk.Frame):
         confirm_button.place(x=800, y=400)
 
 if __name__ == '__main__':
+    update_stat = multiprocessing.Process(target=roll_00_tg_notifier.run)
+    update_stat.start()
     app = SampleApp()
     app.mainloop()
 

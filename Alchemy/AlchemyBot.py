@@ -24,6 +24,8 @@ import time
 import psutil
 import traceback
 
+import math
+
 with open('settings.txt') as f:
     for i in f.readlines():
         if 'path' in i:
@@ -1067,7 +1069,7 @@ def run(hwnd):
             amount_of_diamonds = image.get_diamonds_amount()
             amount_of_slots = image.get_amount_of_slots()
 
-            max_amount_of_rolls = round(amount_of_diamonds / 20)
+            max_amount_of_rolls = math.floor(amount_of_diamonds / 30)
 
             print(f'Адены {amount_of_adena}')
             print(f'Алмазов {amount_of_diamonds}')

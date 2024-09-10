@@ -18,7 +18,6 @@ import win32con
 
 import telebot
 
-import random
 import datetime
 import time
 
@@ -43,6 +42,13 @@ bot = telebot.TeleBot(TG_API_KEY)
 autohotkey = AHK()
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 accs_and_rolls_dict = {}
+
+TIME_FOR_AUTOSELL = ('21:00', '21:01', '21:02', '21:03', '21:04', '21:05', '21:06', '21:07', '21:08', '21:09', '21:10'
+                     '21:11', '21:12', '21:13', '21:14', '21:15', '21:16', '21:17', '21:18', '21:19', '21:20', '21:21')
+
+TIME_FOR_SBOR = ('10:00', '10:01', '10:02', '10:03', '10:04', '10:05', '10:06', '10:07', '10:08', '10:09', '10:10'
+                 '10:11', '10:12', '10:13', '10:14', '10:15', '10:16', '10:17', '10:18', '10:19', '10:20', '10:21')
+
 
 
 try:
@@ -1001,8 +1007,11 @@ def get_inventory_info() -> str or None:
 
 
 def start_side_bots():
-    AutoSellBotFinal.run(None, 1, path)
-    script_dlya_sbora_plushek.run(5, 1, path, None, 1)
+    if datetime.datetime.now().strftime("%H:%M") in TIME_FOR_AUTOSELL:
+        AutoSellBotFinal.run(None, 1, path)
+
+    if datetime.datetime.now().strftime("%H:%M") in TIME_FOR_SBOR:
+        script_dlya_sbora_plushek.run(5, 1, path, None, 1)
 
 
 def run(hwnd):

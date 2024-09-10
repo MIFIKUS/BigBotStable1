@@ -848,8 +848,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        self.host = '192.168.0.18'
-        #self.host = '127.0.0.1'
+        #self.host = '192.168.0.18'
+        self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'
@@ -2848,6 +2848,11 @@ class Rolls():
 
                 self._go_to_craft_menu()
 
+            self._go_to_craft_menu()
+
+            self.craft()
+
+            time.sleep(1)
         for i in range(amount):
             time.sleep(1)
             ahk.mouse_actions('move', x=1670, y=940)
@@ -2873,6 +2878,7 @@ class Rolls():
 
         ahk.mouse_actions('move', x=1775, y=400)
         ahk.mouse_actions('click')
+
     def set_price_for_each(self):
         ahk.mouse_actions('move', x=1700, y=350)
         ahk.mouse_actions('click')

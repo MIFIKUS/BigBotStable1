@@ -63,7 +63,7 @@ def get_all_prices(server_id: int) -> dict:
     data = {}
     for items in prepare_items_list():
         data_for_request = {"game_server_id": server_id, "game_items": items}
-        response = requests.post(COLLECT_PRICE_URL, json=data_for_request, headers=HEADERS, verify=False).json()
+        response = requests.post(COLLECT_PRICE_URL, json=data_for_request, headers=HEADERS).json()
         for i in response['list']:
             if i:
                 data.update({i['game_item_key']: i['sale_price']})

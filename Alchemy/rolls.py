@@ -71,6 +71,18 @@ out_of_blue_items = None
 out_of_green_items = None
 green_item_crafted = False
 
+HEADERS = {
+    "Host": "ncus1-api.g.nc.com",
+    "Accept-Encoding": "deflate, gzip",
+    "Content-Type": "application/json; charset=utf-8",
+    "Accept": "application/json",
+    "Accept-Language": "ru-RU",
+    "Authorization": '',
+    "User-Agent": "NCMop/3.18.0 (2555DA2C-0C84-4A6D-A3ED-7383CA112935/5.0.67; Windows; ru-RU; RU)"
+}
+
+CHECK_PRICE_URL = 'https://ncus1-api.g.nc.com/trade/v1.0/sales/valid/min_unit_price/top'
+
 is_rune = False
 
 
@@ -113,6 +125,10 @@ with open(f'{PATH_TO_ALCHEMY}servers_list.json', 'r', encoding='utf-8') as serve
 
 with open(f'{PATH_TO_ALCHEMY}red_items_list.json', 'r', encoding='utf-8') as red_item_list_jspn:
     RED_ITEMS_LIST = json.load(red_item_list_jspn)
+
+with open (f'{PATH_TO_ALCHEMY}roll_00_items_ids.json', 'r', encoding='utf-8') as items_ids_json:
+    ITEMS_IDS = json.load(items_ids_json)
+
 
 ADDITIONAL_GOOD_RARE_ITEMS_LIST = ('Исскуство Парных Мечей (Гнев Звука)',
                                    'Учебник Арблатетчика (Интеснивная Стрельба)',
@@ -2573,8 +2589,72 @@ class Rolls():
         if slots == red_slots:
             return True
 
-
     def _check_if_item_on_market(self, item_name):
+        need_check_by_packet = False
+        for i in ITEMS_IDS.items():
+            print('Попытка определить есть ли шмотка в списке 00 роллов')
+            if SequenceMatcher(a=item_name, b=i[0].replace(' ', '').lower()).ratio() > 0.95:
+                need_check_by_packet = True
+                item_name_id = i[1]['id']
+                print('Шмоткка есть в списке')
+                break
+
+        if need_check_by_packet:
+            print('Запуск алгоритма определиения цены шмотки по пакетам')
+
+            request_data = {"game_server_id": self.SERVER_ID,
+                            "game_items": {'game_item_key': item_name_id, 'top': '1',
+                            "search": [{"key": "Enchant", "from": i[1]['sharp'], "to": i[1]['sharp']}]}}
+
+            print(f'request_data {request_data}')
+
+            HEADERS['Authorization'] = sql.get_jwt_token()
+
+            response = requests.post(CHECK_PRICE_URL, json=request_data, headers=HEADERS).json()
+
+            print(f'response {response}')
+
+            if response['list']:
+                print('Шмотка есть на ауке')
+                if int(response['list'][0]['sale_price']) >= MINIMAL_PRICE_FOR_ROLL:
+                    print(f'Удалось определить цену шмотки')
+                    print(f'Шмотка подходит под нужную цену')
+                    print(f'Цена шмотки {response['list'][0]['sale_price']}')
+                    return 500
+
+                else:
+                    print(f'Цена шмотки меньше чем нужно')
+                    print(f'Цена шмотки {response['list'][0]['sale_price']}')
+                    return 1
+            else:
+                print('Шмотки нет на сервере')
+                print('Пытаемся найти авг шмотки среди всех серверов')
+                all_servers_prices_for_item = []
+
+                for server_id in SERVERS_LIST.values():
+                    print(f'Попытка найти шмотку на сервере с ID {server_id}')
+
+                    request_data['game_server_id'] = server_id
+                    response = requests.post(CHECK_PRICE_URL, json=request_data, headers=HEADERS).json()
+                    print(f'response {response}')
+                    if response['list']:
+                        print('Шмотка есть на сервере')
+                        all_servers_prices_for_item.append(int(response['list'][0]['sale_price']))
+                        print(f'Цена шмотки на сервере {response['list'][0]['sale_price']}')
+                    else:
+                        print('Шмотки нет на сервере')
+
+                avg_price_for_item = sum(all_servers_prices_for_item) / len(all_servers_prices_for_item)
+                print(f'Необработанное авг цен для шмотки {avg_price_for_item}')
+                avg_price_for_item *= 1.5
+                print(f'Обработанное авг цен для шмотки {avg_price_for_item}')
+                if avg_price_for_item >= MINIMAL_PRICE_FOR_ROLL:
+                    print('Цена шмотки подходит под критерии')
+                    return 500
+                else:
+                    print('Цена шмотки не подходит под критерии')
+                    return 1
+
         self.set_neccesary_sharp(item_name.replace('\n', '').replace(' ', ''))
         time.sleep(2)
         try:
@@ -2589,6 +2669,8 @@ class Rolls():
         except:
             return False
 
+    def check_item_price_by_packets(self, item_id, server_id):
+        sd
     def check_if_item_image_in_forecast(self, slot, images_list, roll):
         time.sleep(0.2)
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\item_on_forecast_image.png',

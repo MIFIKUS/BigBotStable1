@@ -2619,12 +2619,12 @@ class Rolls():
                 if int(response['list'][0]['sale_price']) >= MINIMAL_PRICE_FOR_ROLL:
                     print(f'Удалось определить цену шмотки')
                     print(f'Шмотка подходит под нужную цену')
-                    print(f'Цена шмотки {response['list'][0]['sale_price']}')
+                    #print(f"Цена шмотки {response['list'][0]['sale_price']}")
                     return 500
 
                 else:
                     print(f'Цена шмотки меньше чем нужно')
-                    print(f'Цена шмотки {response['list'][0]['sale_price']}')
+                    #print(f'Цена шмотки {response['list'][0]['sale_price']}')
                     return 1
             else:
                 print('Шмотки нет на сервере')

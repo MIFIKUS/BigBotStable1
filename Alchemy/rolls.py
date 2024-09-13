@@ -725,8 +725,8 @@ class Image:
         server_name = server_name.replace('О', '0')
         server_name = server_name.replace('З', '3')
 
-
         for server, server_id in SERVERS_LIST.items():
+            server_id = server_id.replace('З', '3')
             if server.replace(' ', '').lower() == server_name.lower():
                 return server_id
 
@@ -2669,8 +2669,6 @@ class Rolls():
         except:
             return False
 
-    def check_item_price_by_packets(self, item_id, server_id):
-        sd
     def check_if_item_image_in_forecast(self, slot, images_list, roll):
         time.sleep(0.2)
         image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\item_on_forecast_image.png',

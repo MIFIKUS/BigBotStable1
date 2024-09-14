@@ -2640,7 +2640,7 @@ class Rolls():
                     if response['list']:
                         print('Шмотка есть на сервере')
                         all_servers_prices_for_item.append(int(response['list'][0]['sale_price']))
-                        print(f'Цена шмотки на сервере {response['list'][0]['sale_price']}')
+                        #print(f'Цена шмотки на сервере {response['list'][0]['sale_price']}')
                     else:
                         print('Шмотки нет на сервере')
 

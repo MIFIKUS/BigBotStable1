@@ -3022,6 +3022,7 @@ class Rolls():
                 self._close_sharp_menu()
             if self._put_items_in_sharp_scrol(amount) is not False:
                 accessory_shapred = True
+
     def craft_plus_2_accesories(self, amount, accesory_items_list):
         self.buy_neccesary_items(amount, accesory_items_list, ACESSORIES_LIST, is_acessory=True)
         accessory_shapred = False

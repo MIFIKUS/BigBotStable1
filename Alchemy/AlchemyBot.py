@@ -54,10 +54,10 @@ TIME_FOR_SBOR = ('10:00', '10:01', '10:02', '10:03', '10:04', '10:05', '10:06', 
 
 
 try:
-    with open('alchemy_account_preset.txt', 'r', encoding='windows-1251') as file:
+    with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as file:
         accs_and_rols = file.read().split('\n')
 except:
-    with open('alchemy_account_preset.txt', 'r', encoding='utf-8') as file:
+    with open('alchemy_account_preset.txt', 'r', encoding='windows-1251') as file:
         accs_and_rols = file.read().split('\n')
 
 for i in accs_and_rols:

@@ -721,8 +721,6 @@ class Image:
         print(server_name)
         server_name = server_name.replace(' ', '')
         server_name = server_name.replace('\n', '')
-
-
         server_name = server_name.replace('З', '3')
 
         for server, server_id in SERVERS_LIST.items():
@@ -865,8 +863,8 @@ class GoogleSheets:
 
 class DataBase:
     def __init__(self):
-        #self.host = '192.168.0.18'
-        self.host = '127.0.0.1'
+        self.host = '192.168.0.18'
+        #self.host = '127.0.0.1'
         self.user = 'root'
         self.password = 'BigBot'
         #self.password = 'root'

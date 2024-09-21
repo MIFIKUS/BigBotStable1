@@ -724,8 +724,8 @@ class Image:
         server_name = server_name.replace('З', '3')
 
         for server, server_id in SERVERS_LIST.items():
-            server_id = server_id.replace('З', '3')
-            server_id = server_id.replace('О', '0')
+            server = server.replace('З', '3')
+            server = server.replace('О', '0')
             if server.replace(' ', '').lower() == server_name.lower():
                 return server_id
 

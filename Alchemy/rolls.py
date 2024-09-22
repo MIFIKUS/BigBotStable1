@@ -54,7 +54,7 @@ with open('settings.txt') as f:
             minimal_price = i.split('=')[1]
             print(minimal_price)
 
-MINIMAL_PRICE_FOR_ROLL = int(minimal_price)
+MINIMAL_PRICE_FOR_ROLL = 100
 
 PATH_TO_ALCHEMY = path + '\\Alchemy\\'
 LIST_OF_RARE_ITEMS = ''

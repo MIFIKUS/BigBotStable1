@@ -15,6 +15,9 @@ def main():
         time.sleep(1)
 
     ingame_actions.open_souls_menu()
+    time.sleep(1)
+
+    functions.accept_fuse()
 
     if functions.is_fuse_availible():
         ingame_actions.fuse_souls()

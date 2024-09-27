@@ -5,6 +5,10 @@ image = Image()
 ahk = AHKActions()
 
 
+def accept_fuse():
+    ahk.move(1050, 700)
+    ahk.click()
+
 def skip_fuse():
     for _ in range(10):
         ahk.move(800, 960)

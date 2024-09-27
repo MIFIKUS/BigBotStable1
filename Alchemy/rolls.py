@@ -129,6 +129,8 @@ with open(f'{PATH_TO_ALCHEMY}red_items_list.json', 'r', encoding='utf-8') as red
 with open (f'{PATH_TO_ALCHEMY}roll_00_items_ids.json', 'r', encoding='utf-8') as items_ids_json:
     ITEMS_IDS = json.load(items_ids_json)
 
+with open(f'{PATH_TO_ALCHEMY}all_items_ids.json', 'r', encoding='utf-8') as all_items_json:
+    ALL_ITEMS_IDS = json.load(all_items_json)
 
 ADDITIONAL_GOOD_RARE_ITEMS_LIST = ('Исскуство Парных Мечей (Гнев Звука)',
                                    'Учебник Арблатетчика (Интеснивная Стрельба)',
@@ -1360,7 +1362,13 @@ class Rolls():
                                 time.sleep(4)
 
                                 item_name = image.get_item_name_from_market()
-                                minimal_price = image.get_minimal_price()
+                                try:
+                                    print(f'Попытка получить цену для шмотки {item_name} по пакетам')
+                                    minimal_price = self.get_price_for_item_by_packet(item_name)
+                                except:
+                                    print('Не удалось получить цену шмотки по пакетам')
+                                    traceback.print_exc()
+                                    minimal_price = image.get_minimal_price()
 
                                 print(f'item_name {item_name}')
                                 print(f'minimal_price {minimal_price}')
@@ -1468,6 +1476,66 @@ class Rolls():
         except Exception as e:
             traceback.print_exc()
             #TGNotifier.send_break_msg('Алхимка', acc_name, e)
+
+    def get_price_for_item_by_packet(self, item_name) -> int or bool:
+        def _get_price_for_current_server(item_id: str, sharp: str or int, server_id=self.SERVER_ID) -> int or bool:
+            request_data = {"game_server_id": server_id,
+                            "game_items": {'game_item_key': item_id, 'top': '1',
+                            "search": [{"key": "Enchant", "from": sharp, "to": sharp}]}}
+
+            print(f'request_data {request_data}')
+
+            HEADERS['Authorization'] = sql.get_jwt_token()
+
+            response = requests.post(CHECK_PRICE_URL, json=request_data, headers=HEADERS).json()
+
+            if response.get('list'):
+                return int(response.get('list')[0].get('sale_price'))
+            return False
+
+        def _get_price_for_all_servers(item_id: str, sharp: str or int) -> int or bool:
+            all_prices = []
+            for server_name, server_id in SERVERS_LIST.items():
+                print(f'Проверка цены для {item_id} на сервере {server_name}')
+                price = _get_price_for_current_server(server_id, sharp, server_id)
+                if price and price < 1_000:
+                    all_prices.append(price)
+
+            return 1.5 * int(sum(all_prices) / len(all_prices))
+
+        item_name = item_name.replace(' ', '')
+        item_name = item_name.replace('\n', '')
+        item_name = item_name.lower()
+
+        item_sharp = 0
+
+        if '+' in item_name:
+            item_sharp = item_name[2]
+            item_name = item_name[2:]
+
+        item_id_to_search = ''
+
+        found = False
+        for item_id, name in ALL_ITEMS_IDS.items():
+            name = name.replace(' ', '')
+            name = name.lower()
+
+            if SequenceMatcher(a=name, b=item_name).ratio() >= 0.95:
+                item_id_to_search = item_id
+                found = True
+                break
+
+        if not found:
+            return False
+
+        price = _get_price_for_current_server(item_id_to_search, item_sharp)
+
+        if price:
+            return price
+
+        price = _get_price_for_all_servers(item_id_to_search, item_sharp)
+
+        return price
 
     def check_neccesary_color_of_forecast(self, colors):
         color_of_forecast = self._check_color_of_forecast()

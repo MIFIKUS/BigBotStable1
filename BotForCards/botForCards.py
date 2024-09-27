@@ -61,7 +61,7 @@ class Windows():
             ahk.mouse_actions('move', x=350, y=180)
             ahk.mouse_actions('click')
 
-            ahk.mouse_actions('move', x=250, y=350)
+            ahk.mouse_actions('move', x=250, y=340)
             ahk.mouse_actions('click')
 
             ahk.mouse_actions('move', x=420, y=460)

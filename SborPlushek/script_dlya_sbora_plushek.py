@@ -1035,7 +1035,7 @@ def start():
         telegram.send_next_dungeon_msg()
 
         if NUM_OF_DUNGEON == 3:
-            telegram.send_end_msg()
+            #telegram.send_end_msg()
             return
 
 def run(clan_clicks, multiplier, path, schedule, current_dungeon):

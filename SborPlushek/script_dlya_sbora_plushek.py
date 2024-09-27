@@ -263,6 +263,12 @@ class Image:
 
         return DUNGEONS_LIST.get(dungeon_name)
 
+    def clan_menu_opened(self):
+        self.take_screenshot(f'{PATH_TO_SCRIPT}is_clan_menu_opened.png', (1620, 70, 1745, 115))
+
+        return self.matching(f'{PATH_TO_SCRIPT}clan_menu_opened.png',
+                             f'{PATH_TO_SCRIPT}is_clan_menu_opened.png')
+
 # Класс для работы с окнами
 ahk = AHKActions()
 image = Image()
@@ -548,9 +554,11 @@ class InGame():
             ahk.mouse_actions('click')
             time.sleep(1*MULTIPLIER)
 
-            ahk.mouse_actions('esc')
+            if image.clan_menu_opened():
+                ahk.mouse_actions('esc')
         else:
-            ahk.mouse_actions('esc')
+            if image.clan_menu_opened():
+                ahk.mouse_actions('esc')
 
     def go_to_mail(self):
         ahk.mouse_actions('move', x=1430, y=830)

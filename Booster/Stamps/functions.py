@@ -29,7 +29,7 @@ class ImpressStamps:
                 return False
 
             ingame_actions.reset_impress_menu()
-            time.sleep(2)
+            time.sleep(3)
 
 
     def _get_impress_lvl(self):

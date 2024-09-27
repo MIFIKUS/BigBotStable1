@@ -16,7 +16,7 @@ def open_aghathions_menu():
     ahk.click()
 
 def open_fusion_menu():
-    ahk.move(600, 190)
+    ahk.move(780, 190)
     ahk.click()
 
 def open_fusion_menu_aghathion():
@@ -60,7 +60,7 @@ def exit_from_fuse():
     ahk.click()
 
 def open_confirm_red_menu():
-    ahk.move(940, 190)
+    ahk.move(1200, 190)
     ahk.click()
 
 def open_confirm_red_menu_aghathion():

@@ -1362,6 +1362,9 @@ class Rolls():
                                 time.sleep(4)
 
                                 item_name = image.get_item_name_from_market()
+                                if ('знакшилен') in item_name.replace(' ', '').lower():
+                                    self._close_market()
+                                    return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
                                 try:
                                     print(f'Попытка получить цену для шмотки {item_name} по пакетам')
                                     minimal_price = self.get_price_for_item_by_packet(item_name)

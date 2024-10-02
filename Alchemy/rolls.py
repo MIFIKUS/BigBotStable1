@@ -1213,8 +1213,9 @@ class Rolls():
             item_is_not_selling = False
 
             if 'Lineage2M' in acc_name:
-                print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
-                acc_name = get_acc_name()
+                if roll not in ('40', '50', '50_plus'):
+                    print('Не удалось получить название аккаунта по названию окна, переход к следующему способу')
+                    acc_name = get_acc_name()
 
             if roll not in ('40', '50', '50_plus'):
                 self.SERVER_ID = self.get_server_id()

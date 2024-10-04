@@ -490,7 +490,7 @@ class InGame():
         ahk.mouse_actions('click')
 
     def go_to_menu(self):
-        ahk.mouse_actions('move', x=1775, y=80)
+        ahk.mouse_actions('move', x=1765, y=80)
         ahk.mouse_actions('click')
 
     def go_to_adena_shop(self):

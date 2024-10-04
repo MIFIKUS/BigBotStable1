@@ -1227,7 +1227,7 @@ class Rolls():
 
             if roll == '40' or roll == '50' or roll == '50_plus':
                 while True:
-                    keyboard.add_hotkey('ctrl+f12', lambda: self._make_roll_for_40_50_roll(forecast_colors=forecast_colors, roll=roll, need_check_symbol=need_check_symbol,
+                    keyboard.add_hotkey('0', lambda: self._make_roll_for_40_50_roll(forecast_colors=forecast_colors, roll=roll, need_check_symbol=need_check_symbol,
                                                                                            need_find_by_image=need_find_by_image, list_of_appropriate_roll_items=list_of_appropriate_roll_items,
                                                                                            slots=slots))
                     keyboard.wait()

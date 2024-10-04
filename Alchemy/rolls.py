@@ -3026,8 +3026,11 @@ class Rolls():
 
         ahk.mouse_actions('esc')
 
-    def go_to_craft_stone(self):
-        ahk.mouse_actions('move', x=1400, y=400)
+    def go_to_craft_stone(self, upgraded_stone=False):
+        if upgraded_stone:
+            ahk.mouse_actions('move', x=1400, y=450)
+        else:
+            ahk.mouse_actions('move', x=1400, y=400)
         ahk.mouse_actions('click')
 
         time.sleep(0.5)

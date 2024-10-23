@@ -1429,6 +1429,7 @@ class Rolls():
                                                 ahk.mouse_actions('click')
                                                 time.sleep(4)
 
+
                                                 item_name = image.get_item_name_from_market()
                                                 minimal_price = image.get_minimal_price()
 
@@ -1540,6 +1541,25 @@ class Rolls():
         price = _get_price_for_all_servers(item_id_to_search, item_sharp)
 
         return price
+
+    def get_price_for_item_in_alchemy(self, item_id: str, is_accessory=False) -> int or bool:
+        sharp = 0
+        if is_accessory:
+            sharp = 1
+
+        request_data = {"game_server_id": self.SERVER_ID,
+                        "game_items": {'game_item_key': item_id, 'top': '1',
+                                       "search": [{"key": "Enchant", "from": sharp, "to": sharp}]}}
+
+        print(f'request_data {request_data}')
+
+        HEADERS['Authorization'] = sql.get_jwt_token()
+
+        response = requests.post(CHECK_PRICE_URL, json=request_data, headers=HEADERS).json()
+
+        if response.get('list'):
+            return int(response.get('list')[0].get('sale_price'))
+        return False
 
     def check_neccesary_color_of_forecast(self, colors):
         color_of_forecast = self._check_color_of_forecast()
@@ -2260,7 +2280,27 @@ class Rolls():
 
             return self.BLUE
         else:
-            print('item is not blue')
+            item_name = item_name.replace(' ', '').replace('\n', '')
+
+            item_id_to_search = ''
+
+            is_accessory = False
+
+            for item_id, name in ALL_ITEMS_IDS.items():
+                name = name.replace(' ', '').lower()
+                if SequenceMatcher(a=name, b=item_name).ratio() >= 0.95:
+                    for j in ('кольцо', 'пояс', 'серьга', 'ожерелье'):
+                        if j in name:
+                            is_accessory = True
+
+                    item_id_to_search = item_id
+                    break
+
+            if not item_id_to_search:
+                print('item is not blue')
+                return
+
+            return self.get_price_for_item_in_alchemy(item_id_to_search, is_accessory)
 
         if self._is_item_color_red('red.png'):
             if '+' in item_name:

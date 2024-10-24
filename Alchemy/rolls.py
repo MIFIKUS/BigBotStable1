@@ -1363,7 +1363,7 @@ class Rolls():
                                 time.sleep(4)
 
                                 item_name = image.get_item_name_from_market()
-                                if ('знакшилен') in item_name.replace(' ', '').lower():
+                                if 'знакшилен' in item_name.replace(' ', '').lower():
                                     self._close_market()
                                     return items_on_market, accesory_items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, 0, need_80, need_to_change_bot, item_is_not_selling
                                 try:
@@ -1428,7 +1428,6 @@ class Rolls():
                                                 ahk.mouse_actions('move', x=1450 + (x * 100), y=352 + (y * 100))
                                                 ahk.mouse_actions('click')
                                                 time.sleep(4)
-
 
                                                 item_name = image.get_item_name_from_market()
                                                 minimal_price = image.get_minimal_price()

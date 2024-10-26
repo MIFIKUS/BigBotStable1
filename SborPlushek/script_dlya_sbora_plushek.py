@@ -1003,10 +1003,10 @@ def main(hwnd):
 
         ingame.tp_to_previous_location()
 
-    ingame.go_to_menu()
-    ingame.go_to_dungeon_menu()
-    ingame.choose_dungeon()
-    ingame.go_to_dungeon(hwnd, lvl)
+#    ingame.go_to_menu()
+#    ingame.go_to_dungeon_menu()
+#    ingame.choose_dungeon()
+#    ingame.go_to_dungeon(hwnd, lvl)
     time.sleep(6*MULTIPLIER)
     windows.lock_screen()
 

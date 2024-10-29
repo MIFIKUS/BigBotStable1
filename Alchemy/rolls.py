@@ -1296,7 +1296,7 @@ class Rolls():
                     if need_to_roll is False:
                         raise Exception('Ролл найден')
 
-                    time.sleep(0.5)
+                    time.sleep(1.5)
                     image.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\letter_in_forecast.png', area_of_screenshot=(525, 675, 1345, 715))
 
                     forecast_letter = image.optimise_forecast_letter_image(f'{PATH_TO_ALCHEMY}\\imgs\\letter_in_forecast.png')

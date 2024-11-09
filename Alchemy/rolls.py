@@ -1514,7 +1514,7 @@ class Rolls():
         item_sharp = 0
 
         if '+' in item_name:
-            item_sharp = item_name[2]
+            item_sharp = item_name[1]
             item_name = item_name[2:]
 
         item_id_to_search = ''

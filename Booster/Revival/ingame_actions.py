@@ -7,7 +7,7 @@ def open_menu():
     ahk.click()
 
 def open_revival_menu():
-    ahk.move(1420, 350)
+    ahk.move(1500, 350)
     ahk.click()
 
 def switch_revival_class(class_num: int):

@@ -9,7 +9,7 @@ def open_menu():
 
 
 def open_craft_menu():
-    ahk.move(1430, 460)
+    ahk.move(1500, 460)
     ahk.click()
 
 

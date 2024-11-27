@@ -8,7 +8,7 @@ def open_menu():
     ahk.click()
 
 def open_stamps_menu():
-    ahk.move(1515, 330)
+    ahk.move(1600, 330)
     ahk.click()
 
 def go_next_stamp(num_of_stamp: int):

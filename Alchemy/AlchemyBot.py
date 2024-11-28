@@ -1027,7 +1027,7 @@ def run(hwnd):
             image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
     def _open_market():
-        ahk.mouse_actions('move', x=1510, y=450)
+        ahk.mouse_actions('move', x=1600, y=450)
         ahk.mouse_actions('click')
 
     def _open_sale_menu():
@@ -1035,7 +1035,7 @@ def run(hwnd):
         ahk.mouse_actions('click')
 
     def _open_alchemy():
-        ahk.mouse_actions('move', x=1680, y=330)
+        ahk.mouse_actions('move', x=1780, y=330)
         ahk.mouse_actions('click')
 
     try:

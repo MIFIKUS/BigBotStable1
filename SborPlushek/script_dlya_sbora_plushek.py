@@ -531,7 +531,7 @@ class InGame():
         ahk.mouse_actions('click')
 
     def go_to_clan_menu(self):
-        ahk.mouse_actions('move', x=1515, y=570)
+        ahk.mouse_actions('move', x=1600, y=570)
         ahk.mouse_actions('click')
 
     def check_for_clan(self):
@@ -610,7 +610,7 @@ class InGame():
         time.sleep(2)
 
     def go_to_bonus_menu(self):
-        ahk.mouse_actions('move', x=1700, y=575)
+        ahk.mouse_actions('move', x=1770, y=575)
         ahk.mouse_actions('click')
 
     def get_bonuses_from_bonus_menu(self):

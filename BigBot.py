@@ -25,6 +25,7 @@ import asyncio
 
 import update_statistics
 
+#
 LIST_OF_ROLLS = (
     'Roll_00',
     'Roll_000',

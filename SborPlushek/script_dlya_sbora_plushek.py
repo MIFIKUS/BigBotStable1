@@ -893,7 +893,7 @@ class InGame():
         ahk.mouse_actions('click')
 
     def go_to_dungeon_menu(self):
-        ahk.mouse_actions('move', x=1580, y=450)
+        ahk.mouse_actions('move', x=1700, y=450)
         ahk.mouse_actions('click')
 
     def choose_dungeon(self):
@@ -1002,11 +1002,13 @@ def main(hwnd):
         ingame.get_all_battle_pass_rewards()
 
         ingame.tp_to_previous_location()
+    else:
+        ingame.go_to_menu()
+        ingame.go_to_dungeon_menu()
+        ingame.choose_dungeon()
+        ingame.go_to_dungeon(hwnd, lvl)
 
-#    ingame.go_to_menu()
-#    ingame.go_to_dungeon_menu()
-#    ingame.choose_dungeon()
-#    ingame.go_to_dungeon(hwnd, lvl)
+
     time.sleep(6*MULTIPLIER)
     windows.lock_screen()
 

@@ -1498,11 +1498,13 @@ class Rolls():
             return False
 
         def _get_price_for_all_servers(item_id: str, sharp: str or int) -> int or bool:
+            print('_get_price_for_all_servers')
             all_prices = []
             for server_name, server_id in SERVERS_LIST.items():
                 print(f'Проверка цены для {item_id} на сервере {server_name}')
-                price = _get_price_for_current_server(server_id, sharp, server_id)
+                price = _get_price_for_current_server(item_id, sharp, server_id)
                 if price and price < 1_000:
+                    print(f'all_prices {all_prices}')
                     all_prices.append(price)
 
             return 1.5 * int(sum(all_prices) / len(all_prices))
@@ -1533,7 +1535,6 @@ class Rolls():
             return False
 
         price = _get_price_for_current_server(item_id_to_search, item_sharp)
-
         if price:
             return price
 
@@ -3438,6 +3439,7 @@ class Rolls():
             ahk.mouse_actions('wheel')
 
     def make_new_price(self, price):
+        price = int(price)
         price = str(price)
         price_is_correct = False
         while price_is_correct is False:

@@ -1001,12 +1001,13 @@ def main(hwnd):
         time.sleep(1)
         ingame.get_all_battle_pass_rewards()
 
-        ingame.tp_to_previous_location()
-    else:
-        ingame.go_to_menu()
         ingame.go_to_dungeon_menu()
         ingame.choose_dungeon()
         ingame.go_to_dungeon(hwnd, lvl)
+
+        time.sleep(5)
+
+        ingame.tp_to_previous_location()
 
 
     time.sleep(6*MULTIPLIER)
@@ -1031,7 +1032,7 @@ def start():
     elif 'Авто' in TIME_FOR_WORK:
         windows.switch_windows(main)
 
-        io.update_current_dungeon(NUM_OF_DUNGEON+1)
+        #io.update_current_dungeon(NUM_OF_DUNGEON+1)
 
         time.sleep(telegram.TIMEOUT)
         telegram.send_next_dungeon_msg()

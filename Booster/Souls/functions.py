@@ -11,7 +11,7 @@ def accept_fuse():
 
 def skip_fuse():
     for _ in range(10):
-        ahk.move(800, 960)
+        ahk.move(900, 960)
         ahk.click()
         time.sleep(0.5)
     time.sleep(10)

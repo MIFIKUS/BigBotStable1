@@ -703,6 +703,10 @@ class InGame():
                 ahk.mouse_actions('move', x=1700, y=950)
                 ahk.mouse_actions('click')
                 no_tg_notifications = True
+            elif (190 < color[0] < 255) and (90 < color[1] < 170) and (0 < color[2] < 90):
+                ahk.mouse_actions('move', x=1700, y=950)
+                ahk.mouse_actions('click')
+                no_tg_notifications = True
             else:
                 ahk.mouse_actions('move', x=1500, y=950)
                 print('Обнаруженно сообщение в тг, ожидает секунду')
@@ -951,18 +955,28 @@ class InGame():
 
         lvl = self._choose_dungeon_lvl(hwnd, acc_lvl)
         print(lvl)
-        if lvl == 30:
-            __click_on_dungeon_lvl_button(x=1200, y=270)
-        elif lvl == 40:
-            __click_on_dungeon_lvl_button(x=1200, y=270)
-        elif lvl == 50:
-            __click_on_dungeon_lvl_button(x=1200, y=370)
-        elif lvl == 55:
-            __click_on_dungeon_lvl_button(x=1200, y=470)
-        elif lvl == 60:
-            __click_on_dungeon_lvl_button(x=1200, y=570)
-        elif lvl == 70:
-            __click_on_dungeon_lvl_button(x=1200, y=670)
+
+        match lvl:
+            case 50:
+                __click_on_dungeon_lvl_button(x=1200, y=330)
+            case 55:
+                __click_on_dungeon_lvl_button(x=1200, y=420)
+            case 60:
+                __click_on_dungeon_lvl_button(x=1200, y=500)
+
+
+        #if lvl == 30:
+        #    __click_on_dungeon_lvl_button(x=1200, y=270)
+        #elif lvl == 40:
+        #    __click_on_dungeon_lvl_button(x=1200, y=270)
+        #elif lvl == 50:
+        #    __click_on_dungeon_lvl_button(x=1200, y=370)
+        #elif lvl == 55:
+        #    __click_on_dungeon_lvl_button(x=1200, y=470)
+        #elif lvl == 60:
+        #    __click_on_dungeon_lvl_button(x=1200, y=570)
+        #elif lvl == 70:
+        #    __click_on_dungeon_lvl_button(x=1200, y=670)
 
 
 ingame = InGame()
@@ -1001,13 +1015,7 @@ def main(hwnd):
         time.sleep(1)
         ingame.get_all_battle_pass_rewards()
 
-        ingame.go_to_dungeon_menu()
-        ingame.choose_dungeon()
-        ingame.go_to_dungeon(hwnd, lvl)
-
-        time.sleep(5)
-
-        ingame.tp_to_previous_location()
+#        ingame.tp_to_previous_location()
 
 
     time.sleep(6*MULTIPLIER)
@@ -1132,3 +1140,24 @@ def start_collect_event_good(path):
         windows.switch_windows(collect_event_good)
     except Exception as e:
         TGNotifier.send_break_msg('Сбор плюшек ивент', '', e)
+
+
+
+def next_dungeon(path):
+    def _start_next_dungeon(hwnd):
+        ingame.lock_window()
+        time.sleep(2)
+        lvl = image.get_lvl()
+        ingame.unlock_window()
+
+        ingame.go_to_menu()
+
+        ingame.go_to_dungeon_menu()
+        ingame.choose_dungeon()
+        ingame.go_to_dungeon(hwnd, lvl)
+
+        time.sleep(5)
+
+    global PATH_TO_SCRIPT
+    PATH_TO_SCRIPT = f'{path}\\SborPlushek\\'
+    windows.switch_windows(_start_next_dungeon)

@@ -281,8 +281,8 @@ def sbor_plushek_next_dungeon():
                 print(i)
 
     if __name__ == '__main__':
-        sbor_plushek = multiprocessing.Process(target=script_dlya_sbora_plushek.run,
-                                               args=(clan_clicks, multiplier, path, schedule, current_dungeon))
+        sbor_plushek = multiprocessing.Process(target=script_dlya_sbora_plushek.next_dungeon,
+                                               args=(path,))
         sbor_plushek.start()
 
 def sbor_plushek_apples():

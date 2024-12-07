@@ -22,6 +22,7 @@ class FuseClasses:
         time.sleep(1)
         while True:
             ingame_actions.show_fuse_result()
+            time.sleep(2)
 
             if self._is_fuse_repeat_availible():
                 ingame_actions.repeat_fuse()
@@ -80,7 +81,7 @@ class ConfirmMenu:
         if not self._confirm_button_availible(is_aghathion):
             return False
 
-        image.take_screenshot('Booster\\Fuse\\imgs\\screenshots\\need_to_confirm.png', (10, 200, 400, 600))
+        image.take_screenshot('Booster\\Fuse\\imgs\\screenshots\\need_to_confirm.png')
 
         template_path = 'Booster\\Fuse\\imgs\\templates\\empty_confirm_area.png'
         main_img_path = 'Booster\\Fuse\\imgs\\screenshots\\need_to_confirm.png'

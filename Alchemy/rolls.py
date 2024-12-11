@@ -1095,7 +1095,7 @@ class DataBase:
         server = all_servers.get(server)
         server = server[0] + server.split(' ')[1][0]
 
-        query = f"SELECT * FROM alchemy.gained_items WHERE server = '{server}'"
+        query = f"SELECT * FROM alchemy.gained_items WHERE server_name = '{server}'"
 
         cursor.execute(query)
 

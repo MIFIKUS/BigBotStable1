@@ -54,7 +54,7 @@ with open('settings.txt') as f:
             minimal_price = i.split('=')[1]
             print(minimal_price)
 
-MINIMAL_PRICE_FOR_ROLL = 100
+MINIMAL_PRICE_FOR_ROLL = 60
 
 PATH_TO_ALCHEMY = path + '\\Alchemy\\'
 LIST_OF_RARE_ITEMS = ''
@@ -90,6 +90,7 @@ inventory_matrix = {}
 
 red_slots = []
 template_list_00 = []
+
 with open(f'{PATH_TO_ALCHEMY}good_rare_items.txt', 'r', encoding='utf-8') as rare_items:
     LIST_OF_RARE_ITEMS = list(rare_items.read().split('\n'))
 
@@ -159,6 +160,7 @@ MULTIPLIER = 1
 
 autohotkey = AHK()
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
 
 def decrease_roll_amount(acc_name):
     try:
@@ -1074,6 +1076,40 @@ class DataBase:
         cursor.execute(query)
         return cursor.fetchall()[0][0]
 
+    def get_amount_of_gained_items(self, server: str) -> int or bool:
+        """Возвращает процент"""
+        if not server:
+            print('Сервер не определен')
+            return False
+
+        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password)
+        connection.autocommit = True
+        cursor = connection.cursor()
+
+        all_servers = {"8001": "Барц 01", "8002": "Барц 02", "8003": "Барц 03", "8004": "Барц 04", "8005": "Барц 05",
+                       "8006": "Барц 06", "8011": "Зигхард 01", "8012": "Зигхард 02", "8013": "Зигхард 03", "8014": "Зигхард 04",
+                       "8015": "Зигхард 05", "8016": "Зигхард 06", "8031": "Леона 01", "8032": "Леона 02", "8033": "Леона 03",
+                       "8034": "Леона 04", "8035": "Леона 05", "8036": "Леона 06", "8041": "Эрика 01", "8042": "Эрика 02",
+                       "8043": "Эрика 03", "8044": "Эрика 04", "8045": "Эрика 05", "8046": "Эрика 06"}
+
+        server = all_servers.get(server)
+        server = server[0] + server.split(' ')[1][0]
+
+        query = f"SELECT * FROM alchemy.gained_items WHERE server = '{server}'"
+
+        cursor.execute(query)
+
+        result = cursor.fetchall()
+
+        amount_of_gained_items = 0
+
+        for item_name, _ in result:
+            if item_name in ITEMS_IDS.keys():
+                amount_of_gained_items += 1
+
+        return (amount_of_gained_items / len(ITEMS_IDS)) * 100
+
+
 def sort_inventory():
     ahk.mouse_actions('i')
     time.sleep(0.2)
@@ -1087,6 +1123,7 @@ def sort_inventory():
     ahk.mouse_actions('esc')
 
     time.sleep(1)
+
 
 def get_acc_name():
     with open(f"{PATH_TO_ALCHEMY}acounts_cells_for_sheet.json", "r", encoding='utf-8') as read_file:
@@ -1220,6 +1257,9 @@ class Rolls():
             if roll not in ('40', '50', '50_plus'):
                 self.SERVER_ID = self.get_server_id()
 
+                if sql.get_amount_of_gained_items(self.SERVER_ID) > 80:
+                    print('Колличество накрученных шмоток на сервере больше 80% Скип акка')
+                    return None, None, 0, 0, 0, {}, 0, "", 0
             if need_check_sql:
                 sql.update_less_100_items(acc_name)
                 sql.get_values_from_gained_items(acc_name)

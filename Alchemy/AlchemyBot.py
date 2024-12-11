@@ -1026,6 +1026,8 @@ def start_side_bots():
         script_dlya_sbora_plushek.run(5, 1, path, None, 1)
 
 
+
+
 def run(hwnd):
     def _open_menu():
         image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))

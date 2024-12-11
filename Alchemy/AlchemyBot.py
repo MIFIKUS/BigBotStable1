@@ -1101,11 +1101,6 @@ def run(hwnd):
             if amount_of_diamonds < 1000:
                 roll = 'Roll_00().start_roll'
 
-            elif amount_of_diamonds > 1000:
-                roll = 'Roll_66().start_roll'
-                if amount_of_adena < 110_000_000:
-                    roll = 'Roll_66_Lite().start_roll'
-
             roll_amount = 30 - amount_of_slots
             if roll_amount > max_amount_of_rolls:
                 roll_amount = max_amount_of_rolls

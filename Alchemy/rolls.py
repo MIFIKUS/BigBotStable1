@@ -1197,13 +1197,16 @@ def get_acc_name():
     ahk.mouse_actions('esc')
     print('Не удалось получить название аккаунта. Боль, депрессия и разочарование(((')
 
+
 google = GoogleSheets()
 sql = DataBase()
 
 adena_wasted = 0
 diamonds_wasted = 0
 items_bought = {}
-class Rolls():
+
+
+class Rolls:
     def __init__(self):
         self.RED = 'red'
         self.GREEN = 'green'

@@ -885,7 +885,7 @@ def sharp_accessory():
             accessory_shapred = True
 
 
-def get_inventory_info() -> str or None:
+def get_inventory_info(is_80=False) -> str or None:
     def _check_item_in_inventory_color(row, column):
         def __check_is_item_appropriate(row, column):
             x = row
@@ -992,13 +992,14 @@ def get_inventory_info() -> str or None:
             LIST_OF_ACCESORIES_WORDS = ('кольцо', 'ожерелье', 'серьга', 'пояс', 'браслет', 'ожёрелье', 'глаз')
             LIST_OF_PIECE_WORDS = ('авадон', 'молнии', 'зубе', 'кронвист')
 
-            for i in LIST_OF_ACCESORIES_WORDS:
-                if i in item_name.replace('\n', '').lower():
-                    if '+1' in item_name.replace('\n', '').lower():
-                        print('+1 Accessory')
-                        return '+1 Accessory'
+            if not is_80:
+                for i in LIST_OF_ACCESORIES_WORDS:
+                    if i in item_name.replace('\n', '').lower():
+                        if '+1' in item_name.replace('\n', '').lower():
+                            print('+1 Accessory')
+                            return '+1 Accessory'
 
-            print(item_name, 'is not accessory')
+                print(item_name, 'is not accessory')
 
             for i in LIST_OF_PIECE_WORDS:
                 if i in item_name.replace('\n', '').lower():
@@ -1098,8 +1099,7 @@ def run(hwnd):
             if amount_of_adena < 40_000_000 or amount_of_adena < 100:
                 return
 
-            if amount_of_diamonds < 1000:
-                roll = 'Roll_00().start_roll'
+            roll = 'Roll_00().start_roll'
 
             roll_amount = 30 - amount_of_slots
             if roll_amount > max_amount_of_rolls:
@@ -1161,6 +1161,42 @@ def run(hwnd):
     except Exception as e:
         traceback.print_exc()
         pass
+
+def roll_80():
+    def _open_menu():
+        image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
+        while not image.matching('is_menu_opened.png', 'menu_opened.png'):
+            ahk.mouse_actions('move', x=1775, y=90)
+            ahk.mouse_actions('click')
+            time.sleep(1)
+            image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
+
+    def _open_market():
+        ahk.mouse_actions('move', x=1600, y=450)
+        ahk.mouse_actions('click')
+
+    def _open_sale_menu():
+        ahk.mouse_actions('move', x=400, y=185)
+        ahk.mouse_actions('click')
+
+    def _open_alchemy():
+        ahk.mouse_actions('move', x=1780, y=330)
+        ahk.mouse_actions('click')
+
+    item_info = get_inventory_info(True)
+
+    if item_info == 'piece':
+        _open_menu()
+        time.sleep(2)
+        _open_alchemy()
+        time.sleep(3)
+
+
+
+
+
+
 
 def main(path):
     windows.switch_windows(run)

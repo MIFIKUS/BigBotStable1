@@ -1293,6 +1293,8 @@ class Rolls:
                                                                                  tg, roll)
                 if is_choose_items_done == "GREEN ERROR":
                     return None, None, 0, 0, 0, {}, 0, "Не нашел зеленую шмотку, скип", 0
+
+            if roll == '80auto':
             while is_roll_done is False:
 
                 is_color_good = False
@@ -1523,6 +1525,14 @@ class Rolls:
         except Exception as e:
             traceback.print_exc()
             #TGNotifier.send_break_msg('Алхимка', acc_name, e)
+
+    def set_80_roll(self):
+        def _open_autoforecast():
+            ahk.mouse_actions('move', 330, 950)
+            ahk.mouse_actions('click')
+
+
+
 
     def get_price_for_item_by_packet(self, item_name) -> int or bool:
         def _get_price_for_current_server(item_id: str, sharp: str or int, server_id=self.SERVER_ID) -> int or bool:
@@ -4093,3 +4103,28 @@ class Roll_80_Red:
         return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling
 
 
+class Roll_80_Auto:
+    def __init__(self, colors=(roll.GOLD)):
+        self.colors = colors
+        self.items_to_choose = {roll.PIECE: 1, roll.BLUE: 3}
+        self.need_except_accessories = False
+        self.need_except_sharp = False
+        self.slots = [2]
+        self.totaling_prices = False
+        self.appropriatable_items = f'{PATH_TO_ALCHEMY}\\rol_66_items.txt'
+        self.red_check = False
+        self.need_for_check_roll_items_name = False
+        self.need_for_check_sql = False
+        self.is_80 = False
+        self.need_sequence_matching = True
+        self.need_find_by_image = True
+        self.roll = '80auto'
+
+    def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
+        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+                                                                                                                                                        self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
+                                                                                                                                                        roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
+                                                                                                                                                        need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=False)
+
+        print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
+        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling

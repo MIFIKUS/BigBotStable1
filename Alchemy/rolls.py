@@ -1294,7 +1294,7 @@ class Rolls:
                 if is_choose_items_done == "GREEN ERROR":
                     return None, None, 0, 0, 0, {}, 0, "Не нашел зеленую шмотку, скип", 0
 
-            if roll == '80auto':
+
             while is_roll_done is False:
 
                 is_color_good = False

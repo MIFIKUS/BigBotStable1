@@ -2240,7 +2240,9 @@ class Rolls:
                                     self._go_to_alchemy()
                                 elif roll == '80auto':
                                     inventory_matrix = {}
-                                    self.buy_piece()
+                                    if self.buy_piece() is False:
+                                        return "GREEN ERROR"
+
                                     sort_inventory()
                                     self._go_to_alchemy()
 

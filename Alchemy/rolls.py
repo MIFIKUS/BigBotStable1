@@ -3002,7 +3002,7 @@ class Rolls:
                 return
             sharp = item_name[1]
         else:
-            sharp = sharp_lvl
+            sharp = str(sharp_lvl)
 
         ahk.mouse_actions('move', x=480, y=300)
         ahk.mouse_actions('click')

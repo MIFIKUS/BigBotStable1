@@ -1184,12 +1184,6 @@ def roll_80(hwnd):
         ahk.mouse_actions('move', x=1780, y=330)
         ahk.mouse_actions('click')
 
-    _open_menu()
-    time.sleep(2)
-    _open_alchemy()
-    time.sleep(3)
-
-
     Roll_80_Auto().start_roll(None, None, 1, hwnd)
 
 def start_80():

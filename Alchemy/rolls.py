@@ -1294,7 +1294,9 @@ class Rolls:
                 if is_choose_items_done == "GREEN ERROR":
                     return None, None, 0, 0, 0, {}, 0, "Не нашел зеленую шмотку, скип", 0
 
-
+            if roll == '80auto':
+                self.set_80_roll()
+                return
             while is_roll_done is False:
 
                 is_color_good = False
@@ -1531,8 +1533,52 @@ class Rolls:
             ahk.mouse_actions('move', 330, 950)
             ahk.mouse_actions('click')
 
+        def _click_add_item():
+            ahk.mouse_actions('move', 200, 240)
+            ahk.mouse_actions('click')
 
+        def _add_item(name_of_item: str, position: int):
+            for _ in range(2):
+                ahk.mouse_actions('move', 250, 240)
+                ahk.mouse_actions('click')
+                time.sleep(1)
 
+            ahk.mouse_actions('type', text=name_of_item)
+
+            ahk.mouse_actions('move', 300, 420+(110*position))
+            ahk.mouse_actions('click')
+
+            ahk.mouse_actions('move', 720, 420+(110*position))
+            ahk.mouse_actions('click')
+            time.sleep(1)
+
+        def _set_gold_circle():
+            ahk.mouse_actions('move', 1600, 500)
+            ahk.mouse_actions('click')
+
+        def _start():
+            ahk.mouse_actions('move', 1390, 880)
+            ahk.mouse_actions('click')
+
+        _open_autoforecast()
+        _click_add_item()
+        ITEMS_FOR_80 = ('КольцоСтрасти', '+1КольцоСтрасти', 'ПоясЭкимуса', '+1ПоясЭкимуса')
+
+        for j in ITEMS_FOR_80:
+            pos = 0
+            match j:
+                case 'КольцоСтрасти':
+                    pos = 2
+                case 'ПоясЭкимуса':
+                    pos = 2
+
+            _add_item(j, pos)
+
+        _set_gold_circle()
+        time.sleep(1)
+        _start()
+
+        return
 
     def get_price_for_item_by_packet(self, item_name) -> int or bool:
         def _get_price_for_current_server(item_id: str, sharp: str or int, server_id=self.SERVER_ID) -> int or bool:
@@ -4121,10 +4167,8 @@ class Roll_80_Auto:
         self.roll = '80auto'
 
     def start_roll(self, items_list, accesory_items_list, roll_amount, hwnd):
-        items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling = roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
-                                                                                                                                                        self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
-                                                                                                                                                        roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
-                                                                                                                                                        need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=False)
+        roll.make_roll(self.colors, self.items_to_choose, self.need_except_accessories, self.need_except_sharp,
+        self.slots, self.totaling_prices, self.appropriatable_items, self.red_check, self.need_for_check_roll_items_name, items_list,
+        roll_amount, tg=None, hwnd=hwnd, need_check_sql=self.need_for_check_sql, need_sequence_matching=self.need_sequence_matching,accesory_items_list=accesory_items_list,
+        need_find_by_image=self.need_find_by_image, roll=self.roll, is_80=False)
 
-        print(items_on_market, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot, gained_item)
-        return items_on_market, accesory_items_list, roll_amount, adena_wasted, diamonds_wasted, items_bought, slot+1, gained_item, wasted_time, need_80, need_to_change_bot, item_is_not_selling

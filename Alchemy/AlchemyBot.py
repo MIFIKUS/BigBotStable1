@@ -1,7 +1,7 @@
 from ahk import AHK
 from PIL import Image as pil
 
-from .rolls import Roll_00, Roll_000, Roll_66, Roll_66_Lite, Roll_32, Roll_80, Roll_80_Red, Roll_888, Roll_888_K, Roll_40, Roll_50, Roll_40_Symbol, Roll_50_Symbol, Roll_50_Symbol_Plus
+from .rolls import Roll_00, Roll_000, Roll_66, Roll_66_Lite, Roll_32, Roll_80, Roll_80_Red, Roll_888, Roll_888_K, Roll_40, Roll_50, Roll_40_Symbol, Roll_50_Symbol, Roll_50_Symbol_Plus, Roll_80_Auto
 from .rolls import roll
 
 from Autosell import AutoSellBotFinal
@@ -1162,7 +1162,7 @@ def run(hwnd):
         traceback.print_exc()
         pass
 
-def roll_80():
+def roll_80(hwnd):
     def _open_menu():
         image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
@@ -1184,19 +1184,18 @@ def roll_80():
         ahk.mouse_actions('move', x=1780, y=330)
         ahk.mouse_actions('click')
 
+    _open_menu()
+    time.sleep(2)
+    _open_alchemy()
+    time.sleep(3)
+
     item_info = get_inventory_info(True)
 
     if item_info == 'piece':
-        _open_menu()
-        time.sleep(2)
-        _open_alchemy()
-        time.sleep(3)
+        Roll_80_Auto().start_roll(None, None, 1, hwnd)
 
-
-
-
-
-
+def start_80():
+    windows.switch_windows(roll_80)
 
 def main(path):
     windows.switch_windows(run)

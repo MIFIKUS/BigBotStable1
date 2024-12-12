@@ -359,6 +359,11 @@ def alchemy_bot():
         alchemy = multiprocessing.Process(target=AlchemyBot.main, args=(path,))
         alchemy.start()
 
+def start_alchemy_80():
+    if __name__ == '__main__':
+        alchemy_80 = multiprocessing.Process(target=AlchemyBot.start_80, args=())
+        alchemy_80.start()
+
 def collections():
     if __name__ == '__main__':
         collection = multiprocessing.Process(target=collection_master.run)
@@ -601,6 +606,9 @@ class AllBots(tk.Frame):
         alchemy_settings_button = tk.Button(self, text='Настройки', bg='#404040', fg='#c17a2e', font='Arial 24',
                                             borderwidth=0, command=lambda: controller.show_frame('AlchemySettings'))
 
+        alchemy_80_button = tk.Button(self, text='80', bg='#404040', fg='#d65e5e', font='Arial 24', borderwidth=0,
+                                         command=lambda: start_alchemy_80())
+
         #bot_for_raking_rewards_logs_button.bind('<Enter>', lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#1b9591'))
         #bot_for_raking_rewards_logs_button.bind("<Leave>", lambda event, h=bot_for_raking_rewards_logs_button: h.configure(fg='#24c9c3'))
 
@@ -635,6 +643,8 @@ class AllBots(tk.Frame):
         alchemy_start_button.place(x=50, y=700)
         alchemy_logs_button.place(x=210, y=700)
         alchemy_settings_button.place(x=350,y=700)
+        alchemy_80_button.place(x=600, y=700)
+
 
         go_to_all_bots.place(x=0, y=0)
         go_to_main.place(x=430, y=0)

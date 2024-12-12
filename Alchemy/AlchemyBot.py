@@ -1189,10 +1189,8 @@ def roll_80(hwnd):
     _open_alchemy()
     time.sleep(3)
 
-    item_info = get_inventory_info(True)
 
-    if item_info == 'piece':
-        Roll_80_Auto().start_roll(None, None, 1, hwnd)
+    Roll_80_Auto().start_roll(None, None, 1, hwnd)
 
 def start_80():
     windows.switch_windows(roll_80)

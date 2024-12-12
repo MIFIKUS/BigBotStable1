@@ -1580,6 +1580,71 @@ class Rolls:
 
         return
 
+    def buy_piece(self):
+        ahk.mouse_actions('move', 1780, 90)
+        ahk.mouse_actions('click')
+
+        time.sleep(1)
+
+        ahk.mouse_actions('move', 1620, 450)
+        ahk.mouse_actions('click')
+
+        time.sleep(3)
+
+        ahk.mouse_actions('move', 75, 370)
+        ahk.mouse_actions('click')
+
+        time.sleep(2)
+
+        ahk.mouse_actions('move', 900, 280)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('move', 130, 200)
+        ahk.mouse_actions('click')
+
+        ahk.mouse_actions('type', text='СапогиАвадона')
+
+        ahk.mouse_actions('move', 130, 300)
+        ahk.mouse_actions('click')
+
+        time.sleep(3)
+
+        ahk.mouse_actions('move', 600, 460)
+        ahk.mouse_actions('click')
+
+        time.sleep(2)
+        self.set_neccesary_sharp('', 8)
+
+        image.take_screenshot('Alchemy\\price.png', (1110, 440, 1180, 480))
+        price = image.image_to_string('Alchemy\\price.png', True)
+
+        price = price.replace(' ', '').replace('\n', '')
+
+        try:
+            price = int(price)
+        except:
+            print('не удалось получить цену')
+            return False
+
+        if price <= 60:
+            for _ in range(2):
+                ahk.mouse_actions('move', 700, 500)
+                ahk.mouse_actions('click')
+                time.sleep(1)
+
+            ahk.mouse_actions('move', 1000, 900)
+            ahk.mouse_actions('click')
+            time.sleep(4)
+
+            ahk.mouse_actions('move', 870, 900)
+            ahk.mouse_actions('click')
+
+        else:
+            ahk.mouse_actions('esc')
+            print('Слишком высокая цена')
+            return False
+        ahk.mouse_actions('esc')
+
     def get_price_for_item_by_packet(self, item_name) -> int or bool:
         def _get_price_for_current_server(item_id: str, sharp: str or int, server_id=self.SERVER_ID) -> int or bool:
             request_data = {"game_server_id": server_id,
@@ -2171,6 +2236,11 @@ class Rolls:
                                 elif color is self.PLUS_2_ACCESORY:
                                     inventory_matrix = {}
                                     self.craft_plus_2_accesories(amount_of_items_to_craft, accesory_items_list)
+                                    sort_inventory()
+                                    self._go_to_alchemy()
+                                elif roll == '80auto':
+                                    inventory_matrix = {}
+                                    self.buy_piece()
                                     sort_inventory()
                                     self._go_to_alchemy()
 
@@ -2914,7 +2984,7 @@ class Rolls:
         return False
 
 
-    def set_neccesary_sharp(self, item_name):
+    def set_neccesary_sharp(self, item_name, sharp_lvl=False):
         def __set_sharp(start_drag, end_drag):
             start_x = 315
             end_x = 1770
@@ -2927,14 +2997,16 @@ class Rolls:
             ahk.mouse_actions('press down')
             ahk.mouse_actions('move', x=-end_drag, y=0, relative=True)
             ahk.mouse_actions('click')
-
-        if '+' not in item_name:
-            return
+        if not sharp_lvl:
+            if '+' not in item_name:
+                return
+            sharp = item_name[1]
+        else:
+            sharp = sharp_lvl
 
         ahk.mouse_actions('move', x=480, y=300)
         ahk.mouse_actions('click')
 
-        sharp = item_name[1]
 
         if sharp == '1':
             __set_sharp(start_drag=130, end_drag=1325)

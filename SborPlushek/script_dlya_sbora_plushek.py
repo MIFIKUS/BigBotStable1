@@ -1014,7 +1014,7 @@ def main(hwnd):
         ingame.go_to_battle_pass_menu()
         time.sleep(1)
         ingame.get_all_battle_pass_rewards()
-#
+
         ingame.tp_to_previous_location()
 
 

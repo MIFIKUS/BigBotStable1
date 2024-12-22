@@ -31,7 +31,7 @@ MULTIPLIER = 1
 PATH_TO_SCRIPT = ''
 
 #Колличество ивентов в текущий момент
-AMOUNT_OF_EVENTS = 1
+AMOUNT_OF_EVENTS = 2
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
 # номер данжа
@@ -719,165 +719,43 @@ class InGame():
         ahk.mouse_actions('click')
 
     def go_to_sellers(self):
-
-        grocer_x = 200
-        grocer_y = 180
-
-        buyer_x = 200
-        buyer_y = 310
-
-        warehouse_worker_x = 200
-        warehouse_worker_y = 440
-
-        if AMOUNT_OF_EVENTS > 0:
-            if (image.matching(f'{PATH_TO_SCRIPT}main_screen.jpg', f'{PATH_TO_SCRIPT}event_mark.png',
-                              need_for_taking_screenshot=True, threshold=0.8)) or (image.matching(f'{PATH_TO_SCRIPT}main_screen.jpg',
-                                                                                                  f'{PATH_TO_SCRIPT}event_mark_1.png',
-                                                                                                  need_for_taking_screenshot=True,
-                                                                                                  threshold=0.75)) is True:
-                statue_x = 200
-                statue_y = 180
-
-                grocer_x = 200
-                grocer_y = 240
-
-                buyer_x = 200
-                buyer_y = 500
-
-                warehouse_worker_x = 200
-                warehouse_worker_y = 370
-
-                if AMOUNT_OF_EVENTS == 1:
-                    event_x = 200
-                    event_y = 180
-
-                    grocer_x = 200
-                    grocer_y = 240
-
-                    buyer_x = 200
-                    buyer_y = 500
-
-                    warehouse_worker_x = 200
-                    warehouse_worker_y = 370
-
-                    ahk.mouse_actions('move', x=event_x, y=event_y)
-                    ahk.mouse_actions('click')
-                    time.sleep(13)
-                    ahk.mouse_actions('move', x=1080, y=700)
-                    ahk.mouse_actions('click')
-                    print("Пришел к ивенту")
-
-                if AMOUNT_OF_EVENTS == 2:
-                    event_x = 200
-                    event_y = 180
-
-                    second_event_x = 200
-                    second_event_y = 240
-
-                    grocer_x = 200
-                    grocer_y = 300
-
-                    buyer_x = 200
-                    buyer_y = 500
-
-                    warehouse_worker_x = 200
-                    warehouse_worker_y = 450
-
-                    ahk.mouse_actions('move', x=event_x, y=event_y)
-                    ahk.mouse_actions('click')
-                    time.sleep(13)
-                    #self._autoselling()
-                    ahk.mouse_actions('move', x=1390, y=950)
-                    ahk.mouse_actions('click')
-
-                    for _ in range(2):
-                        ahk.mouse_actions('move', x=630, y=630)
-                        ahk.mouse_actions('click')
-                        time.sleep(1)
-
-                    ahk.mouse_actions('move', x=1650, y=950)
-                    ahk.mouse_actions('click')
-
-                    ahk.mouse_actions('move', x=950, y=710)
-                    ahk.mouse_actions('click')
-
-                    ahk.mouse_actions('esc')
-                    print("Пришел к ивенту")
-
-                    ahk.mouse_actions('move', x=second_event_x, y=second_event_y)
-                    ahk.mouse_actions('click')
-                    time.sleep(13)
-                    ahk.mouse_actions('move', x=1080, y=700)
-                    ahk.mouse_actions('click')
-                    print("Пришел ко второму ивенту")
-
-                    ahk.mouse_actions('move', x=grocer_x, y=grocer_y)
-                    ahk.mouse_actions('click')
-                    time.sleep(13 * MULTIPLIER)
-                    self._autoselling()
-                    print("Пришел к бакалейщику")
-
-                    ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
-                    # for i in range(2):
-                    #    ahk.mouse_actions('wheel')
-                    ahk.mouse_actions('click')
-                    time.sleep(13 * MULTIPLIER)
-                    self._autoselling()
-                    print("Пришел к рабочему склада")
-                    ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
-                    for _ in range(2):
-                        ahk.mouse_actions('wheel')
-                    ahk.mouse_actions('move', x=buyer_x, y=buyer_y)
-                    ahk.mouse_actions('click')
-                    time.sleep(13 * MULTIPLIER)
-                    self._autoselling()
-                    print("Пришел к скупщику")
-
-                    ahk.mouse_actions('move', x=buyer_x, y=buyer_y)
-                    for _ in range(2):
-                        ahk.mouse_actions('wheel_up')
-
-                    return
-            else:
-                grocer_x = 200
-                grocer_y = 180
-
-                buyer_x = 200
-                buyer_y = 440
-
-                warehouse_worker_x = 200
-                warehouse_worker_y = 300
-
-        # go_to_warehouse_worker
-        ahk.mouse_actions('move', x=warehouse_worker_x, y=warehouse_worker_y)
-        #for i in range(2):
-        #    ahk.mouse_actions('wheel')
+        ahk.mouse_actions('move', x=140, y=180)
         ahk.mouse_actions('click')
-        time.sleep(13*MULTIPLIER)
-        self._autoselling()
-        print("Пришел к рабочему склада")
+        time.sleep(11)
 
-        #go_to_grocer
-        ahk.mouse_actions('move', x=grocer_x, y=grocer_y)
+        ahk.mouse_actions('move', x=1050, y=700)
         ahk.mouse_actions('click')
-        time.sleep(13*MULTIPLIER)
-        self._autoselling()
-        print("Пришел к бакалейщику")
 
-        #go_to_buyer
-        if AMOUNT_OF_EVENTS == 2:
-            pass
-
-        ahk.mouse_actions('move', x=buyer_x, y=buyer_y)
+        ahk.mouse_actions('move', x=140, y=250)
         ahk.mouse_actions('click')
-        time.sleep(13*MULTIPLIER)
+        time.sleep(11)
         self._autoselling()
-        print("Пришел к скупщику")
+
+        ahk.mouse_actions('move', x=140, y=310)
+        ahk.mouse_actions('click')
+        time.sleep(11)
+        self._autoselling()
+
+        ahk.mouse_actions('move', x=140, y=440)
+        ahk.mouse_actions('click')
+        time.sleep(11)
+        self._autoselling()
+
+        ahk.mouse_actions('move', x=140, y=310)
+        for _ in range(2):
+            ahk.mouse_actions('wheel')
+
+        ahk.mouse_actions('move', x=140, y=505)
+        ahk.mouse_actions('click')
+        time.sleep(11)
+        self._autoselling()
+
+        ahk.mouse_actions('move', x=140, y=310)
+        for _ in range(2):
+            ahk.mouse_actions('wheel_up')
 
     def switch_off_fast_walk_to_sellers(self):
         ahk.mouse_actions('move', x=200, y=300)
-        for i in range(2):
-            ahk.mouse_actions('wheel_up')
         ahk.mouse_actions('move', x=350, y=270)
         ahk.mouse_actions('click')
 

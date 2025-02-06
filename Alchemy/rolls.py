@@ -720,7 +720,7 @@ class Image:
         return int(image.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\slots.png', is_digits=True).replace('\n', '').split('/')[0])
 
     def get_acc_server_id(self):
-        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\server.png', (1200, 450, 1430, 480))
+        self.take_screenshot(f'{PATH_TO_ALCHEMY}\\imgs\\server.png', (1200, 465, 1430, 512))
         server_name = self.image_to_string(f'{PATH_TO_ALCHEMY}\\imgs\\server.png', False)
         print(server_name)
         server_name = server_name.replace(' ', '')

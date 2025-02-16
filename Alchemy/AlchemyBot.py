@@ -1146,8 +1146,8 @@ def run(hwnd):
             if item_is_not_selling:
                 roll_amount += 1
 
-            if need_to_change_bot:
-                start_side_bots()
+            #if need_to_change_bot:
+            #    start_side_bots()
 
             if roll_amount == 0:
                 return

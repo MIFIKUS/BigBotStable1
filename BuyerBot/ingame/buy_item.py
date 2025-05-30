@@ -27,7 +27,7 @@ def buy_item(item_name: str, price: int) -> bool:
         mouse_and_keyboard.click()
 
     def _open_market():
-        mouse_and_keyboard.move(1775, 340, 0)
+        mouse_and_keyboard.move(1500, 470, 0)
         mouse_and_keyboard.click()
 
     def _open_global_market():

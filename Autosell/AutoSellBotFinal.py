@@ -184,7 +184,7 @@ class AHKActions:
 
 
 class Image():
-    def matching(self, main_image_name, template_image_name, need_for_taking_screenshot=False, threshold=0.8,
+    def matching(self, main_image_name, template_image_name, need_for_taking_screenshot=False, threshold=0.77,
                  func=None, area_of_screenshot=None):
         if need_for_taking_screenshot:
             if area_of_screenshot:

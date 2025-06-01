@@ -770,11 +770,11 @@ database = Database()
 class InGame():
     def go_to_menu(self):
         image.take_screenshot('Autosell\\is_menu_opened.png', (1730, 180, 1820, 292))
-        while not image.matching('Autosell\\is_menu_opened.png', 'menu_opened.png'):
-            ahk.mouse_actions('move', x=1780, y=75)
-            ahk.mouse_actions('click')
-            time.sleep(0.5)
-            image.take_screenshot('Autosell\\is_menu_opened.png', (1730, 180, 1820, 292))
+
+        ahk.mouse_actions('move', x=1780, y=75)
+        ahk.mouse_actions('click')
+        time.sleep(0.5)
+        image.take_screenshot('Autosell\\is_menu_opened.png', (1730, 180, 1820, 292))
 
 
     def go_to_market(self):

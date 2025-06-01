@@ -3274,7 +3274,7 @@ class Rolls:
         time.sleep(1)
         image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
 
-        ahk.mouse_actions('move', x=1500, y=450)
+        ahk.mouse_actions('move', x=1420, y=450)
         ahk.mouse_actions('click')
 
         time.sleep(1)

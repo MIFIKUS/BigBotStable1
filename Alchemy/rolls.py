@@ -1585,7 +1585,7 @@ class Rolls:
 
         time.sleep(1)
 
-        ahk.mouse_actions('move', 1620, 450)
+        ahk.mouse_actions('move', 1500, 450)
         ahk.mouse_actions('click')
 
         time.sleep(3)
@@ -3267,7 +3267,6 @@ class Rolls:
 
     def _go_to_craft_menu(self):
         image.take_screenshot('is_menu_opened.png', (1730, 180, 1820, 292))
-
 
         ahk.mouse_actions('move', x=1775, y=85)
         ahk.mouse_actions('click')

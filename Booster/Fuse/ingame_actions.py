@@ -8,11 +8,11 @@ def open_menu():
     ahk.click()
 
 def open_classes_menu():
-    ahk.move(1420, 220)
+    ahk.move(1340, 220)
     ahk.click()
 
 def open_aghathions_menu():
-    ahk.move(1500, 220)
+    ahk.move(1430, 220)
     ahk.click()
 
 def open_fusion_menu():

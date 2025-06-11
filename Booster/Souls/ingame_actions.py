@@ -9,7 +9,7 @@ def open_menu():
     ahk.click()
 
 def open_souls_menu():
-    ahk.move(1420, 340)
+    ahk.move(1340, 340)
     ahk.click()
 
 def open_collections_menu():

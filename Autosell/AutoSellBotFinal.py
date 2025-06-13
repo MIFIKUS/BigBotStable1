@@ -525,7 +525,7 @@ class Windows():
         ahk.mouse_actions('click')
         time.sleep(0.5)
 
-        ahk.mouse_actions('move', x=1500, y=470)
+        ahk.mouse_actions('move', x=1430, y=470)
         ahk.mouse_actions('click')
         time.sleep(0.5)
 

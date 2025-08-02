@@ -1047,7 +1047,7 @@ def run(hwnd):
         ahk.mouse_actions('click')
 
     def _open_alchemy():
-        ahk.mouse_actions('move', x=1780, y=330)
+        ahk.mouse_actions('move', x=1500, y=560)
         ahk.mouse_actions('click')
 
     try:

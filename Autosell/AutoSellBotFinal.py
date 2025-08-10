@@ -34,7 +34,7 @@ MAIN_TIME = 1
 #Максимальная разница между текущей ценой и минимальной
 MAXIMUM_PERCENTAGE_DIFFERENCE = 15
 #Минимальная цена по которой будут выставляться красные шмотки на глобал ауке
-GLOBAL_MARKET_MINIMAL_PRICE = 250
+GLOBAL_MARKET_MINIMAL_PRICE = 100
 
 PATH_TO_AUTOSELL = r'C:\Users\MIFIKUS\PycharmProjects\BigBot\Autosell\\'
 

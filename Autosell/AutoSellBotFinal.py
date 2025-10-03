@@ -1388,24 +1388,24 @@ def main(hwnd, current_time):
             ingame.make_new_price(price)
             ingame.confirm_new_price()
 
-        acc_name, market_balance, main_balance, sold_balance, slots = windows.update_statistics(acc_name)
-        global_market_balance, sold_balance = autosell_global_market(market_balance, sold_balance, hwnd, current_time)
+        #acc_name, market_balance, main_balance, sold_balance, slots = windows.update_statistics(acc_name)
+        #global_market_balance, sold_balance = autosell_global_market(market_balance, sold_balance, hwnd, current_time)
 
-        print('Баланс на обычном ауке', market_balance)
-        print('Баланс на глобал ауке', global_market_balance)
+        #print('Баланс на обычном ауке', market_balance)
+        #print('Баланс на глобал ауке', global_market_balance)
 
-        if global_market_balance is False:
-            print('Нет шмоток на глобал ауке')
+        #if global_market_balance is False:
+        #    print('Нет шмоток на глобал ауке')
 
-        else:
-            market_balance = market_balance.replace('\n', '')
-            market_balance = market_balance.replace(' ', '')
-            try:
-                market_balance = int(market_balance)
-            except Exception as e:
-                print(f'Не удалось получить market balance {e}')
-                market_balance = 0
-            market_balance += global_market_balance
+        #lse:
+        #   #market_balance = market_balance.replace('\n', '')
+        #   #market_balance = market_balance.replace(' ', '')
+        #   try:
+        #       #market_balance = int(market_balance)
+        #   except Exception as e:
+        #       print(f'Не удалось получить market balance {e}')
+        #       market_balance = 0
+        #    market_balance += global_market_balance
 
         ingame.go_to_menu()
         ingame.go_to_autofit_menu()
@@ -1413,14 +1413,14 @@ def main(hwnd, current_time):
 
         windows.lock_screen()
 
-        print('Ник', acc_name)
-        print('На ауке', market_balance)
-        print('На балансе', main_balance)
-        print('Доход', sold_balance)
-        print('Слоты', slots)
-        print('Нужно переставить шмоток', amount_of_items_to_replace)
+        #print('Ник', acc_name)
+        #print('На ауке', market_balance)
+        #print('На балансе', main_balance)
+        #print('Доход', sold_balance)
+        #print('Слоты', slots)
+        #print('Нужно переставить шмоток', amount_of_items_to_replace)
 
-        google.write_google(acc_name, market_balance, main_balance, sold_balance, slots)
+        #google.write_google(acc_name, market_balance, main_balance, sold_balance, slots)
         google.write_amount_of_items_that_need_to_be_replaced(acc_name, amount_of_items_to_replace)
 
         del cords

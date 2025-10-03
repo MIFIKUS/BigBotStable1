@@ -673,7 +673,7 @@ class Database:
 
     def _delete_sold_item_from_db_sql_script(self, item_name, acc_name):
 
-        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password)
+        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password, port=443)
         connection.autocommit = True
         cursor = connection.cursor()
         server_name = server_for_accs.get(acc_name)
@@ -690,7 +690,7 @@ class Database:
         cursor.close()
 
     def get_prices_from_db(self, item_name) -> dict or bool:
-        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password)
+        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password, port=443)
         connection.autocommit = True
         cursor = connection.cursor()
 
@@ -710,7 +710,7 @@ class Database:
         return {'min_price': min(price_list), 'max_price': max(price_list)}
 
     def add_item_to_db(self, item_name: str, price: int):
-        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password)
+        connection = mysql.connector.connect(host=self.host, user=self.user, password=self.password, port=443)
         connection.autocommit = True
         cursor = connection.cursor()
 
@@ -985,6 +985,7 @@ class InGame():
             def _prepare_item_name(item_name):
                 item_name = item_name.replace(' ', '').replace('\n', '').lower()
                 return item_name
+                
 
             with open(f'{PATH_TO_AUTOSELL}\\items_price_list.json', encoding='utf-8') as file:
                 items_price_list = json.load(file)

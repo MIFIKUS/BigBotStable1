@@ -536,8 +536,8 @@ class Windows():
         image.take_screenshot(f'{PATH_TO_AUTOSELL}sold_items.png', area_of_screenshot=(160, 960, 245, 1000))
         image.take_screenshot(f'{PATH_TO_AUTOSELL}income.png', area_of_screenshot=(1050, 950, 1525, 1030))
 
-        database.delete_sold_item_drom_db(acc_name)
-        database.get_prices_and_item_names()
+        #database.delete_sold_item_drom_db(acc_name)
+        #database.get_prices_and_item_names()
 
         ahk.mouse_actions('move', x=1550, y=980)
         ahk.mouse_actions('click')
@@ -1145,10 +1145,10 @@ class InGame():
             print(f'{item_name} NOT in roll_00 list')
             print(f'Попытка получить в базе данных цены для {item_name}')
 
-            min_and_max_prices = database.get_prices_from_db(item_name)
-            if min_and_max_prices is False:
-                print('Не получилось получить шмотку из базы данных')
-                return False
+            #min_and_max_prices = database.get_prices_from_db(item_name)
+            #   if min_and_max_prices is False:
+            #    print('Не получилось получить шмотку из базы данных')
+            #    return False
 
             print('Удалось получить шмотку из базы данных')
 

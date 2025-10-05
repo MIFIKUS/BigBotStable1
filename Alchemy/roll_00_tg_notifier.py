@@ -29,7 +29,7 @@ def get_jwt_token() -> str:
     password = '!Qwertqwert1'
 
     connection = mysql.connector.connect(host=host, user=user,
-                                         password=password)
+                                         password=password, port=443)
     connection.autocommit = True
     cursor = connection.cursor()
 
